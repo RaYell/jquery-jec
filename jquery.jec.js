@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 0.4.0
+ * jQuery jEC (jQuery Editable Combobox) 0.4.1
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -103,9 +103,9 @@
 							
 							keyValue = '';
 							// iterate through valid ranges
-							for each (validKey in options.acceptedRanges) {
+							for (validKey in options.acceptedRanges) {
 								// the range can be either a min,max tuple or exact value
-								if((typeof(validKey.exact) != 'undefined' && validKey.exact == event.which) || (typeof(validKey.min) != 'undefined' && typeof(validKey.max) != 'undefined' && event.which >= validKey.min && event.which <= validKey.max)) {
+								if((typeof(options.acceptedRanges[validKey].exact) != 'undefined' && options.acceptedRanges[validKey].exact == event.which) || (typeof(options.acceptedRanges[validKey].min) != 'undefined' && typeof(options.acceptedRanges[validKey].max) != 'undefined' && event.which >= options.acceptedRanges[validKey].min && event.which <= options.acceptedRanges[validKey].max)) {
 									keyValue = String.fromCharCode(event.which);
 								}
 							}
