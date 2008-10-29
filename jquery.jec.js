@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 0.5.0
+ * jQuery jEC (jQuery Editable Combobox) 0.5.1
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -82,7 +82,7 @@
 			// handle keys pressed on select
 			$(this).keypress(function(event) {
 
-				switch(event.which) {
+				switch(event.which || event.keyCode) {
 					case 8:	// backspace
 						var option = $(this).children('option.' + options.pluginClass);
 						if (option.val().length > 1) {
@@ -95,6 +95,10 @@
 						} else if (option.val().length == 1) {
 							option.val('').text('').hide();
 						}
+						break;
+					case 9: // tab
+					case 39: // up arrow
+					case 40: // down arrow
 						break;
 					default:
 						// don't handle ignored keys
@@ -137,7 +141,7 @@
 			// sets editable option to the value of currently selected option
 			function setEditableOption(elem) {
 				elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
-			};
+			}
 		});
 	};
 
