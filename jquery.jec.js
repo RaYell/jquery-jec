@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 0.4.1
+ * jQuery jEC (jQuery Editable Combobox) 0.5.0
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -22,6 +22,7 @@
 			classes: '',
 			styles: {},
 			pluginClass: 'jecEditableOption',
+			useExistingOptions: false,
 			ignoredKeys: [],
 			acceptedRanges: [
 				{min:32, max:126},	// standard chars
@@ -124,6 +125,19 @@
 			
 				return (event.which != 8);
 			});
+			
+			// handles 'useExistingOptions' = true behavior
+			if (options.useExistingOptions) {
+				setEditableOption($(this));
+				$(this).change(function() {
+					setEditableOption($(this));
+				});
+			}
+			
+			// sets editable option to the value of currently selected option
+			function setEditableOption(elem) {
+				elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
+			};
 		});
 	};
 
