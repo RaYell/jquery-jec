@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 0.5.1
+ * jQuery jEC (jQuery Editable Combobox) 0.5.2
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -78,12 +78,15 @@
 					$(this).append(editableOption);
 				}
 			}
-
+			
 			// handle keys pressed on select
-			$(this).keypress(function(event) {
+			// backspace and delete must be handled in keydown event in order to work in IE
+			$(this).keydown(function(event) {
 
-				switch(event.which || event.keyCode) {
+				var keyCode = getKeyCode(event);
+				switch(keyCode) {
 					case 8:	// backspace
+					case 46:
 						var option = $(this).children('option.' + options.pluginClass);
 						if (option.val().length > 1) {
 							// remove selection from all options
@@ -95,14 +98,23 @@
 						} else if (option.val().length == 1) {
 							option.val('').text('').hide();
 						}
+						return (keyCode != 8);
 						break;
+				}
+			});
+
+			// the rest of the keys is handled in keypress event because it gives more informations about pressed key
+			$(this).keypress(function(event) {
+
+				var keyCode = getKeyCode(event);
+				switch(keyCode) {
 					case 9: // tab
 					case 39: // up arrow
 					case 40: // down arrow
 						break;
 					default:
 						// don't handle ignored keys
-						if (options.ignoredKeys.indexOf(event.which) == -1) {
+						if (options.ignoredKeys.indexOf(keyCode) == -1) {
 							// remove selection from all options
 							$(this).children(':selected').removeAttr('selected');
 							
@@ -110,8 +122,10 @@
 							// iterate through valid ranges
 							for (validKey in options.acceptedRanges) {
 								// the range can be either a min,max tuple or exact value
-								if((typeof(options.acceptedRanges[validKey].exact) != 'undefined' && options.acceptedRanges[validKey].exact == event.which) || (typeof(options.acceptedRanges[validKey].min) != 'undefined' && typeof(options.acceptedRanges[validKey].max) != 'undefined' && event.which >= options.acceptedRanges[validKey].min && event.which <= options.acceptedRanges[validKey].max)) {
-									keyValue = String.fromCharCode(event.which);
+								if((typeof(options.acceptedRanges[validKey].exact) != 'undefined' && options.acceptedRanges[validKey].exact == keyCode) || 
+									(typeof(options.acceptedRanges[validKey].min) != 'undefined' && typeof(options.acceptedRanges[validKey].max) != 'undefined' 
+										&& keyCode >= options.acceptedRanges[validKey].min && keyCode <= options.acceptedRanges[validKey].max)) {
+									keyValue = String.fromCharCode(keyCode);
 								}
 							}
 
@@ -124,12 +138,6 @@
 				}
 			});
 
-			// disable browser-history-back on backspace
-			$(this).keydown(function(event) {
-			
-				return (event.which != 8);
-			});
-			
 			// handles 'useExistingOptions' = true behavior
 			if (options.useExistingOptions) {
 				setEditableOption($(this));
@@ -141,6 +149,14 @@
 			// sets editable option to the value of currently selected option
 			function setEditableOption(elem) {
 				elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
+			}
+			
+			function getKeyCode(event) {
+				if ($.browser.msie) {
+					return event.keyCode;
+				} else {
+					return event.which;
+				}
 			}
 		});
 	};
