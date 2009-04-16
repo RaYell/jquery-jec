@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 0.5.3
+ * jQuery jEC (jQuery Editable Combobox) 0.5.4
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -25,8 +25,8 @@
 			useExistingOptions: false,
 			ignoredKeys: [],
 			acceptedRanges: [
-				{min:32, max:126},	// standard chars
-				{min:191, max:382}	// latin accented chars
+				{min:32, max:126},
+				{min:191, max:382}
 			]
 		};
 
@@ -77,14 +77,21 @@
 				}
 			}
 
+			// last pressed key's code
+			var lastKeyCode;
+
+			// special keys codes
+			var specialKeys = [46, 37, 38, 39, 40];
+
 			// handles keys pressed on select (backspace and delete must be handled
 			// in keydown event in order to work in IE)
 			$(this).keydown(function(event) {
 
 				var keyCode = getKeyCode(event);
+				lastKeyCode = keyCode;
 				switch(keyCode) {
 					case 8:	// backspace
-					case 46:
+					case 46: // delete
 						var option = $(this).children('option.' + options.pluginClass);
 						if (option.val().length >= 1) {
 							var value = option.val().substring(0, option.val().length - 1);
@@ -104,12 +111,15 @@
 				var keyCode = getKeyCode(event);
 				switch(keyCode) {
 					case 9: // tab
-					case 37: // left arrow
-					case 38: // up arrow
-					case 39: // right arrow
-					case 40: // down arrow
 						break;
 					default:
+						// handle special keys
+						for (var i = 0; i < specialKeys.length; i++) {
+							if (keyCode == specialKeys[i] && keyCode == lastKeyCode) {
+								return;
+							}
+						}
+
 						// don't handle ignored keys
 						if (options.ignoredKeys.indexOf(keyCode) == -1) {
 							// remove selection from all options
@@ -153,7 +163,7 @@
 
 			// returns key code
 			function getKeyCode(event) {
-				if (event.charCode) {
+				if (typeof(event.charCode) != 'undefined' && event.charCode != 0) {
 					return event.charCode;
 				} else {
 					return event.keyCode;
