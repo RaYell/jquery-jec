@@ -206,13 +206,32 @@
 					$(this).unbind('change', $.jecCore.jecChange);
 				}
 			});
+		},
+		
+		// gets or sets editable option's value
+		value: function (value, setFocus) {
+			if (typeof(value) === 'undefined' || value === null) {
+				// get value
+				return $(this).filter('select option.' + $.jecCore.options.pluginClass).val();
+			} else if (typeof(value) === 'string' || typeof(value) === 'number') {
+				// set value
+				return $(this).filter('select').each(function () {
+					var option = $(this).children('option.' + $.jecCore.options.pluginClass);
+					option.val(value).text(value);
+					if (typeof(setFocus) !== 'boolean' || setFocus) {
+						option.attr('selected', 'selected');
+					}
+				});
+			}
 		}
 	};
 
  	// register editableCombobox() jQuery function
 	$.fn.extend({
 		jec: $.jecCore.enable,
+		jecOn: $.jecCore.enable,
 		jecOff: $.jecCore.disable,
+		jecValue: $.jecCore.value,
 		// deprecated
 		editableCombobox: $.jecCore.enable		
 	});
