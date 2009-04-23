@@ -146,8 +146,7 @@
 		enable: function (options) {
 
 			// override passed default options
-			$.jecCore.options = options;
-			$.jecCore.options = $.extend($.jecCore.defaults, $.jecCore.options);
+			$.jecCore.options = $.extend($.jecCore.defaults, options);
 	
 			$.jecCore.ieHacks();
 	
@@ -212,7 +211,7 @@
 		value: function (value, setFocus) {
 			if (typeof(value) === 'undefined' || value === null) {
 				// get value
-				return $(this).filter('select option.' + $.jecCore.options.pluginClass).val();
+				return $(this).children('option.' + $.jecCore.options.pluginClass).val();
 			} else if (typeof(value) === 'string' || typeof(value) === 'number') {
 				// set value
 				return $(this).filter('select').each(function () {
