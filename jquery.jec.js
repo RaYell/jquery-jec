@@ -56,10 +56,12 @@
 				return obj;
 			}
 			
-			var temp = new obj.constructor();
+			var temp = new obj.constructor(), key;
 			
-			for (var key in obj) {
-				temp[key] = $.jecCore.clone(obj[key]);
+			for (key in obj) {
+				if (key !== undefined) {
+					temp[key] = $.jecCore.clone(obj[key]);
+				}
 			}
 			
 			return temp;
@@ -173,7 +175,8 @@
 		
 		// sets combobox
 		setup: function (elem) {
-			var options = $.jecCore.options['id' + elem.attr('jec')];
+			var options, editableOption, i;
+			options = $.jecCore.options['id' + elem.attr('jec')];
 			
 			if (typeof(options) !== 'undefined') {
 				// add editable option tag if not exists
@@ -223,7 +226,7 @@
 	
 			return $(this).filter('select:not([jec])').each(function () {
 	
-				var editableOption, i, random;
+				var random;
 				random = $.jecCore.generateId();
 			
 				// override passed default options
