@@ -32,9 +32,9 @@
 		},
 		
 		// options
-		options: null,
+		options: {},
 		
-		//
+		// IE hacks
 		ieHacks: function () {
 			// IE doesn't implement indexOf() method
 			if ($.browser.msie && Array.prototype.indexOf === null) {
@@ -48,6 +48,21 @@
 					return -1;
 				};
 			}
+		},
+		
+		// clone object
+		clone: function (obj) {
+			if (obj === null || typeof(obj) !== 'object') {
+				return obj;
+			}
+			
+			var temp = new obj.constructor();
+			
+			for (var key in obj) {
+				temp[key] = $.jecCore.clone(obj[key]);
+			}
+			
+			return temp;
 		},
 		
 		// returns key code
@@ -66,22 +81,35 @@
 		
 		// sets editable option to the value of currently selected option
 		setEditableOption: function (elem) {
-			elem.children('option.' + $.jecCore.options.pluginClass).val(elem.children('option:selected').text());
+			var options = $.jecCore.options['id' + elem.attr('jec')];
+			elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
+		},
+		
+		generateId: function () {
+			// find unique identifier
+			while (true) {
+				var random = Math.floor(Math.random() * 100000);
+				
+				if (typeof($.jecCore.options['id' + random]) === 'undefined') {
+					return random;
+				}
+			}
 		},
 		
 		// keydown event handler
 		// handles keys pressed on select (backspace and delete must be handled
 		// in keydown event in order to work in IE)
 		jecKeyDown: function (event) {
-			var keyCode, option, value;
+			var keyCode, option, value, options;
 	
+			options = $.jecCore.options['id' + $(this).attr('jec')];
 			keyCode = $.jecCore.getKeyCode(event);
 			$.jecCore.lastKeyCode = keyCode;
 
 			switch (keyCode) {
 			case 8:	// backspace
 			case 46: // delete
-				option = $(this).children('option.' + $.jecCore.options.pluginClass);
+				option = $(this).children('option.' + options.pluginClass);
 				if (option.val().length >= 1) {
 					value = option.val().substring(0, option.val().length - 1);
 					option.val(value).text(value).attr('selected', 'selected');
@@ -96,8 +124,9 @@
 		// handles the rest of the keys (keypress event gives more informations
 		// about pressed keys)
 		jecKeyPress: function (event) {
-			var keyCode, keyValue, i, option, value, validKey;
+			var keyCode, keyValue, i, option, value, validKey, options;
 	
+			options = $.jecCore.options['id' + $(this).attr('jec')];
 			keyCode = $.jecCore.getKeyCode(event);
 
 			if (keyCode !== 9) {
@@ -109,26 +138,26 @@
 				}
 
 				// don't handle ignored keys
-				if ($.jecCore.options.ignoredKeys.indexOf(keyCode) === -1) {
+				if (options.ignoredKeys.indexOf(keyCode) === -1) {
 					// remove selection from all options
 					$(this).children(':selected').removeAttr('selected');
 
 					keyValue = '';
 					// iterate through valid ranges
-					for (validKey in $.jecCore.options.acceptedRanges) {
+					for (validKey in options.acceptedRanges) {
 						// the range can be either a min,max tuple or exact value
-						if ((typeof($.jecCore.options.acceptedRanges[validKey].exact) !== 'undefined' &&
-								$.jecCore.options.acceptedRanges[validKey].exact === keyCode) ||
-							(typeof($.jecCore.options.acceptedRanges[validKey].min) !== 'undefined' &&
-								typeof($.jecCore.options.acceptedRanges[validKey].max) !== 'undefined' &&
-								keyCode >= $.jecCore.options.acceptedRanges[validKey].min &&
-								keyCode <= $.jecCore.options.acceptedRanges[validKey].max)) {
+						if ((typeof(options.acceptedRanges[validKey].exact) !== 'undefined' &&
+								options.acceptedRanges[validKey].exact === keyCode) ||
+							(typeof(options.acceptedRanges[validKey].min) !== 'undefined' &&
+								typeof(options.acceptedRanges[validKey].max) !== 'undefined' &&
+								keyCode >= options.acceptedRanges[validKey].min &&
+								keyCode <= options.acceptedRanges[validKey].max)) {
 							keyValue = String.fromCharCode(keyCode);
 						}
 					}
 
 					// add key value to proper option tag
-					option = $(this).children('option.' + $.jecCore.options.pluginClass);
+					option = $(this).children('option.' + options.pluginClass);
 					value = option.val() + keyValue;
 					option.val(value).text(value).attr('selected', 'selected');
 				}
@@ -141,67 +170,96 @@
 		jecChange: function () {
 			$.jecCore.setEditableOption($(this));
 		},
-	
-		// enable editable combobox
-		enable: function (options) {
-
-			// override passed default options
-			$.jecCore.options = $.extend($.jecCore.defaults, options);
-	
-			$.jecCore.ieHacks();
-	
-			return $(this).filter('select').each(function () {
-	
-				var editableOption, i;
-	
+		
+		// sets combobox
+		setup: function (elem) {
+			var options = $.jecCore.options['id' + elem.attr('jec')];
+			
+			if (typeof(options) !== 'undefined') {
 				// add editable option tag if not exists
-				if ($(this).children($.jecCore.options.pluginClass).length === 0) {
+				if (elem.children(options.pluginClass).length === 0) {
 					editableOption = $(document.createElement('option'));
-					editableOption.addClass($.jecCore.options.pluginClass);
+					editableOption.addClass(options.pluginClass);
 	
 					// add passed CSS classes
-					if (typeof($.jecCore.options.classes) === 'string') {
-						editableOption.addClass($.jecCore.options.classes);
-					} else if (typeof($.jecCore.options.classes) === 'object') {
-						for (i = 0; i < $.jecCore.options.classes.length; i += 1) {
-							editableOption.addClass($.jecCore.options.classes[i]);
+					if (typeof(options.classes) === 'string') {
+						editableOption.addClass(options.classes);
+					} else if (typeof(options.classes) === 'object') {
+						for (i = 0; i < options.classes.length; i += 1) {
+							editableOption.addClass(options.classes[i]);
 						}
 					}
 	
 					// add passed CSS styles
-					if (typeof($.jecCore.options.styles) === 'object') {
-						for (i = 0; i < $.jecCore.options.styles.length; i += 1) {
-							editableOption.append($.jecCore.options.styles[i]);
+					if (typeof(options.styles) === 'object') {
+						for (i = 0; i < options.styles.length; i += 1) {
+							editableOption.append(options.styles[i]);
 						}
 					}
 	
 					// insert created element on correct position
-					if ($(this).children().eq($.jecCore.options.position).length !== 0) {
-						$(this).children().eq($.jecCore.options.position).before(editableOption);
+					if (elem.children().eq(options.position).length !== 0) {
+						elem.children().eq(options.position).before(editableOption);
 					} else {
-						$(this).append(editableOption);
+						elem.append(editableOption);
 					}
 				}
 	
-				$(this).bind('keydown', $.jecCore.jecKeyDown);
-				$(this).bind('keypress', $.jecCore.jecKeyPress);
+				elem.bind('keydown', $.jecCore.jecKeyDown);
+				elem.bind('keypress', $.jecCore.jecKeyPress);
 	
 				// handles 'useExistingOptions = true' behavior
-				if ($.jecCore.options.useExistingOptions) {
-					$.jecCore.setEditableOption($(this));
-					$(this).bind('change', $.jecCore.jecChange);
+				if (options.useExistingOptions) {
+					$.jecCore.setEditableOption(elem);
+					elem.bind('change', $.jecCore.jecChange);
 				}
+			}
+		},
+	
+		// create editable combobox
+		init: function (settings) {
+	
+			$.jecCore.ieHacks();
+	
+			return $(this).filter('select:not([jec])').each(function () {
+	
+				var editableOption, i, random;
+				random = $.jecCore.generateId();
+			
+				// override passed default options
+				$.jecCore.options['id' + random] = $.extend($.jecCore.clone($.jecCore.defaults), settings);
+				
+				// add unique id
+				$(this).attr('jec', random);
+	
+				$.jecCore.setup($(this));
+			});
+		},
+		
+		destroy: function () {
+			return $(this).filter('select[jec]').each(function () {
+				$(this).jecOff();
+				$(this).removeAttr('jec');
+			});
+		},
+		
+		// enable editablecombobox
+		enable: function () {
+			return $(this).filter('select[jec]').each(function () {
+				$.jecCore.setup($(this));
 			});
 		},
 		
 		// disable editable combobox
 		disable: function () {
-			return $(this).filter('select').each(function () {
-				$(this).children('option.' + $.jecCore.options.pluginClass).remove();
+			return $(this).filter('select[jec]').each(function () {
+				var options = $.jecCore.options['id' + $(this).attr('jec')];
+				
+				$(this).children('option.' + options.pluginClass).remove();
 				$(this).unbind('keydown', $.jecCore.jecKeyDown);
 				$(this).unbind('keypress', $.jecCore.jecKeyPress);
 				
-				if ($.jecCore.options !== null && $.jecCore.options.useExistingOptions) {
+				if (options !== null && options.useExistingOptions) {
 					$(this).unbind('change', $.jecCore.jecChange);
 				}
 			});
@@ -209,13 +267,15 @@
 		
 		// gets or sets editable option's value
 		value: function (value, setFocus) {
+			var options = $.jecCore.options['id' + $(this).attr('jec')];
+			
 			if (typeof(value) === 'undefined' || value === null) {
 				// get value
-				return $(this).children('option.' + $.jecCore.options.pluginClass).val();
+				return $(this).children('option.' + options.pluginClass).val();
 			} else if (typeof(value) === 'string' || typeof(value) === 'number') {
 				// set value
 				return $(this).filter('select').each(function () {
-					var option = $(this).children('option.' + $.jecCore.options.pluginClass);
+					var option = $(this).children('option.' + options.pluginClass);
 					option.val(value).text(value);
 					if (typeof(setFocus) !== 'boolean' || setFocus) {
 						option.attr('selected', 'selected');
@@ -227,12 +287,13 @@
 
  	// register editableCombobox() jQuery function
 	$.fn.extend({
-		jec: $.jecCore.enable,
+		jec: $.jecCore.init,
 		jecOn: $.jecCore.enable,
 		jecOff: $.jecCore.disable,
+		jecKill: $.jecCore.destroy,
 		jecValue: $.jecCore.value,
 		// deprecated
-		editableCombobox: $.jecCore.enable		
+		editableCombobox: $.jecCore.init		
 	});
 
 })(jQuery);

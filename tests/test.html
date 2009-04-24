@@ -26,34 +26,34 @@ $(document).ready(function(){
 		]
 	};
 	
-	module("enable");
-	test("Editable combobox activation", function() {
+	module("init");
+	test("Editable combobox initialization", function() {
 		$('#test').jec();
 		ok($('#test option.jecEditableOption').length === 1, "We expect new editable option element to be created");
-		$('#test').jecOff();
+		$('#test').jecKill();
 	});
 	test("Option: position", function() {
 		$('#test').jec({position: 0});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect new editable option element to be on first position");
-		$('#test').jecOff();
+		$('#test').jecKill();
 		
 		$('#test').jec({position: 1});
 		ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1, "We expect new editable option element to be on second position");
-		$('#test').jecOff();
+		$('#test').jecKill();
 		
 		$('#test').jec({position: 3});
 		ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1, "We expect new editable option element to be on last position");
-		$('#test').jecOff();
+		$('#test').jecKill();
 		
 		$('#test').jec({position: 100});
 		ok($('#test').children('option:last').filter('.jecEditableOption').length === 1, "We expect new editable option element to be on last position (value greater then number of options)");
-		$('#test').jecOff();
+		$('#test').jecKill();
 	});
 	test("Option: pluginClass", function() {
 		var className = 'myClass';
 		$('#test').jec({pluginClass: className});
 		ok($('#test option.' + className).length === 1, "We expect new editable option element to be created");
-		$('#test').jecOff();
+		$('#test').jecKill();
 	});
 	test("Option: useExistingOptions", function() {
 		// nothing to test here at the moment
@@ -69,15 +69,32 @@ $(document).ready(function(){
 	test("Editable combobox deactivation", function() {
 		$('#test').jec();
 		$('#test').jecOff();
-		ok($('#test option').length === 3, "We expect editable combobox to be disabled");
+		ok($('#test option').length === 3 && $('#test').attr('jec') !== undefined, "We expect editable combobox to be disabled");
+		$('#test').jecKill();
+	});
+	
+	module("enable");
+	test("Editable combobox activation", function() {
+		$('#test').jec();
+		$('#test').jecOff();
+		$('#test').jecOn();
+		ok($('#test option.jecEditableOption').length === 1, "We expect editable combobox to be enabled");
+		$('#test').jecKill();
+	});
+	
+	module("kill");
+	test("Editable combobox activation", function() {
+		$('#test').jec();
+		$('#test').jecKill();
+		ok($('#test option').length === 3 && $('#test').attr('jec') === undefined, "We expect editable combobox to be destroyed");
 	});
 	
 	module("value");
 	test("Getting value", function() {
-		$('#test').jec(defaults);
+		$('#test').jec();
 		$('#test option.jecEditableOption').text(testValue).val(testValue);
 		same($('#test').jecValue(), testValue, "We expect value of " + testValue + " to be retrieved");
-		$('#test').jecOff();
+		$('#test').jecKill();
 	});
 	
 	test("Setting value", function() {
@@ -100,7 +117,7 @@ $(document).ready(function(){
 		$('#test').jecValue(undefined);
 		same($('#test').jecValue(), intValue.toString(), "We expect undefined value to be ignored and value of " + intValue + " be still set");
 		
-		$('#test').jecOff();
+		$('#test').jecKill();
 	});
 	
 	$('#test').hide();
