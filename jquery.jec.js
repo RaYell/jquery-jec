@@ -34,6 +34,9 @@
 		// options
 		options: {},
 		
+		// values
+		values: {},
+		
 		// IE hacks
 		ieHacks: function () {
 			// IE doesn't implement indexOf() method
@@ -239,6 +242,7 @@
 			});
 		},
 		
+		// destroys editable combobox
 		destroy: function () {
 			return $(this).filter('select[jec]').each(function () {
 				$(this).jecOff();
@@ -250,13 +254,21 @@
 		enable: function () {
 			return $(this).filter('select[jec]').each(function () {
 				$.jecCore.setup($(this));
+				var value = $.jecCore.values['id' + $(this).attr('jec')];
+				
+				if (value !== undefined) {
+					$(this).jecValue(value);
+				}
 			});
 		},
 		
 		// disable editable combobox
 		disable: function () {
 			return $(this).filter('select[jec]').each(function () {
-				var options = $.jecCore.options['id' + $(this).attr('jec')];
+				var id, options;
+				id = 'id' + $(this).attr('jec');
+				options = $.jecCore.options[id];
+				$.jecCore.values[id] = $(this).children('option.' + options.pluginClass).val();
 				
 				$(this).children('option.' + options.pluginClass).remove();
 				$(this).unbind('keydown', $.jecCore.jecKeyDown);
