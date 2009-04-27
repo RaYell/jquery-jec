@@ -23,6 +23,7 @@
 			classes: '',
 			styles: {},
 			pluginClass: 'jecEditableOption',
+			focusOnNewOption: false,
 			useExistingOptions: false,
 			ignoredKeys: [],
 			acceptedRanges: [
@@ -208,6 +209,11 @@
 						elem.children().eq(options.position).before(editableOption);
 					} else {
 						elem.append(editableOption);
+					}
+					
+					// handle new option's focus
+					if (options.focusOnNewOption) {
+						editableOption.attr('selected', 'selected');
 					}
 				}
 	
