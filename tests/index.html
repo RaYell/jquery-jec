@@ -55,6 +55,11 @@ $(document).ready(function(){
 		ok($('#test option.' + className).length === 1, "We expect new editable option element to be created");
 		$('#test').jecKill();
 	});
+	test("Option: focusOnNewOption", function() {
+		$('#test').jec({focusOnNewOption: true});
+		ok($('#test option:first.jecEditableOption').length === 1, "We expect focus to be moved to editable option");
+		$('#test').jecKill();
+	});
 	test("Option: useExistingOptions", function() {
 		// nothing to test here at the moment
 	});
