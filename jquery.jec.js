@@ -38,10 +38,9 @@
 		// values
 		values: {},
 		
-		// IE hacks
-		ieHacks: function () {
-			// IE doesn't implement indexOf() method
-			if ($.browser.msie && Array.prototype.indexOf === undefined) {
+		// register indexOf method on browsers that doesn't support it (IE)
+		registerIndexOf: function () {
+			if (Array.prototype.indexOf === undefined) {
 				Array.prototype.indexOf = function (object) {
 	
 					for (var i = 0; i < this.length; i += 1) {
@@ -231,7 +230,7 @@
 		// create editable combobox
 		init: function (settings) {
 	
-			$.jecCore.ieHacks();
+			$.jecCore.registerIndexOf();
 	
 			return $(this).filter('select:not([jec])').each(function () {
 	
