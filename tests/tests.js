@@ -90,29 +90,29 @@ $(document).ready(function () {
 	test("Getting value", function () {
 		$('#test').jec();
 		$('#test option.jecEditableOption').text(testValue).val(testValue);
-		same($('#test').jecValue(), testValue, "We expect value of " + testValue + " to be retrieved");
+		ok($('#test').jecValue() === testValue, "We expect value of " + testValue + " to be retrieved");
 		$('#test').jecKill();
 	});
 	
 	test("Setting value", function () {
 		$('#test').jec();
 		$('#test').jecValue(strValue);
-		same($('#test').jecValue(), strValue, "We expect value of " + strValue + " to be set");
+		ok($('#test').jecValue() === strValue, "We expect value of " + strValue + " to be set");
 		
 		$('#test').jecValue(intValue);
-		same($('#test').jecValue(), intValue.toString(), "We expect value of " + intValue + " to be set");
+		ok($('#test').jecValue() === intValue.toString(), "We expect value of " + intValue + " to be set");
 		
 		$('#test').jecValue({});
-		same($('#test').jecValue(), intValue.toString(), "We expect object value to be ignored and value of " + intValue + " be still set");
+		ok($('#test').jecValue() === intValue.toString(), "We expect object value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue([]);
-		same($('#test').jecValue(), intValue.toString(), "We expect array value to be ignored and value of " + intValue + " be still set");
+		ok($('#test').jecValue() === intValue.toString(), "We expect array value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue(null);
-		same($('#test').jecValue(), intValue.toString(), "We expect null value to be ignored and value of " + intValue + " be still set");
+		ok($('#test').jecValue() === intValue.toString(), "We expect null value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue(undefined);
-		same($('#test').jecValue(), intValue.toString(), "We expect undefined value to be ignored and value of " + intValue + " be still set");
+		ok($('#test').jecValue() === intValue.toString(), "We expect undefined value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecKill();
 	});
