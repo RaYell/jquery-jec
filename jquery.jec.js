@@ -1,9 +1,9 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.0.0RC
+ * jQuery jEC (jQuery Editable Combobox) 1.0.0RC2
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
- * Copyright (c) 2008 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
+ * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
