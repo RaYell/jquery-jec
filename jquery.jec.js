@@ -73,7 +73,7 @@
 		
 		// returns key code
 		getKeyCode: function (event) {
-			if (typeof(event.charCode) !== 'undefined' && event.charCode !== 0) {
+			if (event.charCode !== undefined && event.charCode !== 0) {
 				return event.charCode;
 			} else {
 				return event.keyCode;
@@ -96,7 +96,7 @@
 			while (true) {
 				var random = Math.floor(Math.random() * 100000);
 				
-				if (typeof($.jecCore.options['id' + random]) === 'undefined') {
+				if ($.jecCore.options['id' + random] === undefined) {
 					return random;
 				}
 			}
@@ -152,10 +152,10 @@
 					// iterate through valid ranges
 					for (validKey in options.acceptedRanges) {
 						// the range can be either a min,max tuple or exact value
-						if ((typeof(options.acceptedRanges[validKey].exact) !== 'undefined' &&
+						if ((options.acceptedRanges[validKey].exact !== undefined &&
 								options.acceptedRanges[validKey].exact === keyCode) ||
-							(typeof(options.acceptedRanges[validKey].min) !== 'undefined' &&
-								typeof(options.acceptedRanges[validKey].max) !== 'undefined' &&
+							(options.acceptedRanges[validKey].min !== undefined &&
+								options.acceptedRanges[validKey].max !== undefined &&
 								keyCode >= options.acceptedRanges[validKey].min &&
 								keyCode <= options.acceptedRanges[validKey].max)) {
 							keyValue = String.fromCharCode(keyCode);
@@ -182,7 +182,7 @@
 			var options, editableOption, i;
 			options = $.jecCore.options['id' + elem.attr('jec')];
 			
-			if (typeof(options) !== 'undefined') {
+			if (options !== undefined) {
 				// add editable option tag if not exists
 				if (elem.children(options.pluginClass).length === 0) {
 					editableOption = $(document.createElement('option'));
@@ -290,7 +290,7 @@
 		value: function (value, setFocus) {
 			var options = $.jecCore.options['id' + $(this).attr('jec')];
 			
-			if (typeof(value) === 'undefined' || value === null) {
+			if (value === undefined || value === null) {
 				// get value
 				return $(this).children('option.' + options.pluginClass).val();
 			} else if (typeof(value) === 'string' || typeof(value) === 'number') {
