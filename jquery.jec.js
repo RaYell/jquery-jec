@@ -41,7 +41,7 @@
 		// IE hacks
 		ieHacks: function () {
 			// IE doesn't implement indexOf() method
-			if ($.browser.msie && Array.prototype.indexOf === null) {
+			if ($.browser.msie && Array.prototype.indexOf === undefined) {
 				Array.prototype.indexOf = function (object) {
 	
 					for (var i = 0; i < this.length; i += 1) {
