@@ -38,6 +38,17 @@
 		// values
 		values: {},
 		
+		// check if object is an array
+		isArray: function (object) {
+			return object !== null && typeof(object) === 'object' && 
+				typeof(object.length) === 'number';
+		},
+		
+		// check if value is an integer
+		isInteger: function (number) {
+			return typeof(number) === 'number' && Math.ceil(number) === Math.floor(number);
+		},
+		
 		// register indexOf method on browsers that doesn't support it (IE)
 		registerIndexOf: function () {
 			if (Array.prototype.indexOf === undefined) {
@@ -59,7 +70,7 @@
 				return obj;
 			}
 			
-			var temp = new obj.constructor(), key;
+			var key, temp = new obj.constructor();
 			
 			for (key in obj) {
 				if (key !== undefined) {
@@ -90,8 +101,8 @@
 			elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
 		},
 		
+		// find unique identifier
 		generateId: function () {
-			// find unique identifier
 			while (true) {
 				var random = Math.floor(Math.random() * 100000);
 				
@@ -178,7 +189,7 @@
 		
 		// sets combobox
 		setup: function (elem) {
-			var options, editableOption, i;
+			var options, editableOption, i, key;
 			options = $.jecCore.options['id' + elem.attr('jec')];
 			
 			if (options !== undefined) {
@@ -190,16 +201,18 @@
 					// add passed CSS classes
 					if (typeof(options.classes) === 'string') {
 						editableOption.addClass(options.classes);
-					} else if (typeof(options.classes) === 'object') {
+					} else if (typeof(options.classes) === 'object' && $.jecCore.isArray(options.classes)) {
 						for (i = 0; i < options.classes.length; i += 1) {
 							editableOption.addClass(options.classes[i]);
 						}
 					}
 	
 					// add passed CSS styles
-					if (typeof(options.styles) === 'object') {
-						for (i = 0; i < options.styles.length; i += 1) {
-							editableOption.append(options.styles[i]);
+					if (typeof(options.styles) === 'object' && !($.jecCore.isArray(options.styles))) {
+						for (key in options.styles) {
+							if (options.styles[key] !== null && options.styles[key] !== undefined) {
+								editableOption.css(key, options.styles[key]);
+							}
 						}
 					}
 	
@@ -234,11 +247,53 @@
 	
 			return $(this).filter('select:not([jec])').each(function () {
 	
-				var random;
+				var random, id, key;
 				random = $.jecCore.generateId();
+				id = 'id' + random;
 			
 				// override passed default options
-				$.jecCore.options['id' + random] = $.extend($.jecCore.clone($.jecCore.defaults), settings);
+				$.jecCore.options[id] = $.jecCore.clone($.jecCore.defaults);
+				
+				if (settings !== null && typeof(settings) === 'object') {
+					for (key in settings) {
+						if (settings[key] !== null && settings[key] !== undefined) {
+							switch (key) {
+							case 'position':
+								if ($.jecCore.isInteger(settings[key])) {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							case 'pluginClass':
+								if (typeof (settings[key]) === 'string') {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							case 'classes':
+								if (typeof (settings[key]) === 'string' || $.jecCore.isArray(settings[key])) {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							case 'styles':
+								if (typeof (settings[key]) === 'object'/* && !($.jecCore.isArray(settings[key]))*/) {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							case 'focusOnNewOption':
+							case 'useExistingOptions':
+								if (typeof (settings[key]) === 'boolean') {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							case 'ignoredKeys':
+							case 'acceptedRanges':
+								if ($.jecCore.isArray(settings[key])) {
+									$.jecCore.options[id][key] = settings[key];
+								}
+								break;
+							}
+						}
+					}
+				}
 				
 				// add unique id
 				$(this).attr('jec', random);
@@ -305,15 +360,13 @@
 		}
 	};
 
- 	// register editableCombobox() jQuery function
+ 	// register jQuery functions
 	$.fn.extend({
 		jec: $.jecCore.init,
 		jecOn: $.jecCore.enable,
 		jecOff: $.jecCore.disable,
 		jecKill: $.jecCore.destroy,
-		jecValue: $.jecCore.value,
-		// deprecated
-		editableCombobox: $.jecCore.init		
+		jecValue: $.jecCore.value
 	});
 
 })(jQuery);
