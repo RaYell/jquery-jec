@@ -162,6 +162,30 @@ $(document).ready(function () {
 		$('#test').jec({styles: obj});
 		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue && $('#test').children('option.jecEditableOption').css(otherStyleName) === otherStyleValue, "We expect new editable option to have several extra styles");
 		$('#test').jecKill();
+		
+		$('#test').jec({styles: 'width: 100px'});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (string)");
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: 10});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (number)");
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: true});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (boolean)");
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: null});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (null)");
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: undefined});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (undefined)");
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: [{styles: obj}]});
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (array)");
+		$('#test').jecKill();
 	});
 	test("Option: focusOnNewOption", function () {
 		$('#test').jec({focusOnNewOption: false});
