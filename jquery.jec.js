@@ -41,7 +41,8 @@
 		// check if object is an array
 		isArray: function (object) {
 			return object !== null && typeof(object) === 'object' && 
-				typeof(object.length) === 'number';
+				typeof(object.length) === 'number' && typeof(object.splice) === 'function' &&
+				!(object.propertyIsEnumerable('length'));
 		},
 		
 		// check if value is an integer
