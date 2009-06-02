@@ -274,7 +274,7 @@
 								}
 								break;
 							case 'styles':
-								if (typeof (settings[key]) === 'object'/* && !($.jecCore.isArray(settings[key]))*/) {
+								if (typeof (settings[key]) === 'object' && !($.jecCore.isArray(settings[key]))) {
 									$.jecCore.options[id][key] = settings[key];
 								}
 								break;
@@ -331,6 +331,7 @@
 				$.jecCore.values[id] = $(this).children('option.' + options.pluginClass).val();
 				
 				$(this).children('option.' + options.pluginClass).remove();
+				$(this).children('option:first').attr('selected', 'selected');
 				$(this).unbind('keydown', $.jecCore.jecKeyDown);
 				$(this).unbind('keypress', $.jecCore.jecKeyPress);
 				
