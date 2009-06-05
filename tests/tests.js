@@ -21,146 +21,184 @@ $(document).ready(function () {
 	module("init");
 	test("Editable combobox initialization", function () {
 		$('#test').jec();
-		ok($('#test option.jecEditableOption').length === 1, "We expect new editable option element to be created");
+		ok($('#test option.jecEditableOption').length === 1, 
+            "We expect new editable option element to be created");
 		$('#test').jecKill();
 	});
 	test("Option: position", function () {
 		$('#test').jec({position: 0});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect new editable option element to be on first position");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect new editable option element to be on first position");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 1});
-		ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1, "We expect new editable option element to be on second position");
+		ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1, 
+            "We expect new editable option element to be on second position");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 3});
-		ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1, "We expect new editable option element to be on last position");
+		ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1, 
+            "We expect new editable option element to be on last position");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 100});
-		ok($('#test').children('option:last').filter('.jecEditableOption').length === 1, "We expect new editable option element to be on last position (value greater then number of options)");
+		ok($('#test').children('option:last').filter('.jecEditableOption').length === 1, 
+            "We expect new editable option element to be on last position (value too big)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 4.2});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (float)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (float)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: '1'});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (string)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (string)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: true});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (boolean)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (boolean)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: null});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (null)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (null)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: undefined});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (undefined)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (undefined)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: {pos: 1}});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (object)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (object)");
 		$('#test').jecKill();
 		
 		$('#test').jec({position: [1]});
-		ok($('#test').children('option:first.jecEditableOption').length === 1, "We expect malformed position option to be ignored (array)");
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            "We expect malformed position option to be ignored (array)");
 		$('#test').jecKill();
 	});
 	test("Option: pluginClass", function () {
 		var className = 'myClass', defaultClassName = 'jecEditableOption';
 		$('#test').jec({pluginClass: className});
-		ok($('#test option.' + className).length === 1, "We expect new editable option element to be created");
+		ok($('#test option.' + className).length === 1, 
+            "We expect new editable option element to be created");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: 1});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (number)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (number)");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: true});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (boolean)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (boolean)");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: null});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (null)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (null)");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: undefined});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (undefined)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (undefined)");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: {classes: className}});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (object)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (object)");
 		$('#test').jecKill();
 		
 		$('#test').jec({pluginClass: [className]});
-		ok($('#test option.' + defaultClassName).length === 1, "We expect malformed plugin class option to be ignored (array)");
+		ok($('#test option.' + defaultClassName).length === 1, 
+            "We expect malformed plugin class option to be ignored (array)");
 		$('#test').jecKill();
 	});
 	test("Option: classes", function () {
-		var defaultClassName = 'jecEditableOption', className = 'className', otherClassName = 'otherClassName';
+		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
 		$('#test').jec({classes: ''});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect new editable option to have no extra classes");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect new editable option to have no extra classes");
 		$('#test').jecKill();
 		
 		className = 'myClass';
 		$('#test').jec({classes: className});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect new editable option to have one extra class (string)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect new editable option to have one extra class (string)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: className + ' ' + otherClassName});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && $('#test').children('option.jecEditableOption').hasClass(className), "We expect new editable option to have several extra classes (string)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && 
+            $('#test').children('option.jecEditableOption').hasClass(className), 
+            "We expect new editable option to have several extra classes (string)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: []});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect new editable option to have no extra classes (array)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect new editable option to have no extra classes (array)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: [className]});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && $('#test').children('option.jecEditableOption').hasClass(className), "We expect new editable option to have one extra class (array)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && 
+            $('#test').children('option.jecEditableOption').hasClass(className), 
+            "We expect new editable option to have one extra class (array)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: [className, otherClassName]});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && $('#test').children('option.jecEditableOption').hasClass(className) && $('#test').children('option.jecEditableOption').hasClass(otherClassName), "We expect new editable option to have several extra classes (array)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && 
+            $('#test').children('option.jecEditableOption').hasClass(className) && 
+            $('#test').children('option.jecEditableOption').hasClass(otherClassName), 
+            "We expect new editable option to have several extra classes (array)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: 10});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect malformed classes option to be ignored (number)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect malformed classes option to be ignored (number)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: true});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect malformed classes option to be ignored (boolean)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect malformed classes option to be ignored (boolean)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: null});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect malformed classes option to be ignored (null)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect malformed classes option to be ignored (null)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: undefined});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect malformed classes option to be ignored (undefined)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect malformed classes option to be ignored (undefined)");
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: {cl: className}});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), "We expect malformed classes option to be ignored (object)");
+		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
+            "We expect malformed classes option to be ignored (object)");
 		$('#test').jecKill();
 	});
 	test("Option: styles", function () {
 		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', otherStyleValue = '200px', obj = {};
 		
 		$('#test').jec({styles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === 'auto', "We expect new editable option to have no extra styles");
+		ok($('#test').children('option.jecEditableOption').css(styleName) === 'auto', 
+            "We expect new editable option to have no extra styles");
 		$('#test').jecKill();
 		
 		obj[styleName] = styleValue;
 		$('#test').jec({styles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue, "We expect new editable option to have one extra style");
+		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue, 
+            "We expect new editable option to have one extra style");
 		$('#test').jecKill();
 		
 		obj[otherStyleName] = otherStyleValue;
 		$('#test').jec({styles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue && $('#test').children('option.jecEditableOption').css(otherStyleName) === otherStyleValue, "We expect new editable option to have several extra styles");
+		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue && 
+            $('#test').children('option.jecEditableOption').css(otherStyleName) === otherStyleValue,
+             "We expect new editable option to have several extra styles");
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: 'width: 100px'});
@@ -168,56 +206,69 @@ $(document).ready(function () {
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: 10});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (number)");
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+            "We expect malformed styles option to be ignored (number)");
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: true});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (boolean)");
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+            "We expect malformed styles option to be ignored (boolean)");
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: null});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (null)");
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+            "We expect malformed styles option to be ignored (null)");
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: undefined});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (undefined)");
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+            "We expect malformed styles option to be ignored (undefined)");
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: [{styles: obj}]});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, "We expect malformed styles option to be ignored (array)");
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+            "We expect malformed styles option to be ignored (array)");
 		$('#test').jecKill();
 	});
 	test("Option: focusOnNewOption", function () {
 		$('#test').jec({focusOnNewOption: false});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect focus to be set on first option");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect focus to be set on first option");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: true});
-		ok($('#test option:first:selected').length === 1, "We expect focus to be moved to editable option");
+		ok($('#test option:first:selected').length === 1, 
+            "We expect focus to be moved to editable option");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: '1'});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (string)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (string)");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: 1});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (number)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (number)");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: null});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (null)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (null)");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: undefined});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (undefined)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (undefined)");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: {focus: true}});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (object)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (object)");
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: [true]});
-		ok($('#test option:first:not(:selected)').length === 1, "We expect malformed focus option to be ignored (array)");
+		ok($('#test option:first:not(:selected)').length === 1, 
+            "We expect malformed focus option to be ignored (array)");
 		$('#test').jecKill();
 	});
 	test("Option: useExistingOptions", function () {
@@ -234,7 +285,8 @@ $(document).ready(function () {
 	test("Editable combobox deactivation", function () {
 		$('#test').jec();
 		$('#test').jecOff();
-		ok($('#test option').length === 3 && $('#test').attr('jec') !== undefined, "We expect editable combobox to be disabled");
+		ok($('#test option').length === 3 && $('#test').attr('jec') !== undefined, 
+            "We expect editable combobox to be disabled");
 		$('#test').jecKill();
 	});
 	
@@ -243,7 +295,8 @@ $(document).ready(function () {
 		$('#test').jec();
 		$('#test').jecOff();
 		$('#test').jecOn();
-		ok($('#test option.jecEditableOption').length === 1, "We expect editable combobox to be enabled");
+		ok($('#test option.jecEditableOption').length === 1, 
+            "We expect editable combobox to be enabled");
 		$('#test').jecKill();
 	});
 	
@@ -251,36 +304,43 @@ $(document).ready(function () {
 	test("Editable combobox activation", function () {
 		$('#test').jec();
 		$('#test').jecKill();
-		ok($('#test option').length === 3 && $('#test').attr('jec') === undefined, "We expect editable combobox to be destroyed");
+		ok($('#test option').length === 3 && $('#test').attr('jec') === undefined, 
+            "We expect editable combobox to be destroyed");
 	});
 	
 	module("value");
 	test("Getting value", function () {
 		$('#test').jec();
 		$('#test option.jecEditableOption').text(testValue).val(testValue);
-		ok($('#test').jecValue() === testValue, "We expect value of " + testValue + " to be retrieved");
+		same($('#test').jecValue(), testValue, 
+            "We expect value of " + testValue + " to be retrieved");
 		$('#test').jecKill();
 	});
 	
 	test("Setting value", function () {
 		$('#test').jec();
 		$('#test').jecValue(strValue);
-		ok($('#test').jecValue() === strValue, "We expect value of " + strValue + " to be set");
+		same($('#test').jecValue(), strValue, "We expect value of " + strValue + " to be set");
 		
 		$('#test').jecValue(intValue);
-		ok($('#test').jecValue() === intValue.toString(), "We expect value of " + intValue + " to be set");
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect value of " + intValue + " to be set");
 		
 		$('#test').jecValue({});
-		ok($('#test').jecValue() === intValue.toString(), "We expect object value to be ignored and value of " + intValue + " be still set");
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect object value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue([]);
-		ok($('#test').jecValue() === intValue.toString(), "We expect array value to be ignored and value of " + intValue + " be still set");
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect array value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue(null);
-		ok($('#test').jecValue() === intValue.toString(), "We expect null value to be ignored and value of " + intValue + " be still set");
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect null value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecValue(undefined);
-		ok($('#test').jecValue() === intValue.toString(), "We expect undefined value to be ignored and value of " + intValue + " be still set");
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect undefined value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecKill();
 	});
