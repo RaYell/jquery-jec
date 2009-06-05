@@ -50,7 +50,7 @@
 			return typeof(number) === 'number' && Math.ceil(number) === Math.floor(number);
 		},
 		
-		// register indexOf method on browsers that doesn't support it (IE)
+		// register indexOf method on browsers that doesn't support it
 		registerIndexOf: function () {
 			if (Array.prototype.indexOf === undefined) {
 				Array.prototype.indexOf = function (object) {
@@ -99,7 +99,8 @@
 		// sets editable option to the value of currently selected option
 		setEditableOption: function (elem) {
 			var options = $.jecCore.options['id' + elem.attr('jec')];
-			elem.children('option.' + options.pluginClass).val(elem.children('option:selected').text());
+			elem.children('option.' + options.pluginClass).
+                val(elem.children('option:selected').text());
 		},
 		
 		// find unique identifier
@@ -164,7 +165,7 @@
 					for (validKey in options.acceptedRanges) {
 						// the range can be either a min,max tuple or exact value
 						if ((options.acceptedRanges[validKey].exact !== undefined &&
-								options.acceptedRanges[validKey].exact === keyCode) ||
+                                options.acceptedRanges[validKey].exact === keyCode) ||
 							(options.acceptedRanges[validKey].min !== undefined &&
 								options.acceptedRanges[validKey].max !== undefined &&
 								keyCode >= options.acceptedRanges[validKey].min &&
@@ -202,14 +203,16 @@
 					// add passed CSS classes
 					if (typeof(options.classes) === 'string') {
 						editableOption.addClass(options.classes);
-					} else if (typeof(options.classes) === 'object' && $.jecCore.isArray(options.classes)) {
+					} else if (typeof(options.classes) === 'object' && 
+                        $.jecCore.isArray(options.classes)) {
 						for (i = 0; i < options.classes.length; i += 1) {
 							editableOption.addClass(options.classes[i]);
 						}
 					}
 	
 					// add passed CSS styles
-					if (typeof(options.styles) === 'object' && !($.jecCore.isArray(options.styles))) {
+					if (typeof(options.styles) === 'object' && 
+                        !($.jecCore.isArray(options.styles))) {
 						for (key in options.styles) {
 							if (options.styles[key] !== null && options.styles[key] !== undefined) {
 								editableOption.css(key, options.styles[key]);
@@ -270,12 +273,14 @@
 								}
 								break;
 							case 'classes':
-								if (typeof (settings[key]) === 'string' || $.jecCore.isArray(settings[key])) {
+								if (typeof (settings[key]) === 'string' || 
+                                    $.jecCore.isArray(settings[key])) {
 									$.jecCore.options[id][key] = settings[key];
 								}
 								break;
 							case 'styles':
-								if (typeof (settings[key]) === 'object' && !($.jecCore.isArray(settings[key]))) {
+								if (typeof (settings[key]) === 'object' && 
+                                    !($.jecCore.isArray(settings[key]))) {
 									$.jecCore.options[id][key] = settings[key];
 								}
 								break;
