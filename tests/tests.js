@@ -405,32 +405,34 @@ $(document).ready(function () {
 		$('#test').jecPref('position', null);
 		ok($('#test').jecPref('position') === 1, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: classes', function () {
-		var className = 'myClass', otherClassName = 'mySecClass';
+		var className = 'myClass', classArr = [className];
 		$('#test').jec();
-		$('#test').jecPref('classes', [className]);
-		same($('#test').jecPref('classes'), [className], 
+		$('#test').jecPref('classes', classArr);
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect array preference value to be handled');
 		$('#test').jecPref('classes', className);
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect string preference value to be handled');
 		$('#test').jecPref('classes', 1);
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect number preference value to be ignored');
 		$('#test').jecPref('classes', {});
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect object preference value to be ignored');
 		$('#test').jecPref('classes', false);
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect boolean preference value to be ignored');
 		$('#test').jecPref('classes', undefined);
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect undefined preference value to be ignored');
 		$('#test').jecPref('classes', null);
-		ok($('#test').jecPref('classes') === className, 
+		same($('#test').jecPref('classes'), classArr, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: styles', function () {
@@ -457,6 +459,7 @@ $(document).ready(function () {
 		$('#test').jecPref('styles', null);
 		ok($('#test').jecPref('styles') === styles, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: pluginClass', function () {
@@ -483,6 +486,7 @@ $(document).ready(function () {
 		$('#test').jecPref('pluginClass', null);
 		ok($('#test').jecPref('pluginClass') === className, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: focusOnNewOption', function () {
@@ -508,6 +512,7 @@ $(document).ready(function () {
 		$('#test').jecPref('focusOnNewOption', null);
 		ok($('#test').jecPref('focusOnNewOption') === true, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: useExistingOptions', function () {
@@ -533,6 +538,7 @@ $(document).ready(function () {
 		$('#test').jecPref('useExistingOptions', null);
 		ok($('#test').jecPref('useExistingOptions') === true, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: ignoredKeys', function () {
@@ -559,6 +565,7 @@ $(document).ready(function () {
 		$('#test').jecPref('ignoredKeys', null);
 		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	test('Setting preference: acceptedRanges', function () {
@@ -588,6 +595,7 @@ $(document).ready(function () {
 		$('#test').jecPref('acceptedRanges', null);
 		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect null preference value to be ignored');
+		$('#test').jecKill();
 	});
 	
 	$('#test').hide();

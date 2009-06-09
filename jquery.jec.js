@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.0.1
+ * jQuery jEC (jQuery Editable Combobox) 1.1.0
  * http://code.google.com/p/jquery-jec
  * http://plugins.jquery.com/project/jEC
  *
@@ -151,7 +151,8 @@
 			if (keyCode !== 9) {
 				// handle special keys
 				for (i = 0; i < $.jecCore.specialKeys.length; i += 1) {
-					if (keyCode === $.jecCore.specialKeys[i] && keyCode === $.jecCore.lastKeyCode) {
+					if (keyCode === $.jecCore.specialKeys[i] && 
+						keyCode === $.jecCore.lastKeyCode) {
 						return;
 					}
 				}
@@ -259,27 +260,102 @@
 					switch (name) {
 					case 'position':
 						if ($.jecCore.isInteger(value)) {
+							// update combobox
+							if (update && $.jecCore.options[id][name] !== value) {
+								temp = $('select[jec=' + id + '] option.' + 
+									$.jecCore.options[id][name]);
+								if ($('select[jec=' + id + ']').children().eq(value) !== 0) {
+									$('select[jec=' + id + ']').children().eq(value).before(temp);
+								} else {
+									$('select[jec=' + id + ']').append(temp);
+								}
+							}
+							
+							// save new value
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'pluginClass':
 						if (typeof(value) === 'string') {
+							// update combobox
+							if (update) {
+								$('select[jec=' + id + '] option.' + $.jecCore.options[id][name]).
+									removeClass($.jecCore.options[id][name]).addClass(value);
+							}
+							
+							// save new value
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'classes':
-						if (typeof(value) === 'string' || $.jecCore.isArray(value)) {
+						if (typeof(value) === 'string') {
+							value = [value];
+						}
+						if ($.jecCore.isArray(value)) {
+							// update combobox
+							if (update) {
+								// remove old classes
+								for (i = 0; i < $.jecCore.options[id][name].length; i += 1) {
+									$('select[jec=' + id + ']').
+										removeClass($.jecCore.options[id][name][i]);
+								}
+								
+								// add new classes
+								for (i = 0; i < value.length; i += 1) {
+									$('select[jec=' + id + ']').addClass(value[i]);
+								}
+							}
+							
+							// save new value
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'styles':
 						if (typeof(value) === 'object' && !($.jecCore.isArray(value))) {
+							// update combobox
+							if (update) {
+								// remove old styles
+								for (temp in $.jecCore.options[id][name]) {
+									if ($.jecCore.options[id][name][temp] !== null && 
+										$.jecCore.options[id][name][temp] !== undefined) {
+										$('select[jec=' + id + '] option.' + 
+											$.jecCore.options[id].pluginClass).css(temp, '');
+									}
+								}
+								
+								// add new styles
+								for (temp in value) {
+									if (value[temp] !== null && value[temp] !== undefined) {
+										$('select[jec=' + id + '] option.' + 
+											$.jecCore.options[id].pluginClass).
+											css(temp, value[temp]);
+									}
+								}
+							}
+							
+							// save new value
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'focusOnNewOption':
+						if (typeof(value) === 'boolean') {
+							$.jecCore.options[id][name] = value;
+						}
+						break;
 					case 'useExistingOptions':
 						if (typeof(value) === 'boolean') {
+							// update combobox
+							if (update && value !== $.jecCore.options[id][name]) {
+								temp = $('select[jec=' + id + ']');
+								if (value) {
+									$.jecCore.setEditableOption(temp);
+									temp.bind('change', $.jecCore.jecChange);
+								} else {
+									temp.unbind('change', $.jecCore.jecChange);
+								}
+							}
+							
+							// save new value
 							$.jecCore.options[id][name] = value;
 						}
 						break;
@@ -291,6 +367,8 @@
 									temp[temp.length] = value[i];
 								}
 							}
+							
+							// save new value
 							$.jecCore.options[id][name] = temp;
 						}
 						break;
@@ -308,6 +386,8 @@
 									temp[temp.length] = value[i];
 								}
 							}
+							
+							// save new value
 							$.jecCore.options[id][name] = temp;
 						}
 						break;
