@@ -3,9 +3,7 @@ $(document).ready(function () {
 	// hack for html validator (ol cannot be empty
 	$('li').remove();
 	
-	var strValue = 'myString', intValue = 123, testValue = 'myTestValue', defaults;
-	
-	defaults = {
+	var defaults = {
 		position: 0,
 		classes: '',
 		styles: {},
@@ -301,7 +299,7 @@ $(document).ready(function () {
 	});
 	
 	module("kill");
-	test("Editable combobox activation", function () {
+	test("Editable combobox destruction", function () {
 		$('#test').jec();
 		$('#test').jecKill();
 		ok($('#test option').length === 3 && $('#test').attr('jec') === undefined, 
@@ -310,6 +308,7 @@ $(document).ready(function () {
 	
 	module("value");
 	test("Getting value", function () {
+		var testValue = 'myTestValue';
 		$('#test').jec();
 		$('#test option.jecEditableOption').text(testValue).val(testValue);
 		same($('#test').jecValue(), testValue, 
@@ -318,9 +317,15 @@ $(document).ready(function () {
 	});
 	
 	test("Setting value", function () {
+		var strValue = 'myString', intValue = 123, floatValue = 1.2, defaults;
+		
 		$('#test').jec();
 		$('#test').jecValue(strValue);
 		same($('#test').jecValue(), strValue, "We expect value of " + strValue + " to be set");
+		
+		$('#test').jecValue(floatValue);
+		same($('#test').jecValue(), floatValue.toString(), 
+            "We expect value of " + floatValue + " to be set");
 		
 		$('#test').jecValue(intValue);
 		same($('#test').jecValue(), intValue.toString(), 
@@ -341,6 +346,10 @@ $(document).ready(function () {
 		$('#test').jecValue(undefined);
 		same($('#test').jecValue(), intValue.toString(), 
             "We expect undefined value to be ignored and value of " + intValue + " be still set");
+            
+        $('#test').jecValue(true);
+		same($('#test').jecValue(), intValue.toString(), 
+            "We expect boolean value to be ignored and value of " + intValue + " be still set");
 		
 		$('#test').jecKill();
 	});
