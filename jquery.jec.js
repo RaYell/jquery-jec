@@ -15,7 +15,7 @@
 (function ($) {
 
 	// jEC Core class
-	$.jecCore = (function () {
+	$.jEC = (function () {
 		// variables declaration
 		var defaults, options, values, specialKeys, lastKeyCode, Validators, Hacks, EventHandlers,
 			Combobox;
@@ -552,7 +552,7 @@
 			};
 		}());
 		
-		// jecCore public members
+		// jEC public members
 		return {
 			init	: Combobox.init,
 			enable	: Combobox.enable,
@@ -565,12 +565,12 @@
 
  	// register jQuery functions
 	$.fn.extend({
-		jec			: $.jecCore.init,
-		jecOn		: $.jecCore.enable,
-		jecOff		: $.jecCore.disable,
-		jecKill		: $.jecCore.destroy,
-		jecValue	: $.jecCore.value,
-		jecPref		: $.jecCore.pref
+		jec			: $.jEC.init,
+		jecOn		: $.jEC.enable,
+		jecOff		: $.jEC.disable,
+		jecKill		: $.jEC.destroy,
+		jecValue	: $.jEC.value,
+		jecPref		: $.jEC.pref
 	});
 
 }(jQuery));
