@@ -53,8 +53,8 @@
 			
 			// check if object is an array
 			array = function (object) {
-				return object !== null && typeof(object) === 'object' && 
-					typeof(object.length) === 'number' && 
+				return object !== null && typeof(object) === 'object' &&
+					typeof(object.length) === 'number' &&
 					typeof(object.splice) === 'function' &&
 					!(object.propertyIsEnumerable('length'));
 			};
@@ -79,7 +79,6 @@
 			registerIndexOf = function () {
 				if (Array.prototype.indexOf === undefined) {
 					Array.prototype.indexOf = function (object) {
-		
 						for (var i = 0; i < this.length; i += 1) {
 							if (this[i] === object) {
 								return i;
@@ -132,11 +131,11 @@
 			// in keydown event in order to work in IE)
 			keyDown = function (event) {
 				var keyCode, option, value, opt;
-		
+				
 				opt = options[$(this).attr('jec')];
 				keyCode = getKeyCode(event);
 				lastKeyCode = keyCode;
-	
+				
 				switch (keyCode) {
 				case 8:	// backspace
 				case 46: // delete
@@ -156,24 +155,24 @@
 			// about pressed keys)
 			keyPress = function (event) {
 				var keyCode, keyValue, i, option, value, validKey, opt;
-		
+				
 				opt = options[$(this).attr('jec')];
 				keyCode = getKeyCode(event);
-	
+				
 				if (keyCode !== 9) {
 					// handle special keys
 					for (i = 0; i < specialKeys.length; i += 1) {
-						if (keyCode === specialKeys[i] && 
+						if (keyCode === specialKeys[i] &&
 							keyCode === lastKeyCode) {
 							return;
 						}
 					}
-	
+					
 					// don't handle ignored keys
 					if (opt.ignoredKeys.indexOf(keyCode) === -1) {
 						// remove selection from all options
 						$(this).children(':selected').removeAttr('selected');
-	
+						
 						keyValue = '';
 						// iterate through valid ranges
 						for (validKey in opt.acceptedRanges) {
@@ -187,7 +186,7 @@
 								keyValue = String.fromCharCode(keyCode);
 							}
 						}
-	
+						
 						// add key value to proper option tag
 						option = $(this).children('option.' + opt.pluginClass);
 						value = option.val() + keyValue;
@@ -237,19 +236,19 @@
 					if (elem.children(opt.pluginClass).length === 0) {
 						editableOption = $(document.createElement('option'));
 						editableOption.addClass(opt.pluginClass);
-		
+						
 						// add passed CSS classes
 						if (typeof(opt.classes) === 'string') {
 							editableOption.addClass(opt.classes);
-						} else if (typeof(opt.classes) === 'object' && 
+						} else if (typeof(opt.classes) === 'object' &&
 							Validators.array(opt.classes)) {
 							for (i = 0; i < opt.classes.length; i += 1) {
 								editableOption.addClass(opt.classes[i]);
 							}
 						}
-		
+						
 						// add passed CSS styles
-						if (typeof(opt.styles) === 'object' && 
+						if (typeof(opt.styles) === 'object' &&
 							!(Validators.array(opt.styles))) {
 							for (key in opt.styles) {
 								if (opt.styles[key] !== null && opt.styles[key] !== undefined) {
@@ -257,7 +256,7 @@
 								}
 							}
 						}
-		
+						
 						// insert created element on correct position
 						if (elem.children().eq(opt.position).length !== 0) {
 							elem.children().eq(opt.position).before(editableOption);
@@ -270,10 +269,10 @@
 							editableOption.attr('selected', 'selected');
 						}
 					}
-		
+					
 					elem.bind('keydown', EventHandlers.keyDown);
 					elem.bind('keypress', EventHandlers.keyPress);
-		
+					
 					// handles 'useExistingOptions = true' behavior
 					if (opt.useExistingOptions) {
 						Combobox.setEditableOption(elem);
@@ -414,7 +413,7 @@
 										((value[i].min !== undefined && value[i].max !== undefined &&
 											Validators.int(value[i].min) &&
 											Validators.int(value[i].max)) ||
-										(value[i].exact !== undefined && 
+										(value[i].exact !== undefined &&
 											Validators.int(value[i].exact)))) {
 										temp[temp.length] = value[i];
 									}
@@ -436,15 +435,14 @@
 			};
 			
 			// create editable combobox
-			init = function (settings) {	
+			init = function (settings) {
 				Hacks.registerIndexOf();
 				
 				return $(this).filter('select:not([jec])').each(function () {
-		
 					var random, id, key;
 					random = generateId();
 					id = 'id' + random;
-				
+					
 					// override passed default options
 					options[id] = Hacks.clone(defaults);
 					
@@ -458,7 +456,7 @@
 					
 					// add unique id
 					$(this).attr('jec', id);
-		
+					
 					setup($(this));
 				});
 			};
