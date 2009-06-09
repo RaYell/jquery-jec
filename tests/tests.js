@@ -535,29 +535,29 @@ $(document).ready(function () {
 			'We expect null preference value to be ignored');
 	});
 	
-	test('Setting preference: useExistingOptions', function () {
+	test('Setting preference: ignoredKeys', function () {
 		var range = [1, 2, 3];
 		$('#test').jec();
 		$('#test').jecPref('ignoredKeys', range);
 		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect array preference value to be handled');
 		$('#test').jecPref('ignoredKeys', true);
-		ok($('#test').jecPref('ignoredKeys') == range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect boolean preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', 'true');
-		ok($('#test').jecPref('ignoredKeys') === range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect string preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', {});
-		ok($('#test').jecPref('ignoredKeys') === range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect object preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', 1);
-		ok($('#test').jecPref('ignoredKeys') === range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect number preference value to be range');
 		$('#test').jecPref('ignoredKeys', undefined);
-		ok($('#test').jecPref('ignoredKeys') === range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect undefined preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', null);
-		ok($('#test').jecPref('ignoredKeys') === range, 
+		same($('#test').jecPref('ignoredKeys'), range, 
 			'We expect null preference value to be ignored');
 	});
 	
@@ -571,22 +571,22 @@ $(document).ready(function () {
 		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect array preference value to be handled');
 		$('#test').jecPref('acceptedRanges', true);
-		ok($('#test').jecPref('acceptedRanges') == range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect boolean preference value to be ignored');
 		$('#test').jecPref('acceptedRanges', 'true');
-		ok($('#test').jecPref('acceptedRanges') === range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect string preference value to be ignored');
 		$('#test').jecPref('acceptedRanges', {});
-		ok($('#test').jecPref('acceptedRanges') === range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect object preference value to be ignored');
 		$('#test').jecPref('acceptedRanges', 1);
-		ok($('#test').jecPref('acceptedRanges') === range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect number preference value to be range');
 		$('#test').jecPref('acceptedRanges', undefined);
-		ok($('#test').jecPref('acceptedRanges') === range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect undefined preference value to be ignored');
 		$('#test').jecPref('acceptedRanges', null);
-		ok($('#test').jecPref('acceptedRanges') === range, 
+		same($('#test').jecPref('acceptedRanges'), range, 
 			'We expect null preference value to be ignored');
 	});
 	

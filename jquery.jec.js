@@ -247,13 +247,14 @@
 		
 		// set parameter value
 		setParam: function (id, name, value, update) {
-			if (typeof (update) !== 'boolean') {
+			if (typeof(update) !== 'boolean') {
 				update = false;
 			}
 			
 			if (id !== undefined && id !== null && name !== undefined && name !== null &&
 				value !== undefined && value !== null) {
-				var options = $.jecCore.options[id];
+				var options, i, temp;
+				options = $.jecCore.options[id];
 				if (options !== undefined) {
 					switch (name) {
 					case 'position':
@@ -262,32 +263,52 @@
 						}
 						break;
 					case 'pluginClass':
-						if (typeof (value) === 'string') {
+						if (typeof(value) === 'string') {
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'classes':
-						if (typeof (value) === 'string' || 
-							$.jecCore.isArray(value)) {
+						if (typeof(value) === 'string' || $.jecCore.isArray(value)) {
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'styles':
-						if (typeof (value) === 'object' && 
-							!($.jecCore.isArray(value))) {
+						if (typeof(value) === 'object' && !($.jecCore.isArray(value))) {
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'focusOnNewOption':
 					case 'useExistingOptions':
-						if (typeof (value) === 'boolean') {
+						if (typeof(value) === 'boolean') {
 							$.jecCore.options[id][name] = value;
 						}
 						break;
 					case 'ignoredKeys':
+						if ($.jecCore.isArray(value)) {
+							temp = [];
+							for (i = 0; i < value.length; i += 1) {
+								if ($.jecCore.isInteger(value[i])) {
+									temp[temp.length] = value[i];
+								}
+							}
+							$.jecCore.options[id][name] = temp;
+						}
+						break;
 					case 'acceptedRanges':
 						if ($.jecCore.isArray(value)) {
-							$.jecCore.options[id][name] = value;
+							temp = [];
+							for (i = 0; i < value.length; i += 1) {
+								if (value[i] !== null && typeof(value[i]) === 'object' &&
+									!($.jecCore.isArray(value[i])) &&
+									((value[i].min !== undefined && value[i].max !== undefined &&
+										$.jecCore.isInteger(value[i].min) &&
+										$.jecCore.isInteger(value[i].max)) ||
+									(value[i].exact !== undefined && 
+										$.jecCore.isInteger(value[i].exact)))) {
+									temp[temp.length] = value[i];
+								}
+							}
+							$.jecCore.options[id][name] = temp;
 						}
 						break;
 					}
