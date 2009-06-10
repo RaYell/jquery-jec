@@ -18,7 +18,7 @@
 	$.jEC = (function () {
 		// variables declaration
 		var defaults, options, values, specialKeys, lastKeyCode, Validators, Hacks, EventHandlers,
-			Combobox;
+			Combobox, clone, typeOf;
 		
 		// default options
 		defaults = {
@@ -47,33 +47,76 @@
 		// last presses key's code
 		lastKeyCode = null;
 		
+		// returns type of value
+		typeOf = function (value) {
+			var type = typeof value;
+			if (type === 'object') {
+				if (value === null) {
+					type = 'null';
+				} else if (typeof value.length === 'number' &&
+					typeof value.splice === 'function' &&
+					!(value.propertyIsEnumerable('length'))) {
+					type = 'array';
+				}
+			}
+			return type;
+		};
+		
+		// clone object
+		clone = function (object) {
+			if (typeOf(object) !== 'object') {
+				return object;
+			}
+			
+			var key, temp = new object.constructor();
+			
+			for (key in object) {
+				if (key !== undefined) {
+					temp[key] = clone(object[key]);
+				}
+			}
+			
+			return temp;
+		};
+		
 		// validator methods
 		(Validators = function () {
-			var array, int;
-			
-			// check if object is an array
-			array = function (object) {
-				return object !== null && typeof(object) === 'object' &&
-					typeof(object.length) === 'number' &&
-					typeof(object.splice) === 'function' &&
-					!(object.propertyIsEnumerable('length'));
+			var int, empty;
+			// check if value is empty (null, undefined, empty array or object)
+			empty = function (value) {
+				switch (typeOf(value)) {
+				case 'object':
+					var key;
+					for (key in value) {
+						if (value[key] !== undefined) {
+							return false;
+						}
+					}
+					break;
+				case 'array':
+					return value.length === 0;
+				case 'undefined':
+				case 'null':
+					return true;
+				}
+				return false;
 			};
 			
 			// check if value is an integer
-			int = function (object) {
-				return typeof(object) === 'number' && Math.ceil(object) === Math.floor(object);
+			int = function (value) {
+				return typeOf(value) === 'number' && Math.ceil(value) === Math.floor(value);
 			};
 			
 			// Validators public members
 			return {
-				array	: array,
-				int		: int
+				int		: int,
+				empty	: empty
 			};
 		}());
 		
 		// browser hacks
 		(Hacks = function () {
-			var registerIndexOf, clone;
+			var registerIndexOf;
 			
 			// register indexOf method on browsers that doesn't support it
 			registerIndexOf = function () {
@@ -89,27 +132,9 @@
 				}
 			};
 			
-			// clone object
-			clone = function (object) {
-				if (object === null || typeof(object) !== 'object') {
-					return object;
-				}
-				
-				var key, temp = new object.constructor();
-				
-				for (key in object) {
-					if (key !== undefined) {
-						temp[key] = clone(object[key]);
-					}
-				}
-				
-				return temp;
-			};
-			
 			// Hacks public members
 			return {
-				registerIndexOf	: registerIndexOf,
-				clone			: clone
+				registerIndexOf	: registerIndexOf
 			};
 		}());
 		
@@ -238,20 +263,18 @@
 						editableOption.addClass(opt.pluginClass);
 						
 						// add passed CSS classes
-						if (typeof(opt.classes) === 'string') {
+						if (typeOf(opt.classes) === 'string') {
 							editableOption.addClass(opt.classes);
-						} else if (typeof(opt.classes) === 'object' &&
-							Validators.array(opt.classes)) {
+						} else if (typeOf(opt.classes) === 'array') {
 							for (i = 0; i < opt.classes.length; i += 1) {
 								editableOption.addClass(opt.classes[i]);
 							}
 						}
 						
 						// add passed CSS styles
-						if (typeof(opt.styles) === 'object' &&
-							!(Validators.array(opt.styles))) {
+						if (typeOf(opt.styles) === 'object') {
 							for (key in opt.styles) {
-								if (opt.styles[key] !== null && opt.styles[key] !== undefined) {
+								if (!(Validators.empty(opt.styles[key]))) {
 									editableOption.css(key, opt.styles[key]);
 								}
 							}
@@ -283,12 +306,12 @@
 			
 			// set parameter value
 			setParam = function (id, name, value, update) {
-				if (typeof(update) !== 'boolean') {
+				if (typeOf(update) !== 'boolean') {
 					update = false;
 				}
 				
-				if (id !== undefined && id !== null && name !== undefined && name !== null &&
-					value !== undefined && value !== null) {
+				if (!(Validators.empty(id)) && !(Validators.empty(name)) && 
+					!(Validators.empty(value))) {
 					var opt, i, temp;
 					opt = options[id];
 					if (opt !== undefined) {
@@ -311,7 +334,7 @@
 							}
 							break;
 						case 'pluginClass':
-							if (typeof(value) === 'string') {
+							if (typeOf(value) === 'string') {
 								// update combobox
 								if (update) {
 									$('select[jec=' + id + '] option.' + opt[name]).
@@ -323,10 +346,10 @@
 							}
 							break;
 						case 'classes':
-							if (typeof(value) === 'string') {
+							if (typeOf(value) === 'string') {
 								value = [value];
 							}
-							if (Validators.array(value)) {
+							if (typeOf(value) === 'array') {
 								// update combobox
 								if (update) {
 									// remove old classes
@@ -345,13 +368,12 @@
 							}
 							break;
 						case 'styles':
-							if (typeof(value) === 'object' && !(Validators.array(value))) {
+							if (typeOf(value) === 'object') {
 								// update combobox
 								if (update) {
 									// remove old styles
 									for (temp in opt[name]) {
-										if (opt[name][temp] !== null && 
-											opt[name][temp] !== undefined) {
+										if (!(Validators.empty(opt[name][temp]))) {
 											$('select[jec=' + id + '] option.' + opt.pluginClass).
 												css(temp, '');
 										}
@@ -359,7 +381,7 @@
 									
 									// add new styles
 									for (temp in value) {
-										if (value[temp] !== null && value[temp] !== undefined) {
+										if (!(Validators.empty(value[temp]))) {
 											$('select[jec=' + id + '] option.' + opt.pluginClass).
 												css(temp, value[temp]);
 										}
@@ -371,12 +393,12 @@
 							}
 							break;
 						case 'focusOnNewOption':
-							if (typeof(value) === 'boolean') {
+							if (typeOf(value) === 'boolean') {
 								opt[name] = value;
 							}
 							break;
 						case 'useExistingOptions':
-							if (typeof(value) === 'boolean') {
+							if (typeOf(value) === 'boolean') {
 								// update combobox
 								if (update && value !== opt[name]) {
 									temp = $('select[jec=' + id + ']');
@@ -393,7 +415,7 @@
 							}
 							break;
 						case 'ignoredKeys':
-							if (Validators.array(value)) {
+							if (typeOf(value) === 'array') {
 								temp = [];
 								for (i = 0; i < value.length; i += 1) {
 									if (Validators.int(value[i])) {
@@ -406,16 +428,15 @@
 							}
 							break;
 						case 'acceptedRanges':
-							if (Validators.array(value)) {
+							if (typeOf(value) === 'array') {
 								temp = [];
 								for (i = 0; i < value.length; i += 1) {
-									if (value[i] !== null && typeof(value[i]) === 'object' &&
-										!(Validators.array(value[i])) &&
-										((value[i].min !== undefined && 
-											value[i].max !== undefined &&
+									if (typeOf(value[i]) === 'object' &&
+										((!(Validators.empty(value[i].min)) && 
+											!(Validators.empty(value[i].max)) &&
 											Validators.int(value[i].min) &&
 											Validators.int(value[i].max)) ||
-										(value[i].exact !== undefined &&
+										(!(Validators.empty(value[i].exact)) &&
 											Validators.int(value[i].exact)))) {
 										temp[temp.length] = value[i];
 									}
@@ -446,9 +467,9 @@
 					id = 'id' + generateId();
 					
 					// override passed default options
-					options[id] = Hacks.clone(defaults);
+					options[id] = clone(defaults);
 					
-					if (settings !== null && typeof(settings) === 'object') {
+					if (typeOf(settings) === 'object') {
 						for (key in settings) {
 							if (settings[key] !== undefined) {
 								setParam(id, key, settings[key]);
@@ -496,7 +517,7 @@
 					$(this).unbind('keydown', EventHandlers.keyDown);
 					$(this).unbind('keypress', EventHandlers.keyPress);
 					
-					if (opt !== null && opt.useExistingOptions) {
+					if (opt.useExistingOptions) {
 						$(this).unbind('change', EventHandlers.change);
 					}
 				});
@@ -506,16 +527,16 @@
 			value = function (value, setFocus) {
 				if ($(this).filter(':editable').length > 0) {
 					var opt = options[$(this).attr('jec')];
-					if (value === undefined || value === null) {
+					if (Validators.empty(value)) {
 						// get value
 						return $(this).filter('select').children('option.' + opt.pluginClass).
 							val();
-					} else if (typeof(value) === 'string' || typeof(value) === 'number') {
+					} else if (typeOf(value) === 'string' || typeOf(value) === 'number') {
 						// set value
 						return $(this).filter('select').each(function () {
 							var option = $(this).children('option.' + opt.pluginClass);
 							option.val(value).text(value);
-							if (typeof(setFocus) !== 'boolean' || setFocus) {
+							if (typeOf(setFocus) !== 'boolean' || setFocus) {
 								option.attr('selected', 'selected');
 							}
 						});
@@ -526,8 +547,8 @@
 			// gets or sets editable option's preference
 			pref = function (name, value) {
 				if ($(this).filter(':editable').length > 0) {
-					if (name !== undefined && name !== null) {
-						if (value === undefined || value === null) {
+					if (!(Validators.empty(name))) {
+						if (Validators.empty(value)) {
 							// get preference
 							return options[$(this).attr('jec')][name];
 						} else {
