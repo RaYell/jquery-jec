@@ -299,7 +299,8 @@
 								if (update && opt[name] !== value) {
 									temp = $('select[jec=' + id + '] option.' + opt[name]);
 									if ($('select[jec=' + id + ']').children().eq(value) !== 0) {
-										$('select[jec=' + id + ']').children().eq(value).before(temp);
+										$('select[jec=' + id + ']').children().eq(value).
+											before(temp);
 									} else {
 										$('select[jec=' + id + ']').append(temp);
 									}
@@ -330,8 +331,7 @@
 								if (update) {
 									// remove old classes
 									for (i = 0; i < opt[name].length; i += 1) {
-										$('select[jec=' + id + ']').
-											removeClass(opt[name][i]);
+										$('select[jec=' + id + ']').removeClass(opt[name][i]);
 									}
 									
 									// add new classes
@@ -350,7 +350,8 @@
 								if (update) {
 									// remove old styles
 									for (temp in opt[name]) {
-										if (opt[name][temp] !== null && opt[name][temp] !== undefined) {
+										if (opt[name][temp] !== null && 
+											opt[name][temp] !== undefined) {
 											$('select[jec=' + id + '] option.' + opt.pluginClass).
 												css(temp, '');
 										}
@@ -410,7 +411,8 @@
 								for (i = 0; i < value.length; i += 1) {
 									if (value[i] !== null && typeof(value[i]) === 'object' &&
 										!(Validators.array(value[i])) &&
-										((value[i].min !== undefined && value[i].max !== undefined &&
+										((value[i].min !== undefined && 
+											value[i].max !== undefined &&
 											Validators.int(value[i].min) &&
 											Validators.int(value[i].max)) ||
 										(value[i].exact !== undefined &&
@@ -431,17 +433,17 @@
 			// sets editable option to the value of currently selected option
 			setEditableOption = function (elem) {
 				var opt = options[elem.attr('jec')];
-				elem.children('option.' + opt.pluginClass).val(elem.children('option:selected').text());
+				elem.children('option.' + opt.pluginClass).
+					val(elem.children('option:selected').text());
 			};
 			
 			// create editable combobox
 			init = function (settings) {
 				Hacks.registerIndexOf();
 				
-				return $(this).filter('select:not([jec])').each(function () {
-					var random, id, key;
-					random = generateId();
-					id = 'id' + random;
+				return $(this).filter(':uneditable').each(function () {
+					var id, key;
+					id = 'id' + generateId();
 					
 					// override passed default options
 					options[id] = Hacks.clone(defaults);
@@ -463,7 +465,7 @@
 			
 			// destroys editable combobox
 			destroy = function () {
-				return $(this).filter('select[jec]').each(function () {
+				return $(this).filter(':editable').each(function () {
 					$(this).jecOff();
 					$(this).removeAttr('jec');
 				});
@@ -471,7 +473,7 @@
 			
 			// enable editablecombobox
 			enable = function () {
-				return $(this).filter('select[jec]').each(function () {
+				return $(this).filter(':editable').each(function () {
 					setup($(this));
 					var value = values[$(this).attr('jec')];
 					
@@ -483,7 +485,7 @@
 			
 			// disable editable combobox
 			disable = function () {
-				return $(this).filter('select[jec]').each(function () {
+				return $(this).filter(':editable').each(function () {
 					var id, opt;
 					id = $(this).attr('jec');
 					opt = options[id];
@@ -502,7 +504,7 @@
 			
 			// gets or sets editable option's value
 			value = function (value, setFocus) {
-				if ($(this).filter('select[jec]').length > 0) {
+				if ($(this).filter(':editable').length > 0) {
 					var opt = options[$(this).attr('jec')];
 					if (value === undefined || value === null) {
 						// get value
@@ -523,7 +525,7 @@
 			
 			// gets or sets editable option's preference
 			pref = function (name, value) {
-				if ($(this).filter('select[jec]').length > 0) {
+				if ($(this).filter(':editable').length > 0) {
 					if (name !== undefined && name !== null) {
 						if (value === undefined || value === null) {
 							// get preference
@@ -561,7 +563,7 @@
 		};
 	}());
 
- 	// register jQuery functions
+ 	// register functions
 	$.fn.extend({
 		jec			: $.jEC.init,
 		jecOn		: $.jEC.enable,
@@ -569,6 +571,16 @@
 		jecKill		: $.jEC.destroy,
 		jecValue	: $.jEC.value,
 		jecPref		: $.jEC.pref
+	});
+	
+	// register selectors
+	$.extend($.expr[':'], {
+		editable	: function (a) {
+			return $(a).filter('select[jec]').length !== 0;
+		},
+		uneditable	: function (a) {
+			return $(a).filter('select:not([jec])').length !== 0;
+		}
 	});
 
 }(jQuery));
