@@ -235,7 +235,7 @@
 		
 		// Combobox
 		(Combobox = function () {
-			var generateId, setup, setParam, setEditableOption, init, destroy, enable, disable,
+			var Parameters, generateId, setup, setEditableOption, init, destroy, enable, disable,
 				value, pref;
 			
 			// find unique identifier
@@ -248,6 +248,209 @@
 					}
 				}
 			};
+			
+			// validates and set combobox parameters
+			(Parameters = function () {
+				var set, setPosition, setPluginClass, setClasses, setStyles, setFocusOnNewOption,
+					setUseExistingOptions, setIgnoredKeys, setAcceptedRanges;
+				
+				// set position
+				setPosition = function (opt, id, value, update) {
+					if (Validators.int(value)) {
+						// update combobox
+						if (update && opt.position !== value) {
+							var temp = $('select[jec=' + id + '] option.' + opt.pluginClass);
+							if ($('select[jec=' + id + ']').children().eq(value) !== 0) {
+								$('select[jec=' + id + ']').children().eq(value).
+									before(temp);
+							} else {
+								$('select[jec=' + id + ']').append(temp);
+							}
+						}
+						
+						// save new value
+						opt.position = value;
+					}
+				};
+				
+				// set plugin class
+				setPluginClass = function (opt, id, value, update) {
+					if (typeOf(value) === 'string') {
+						// update combobox
+						if (update) {
+							$('select[jec=' + id + '] option.' + opt.pluginClass).
+								removeClass(opt.pluginClass).addClass(value);
+						}
+						
+						// save new value
+						opt.pluginClass = value;
+					}
+				};
+				
+				// set classes
+				setClasses = function (opt, id, value, update) {
+					// convert string value to array
+					if (typeOf(value) === 'string') {
+						value = [value];
+					}
+					
+					if (typeOf(value) === 'array') {
+						// update combobox
+						if (update) {
+							var i;
+							
+							// remove old classes
+							for (i = 0; i < opt.classes.length; i += 1) {
+								$('select[jec=' + id + ']').removeClass(opt.classes[i]);
+							}
+							
+							// add new classes
+							for (i = 0; i < value.length; i += 1) {
+								$('select[jec=' + id + ']').addClass(value[i]);
+							}
+						}
+						
+						// save new value
+						opt.classes = value;
+					}
+				};
+				
+				// set styles
+				setStyles = function (opt, id, value, update) {
+					if (typeOf(value) === 'object') {
+						// update combobox
+						if (update) {
+							var style;
+							
+							// remove old styles
+							for (style in opt.styles) {
+								if (!(Validators.empty(opt.styles[style]))) {
+									$('select[jec=' + id + '] option.' + opt.pluginClass).
+										css(style, '');
+								}
+							}
+							
+							// add new styles
+							for (style in value) {
+								if (!(Validators.empty(value[style]))) {
+									$('select[jec=' + id + '] option.' + opt.pluginClass).
+										css(style, value[style]);
+								}
+							}
+						}
+						
+						// save new value
+						opt.styles = value;
+					}
+				};
+				
+				// set focusOnNewOption
+				setFocusOnNewOption = function (opt, id, value) {
+					if (typeOf(value) === 'boolean') {
+						opt.focusOnNewOption = value;
+					}
+				};
+				
+				// set useExistingOptions
+				setUseExistingOptions = function (opt, id, value, update) {
+					if (typeOf(value) === 'boolean') {
+						// update combobox
+						if (update && value !== opt.useExistingOptions) {
+							var select = $('select[jec=' + id + ']');
+							if (value) {
+								Combobox.setEditableOption(select);
+								select.bind('change', EventHandlers.change);
+							} else {
+								select.unbind('change', EventHandlers.change);
+							}
+						}
+						
+						// save new value
+						opt.useExistingOptions = value;
+					}
+				};
+				
+				// set ignored keys
+				setIgnoredKeys = function (opt, id, value) {
+					if (typeOf(value) === 'array') {
+						var i, keys = [];
+						for (i = 0; i < value.length; i += 1) {
+							if (Validators.int(value[i])) {
+								keys[keys.length] = value[i];
+							}
+						}
+						
+						// save new value
+						opt.ignoredKeys = keys;
+					}
+				};
+				
+				// set accepted ranges
+				setAcceptedRanges = function (opt, id, value) {
+					if (typeOf(value) === 'array') {
+						var i, keys = [];
+						for (i = 0; i < value.length; i += 1) {
+							if (typeOf(value[i]) === 'object' &&
+								((!(Validators.empty(value[i].min)) && 
+									!(Validators.empty(value[i].max)) &&
+									Validators.int(value[i].min) &&
+									Validators.int(value[i].max) &&
+									value[i].min <= value[i].max) ||
+								(!(Validators.empty(value[i].exact)) &&
+									Validators.int(value[i].exact)))) {
+								keys[keys.length] = value[i];
+							}
+						}
+						
+						// save new value
+						opt.acceptedRanges = keys;
+					}
+				};
+				
+				// set parameter
+				set = function (id, name, value, update) {
+					if (typeOf(update) !== 'boolean') {
+						update = false;
+					}
+					
+					if (!(Validators.empty(id)) && !(Validators.empty(name)) && 
+						!(Validators.empty(value))) {
+						var opt = options[id];
+						if (opt !== undefined) {
+							switch (name) {
+							case 'position':
+								setPosition(opt, id, value, update);
+								break;
+							case 'pluginClass':
+								setPluginClass(opt, id, value, update);
+								break;
+							case 'classes':
+								setClasses(opt, id, value, update);
+								break;
+							case 'styles':
+								setStyles(opt, id, value, update);
+								break;
+							case 'focusOnNewOption':
+								setFocusOnNewOption(opt, id, value);
+								break;
+							case 'useExistingOptions':
+								setUseExistingOptions(opt, id, value);
+								break;
+							case 'ignoredKeys':
+								setIgnoredKeys(opt, id, value);
+								break;
+							case 'acceptedRanges':
+								setAcceptedRanges(opt, id, value);
+								break;
+							}
+						}
+					}
+				};
+				
+				return {
+					set: set
+				};
+			}());
 			
 			// sets combobox
 			setup = function (elem) {
@@ -302,158 +505,9 @@
 				}
 			};
 			
-			// set parameter value
-			setParam = function (id, name, value, update) {
-				if (typeOf(update) !== 'boolean') {
-					update = false;
-				}
-				
-				if (!(Validators.empty(id)) && !(Validators.empty(name)) && 
-					!(Validators.empty(value))) {
-					var opt, i, temp;
-					opt = options[id];
-					if (opt !== undefined) {
-						switch (name) {
-						case 'position':
-							if (Validators.int(value)) {
-								// update combobox
-								if (update && opt.position !== value) {
-									temp = $('select[jec=' + id + '] option.' + opt.pluginClass);
-									if ($('select[jec=' + id + ']').children().eq(value) !== 0) {
-										$('select[jec=' + id + ']').children().eq(value).
-											before(temp);
-									} else {
-										$('select[jec=' + id + ']').append(temp);
-									}
-								}
-								
-								// save new value
-								opt.position = value;
-							}
-							break;
-						case 'pluginClass':
-							if (typeOf(value) === 'string') {
-								// update combobox
-								if (update) {
-									$('select[jec=' + id + '] option.' + opt.pluginClass).
-										removeClass(opt.pluginClass).addClass(value);
-								}
-								
-								// save new value
-								opt.pluginClass = value;
-							}
-							break;
-						case 'classes':
-							if (typeOf(value) === 'string') {
-								value = [value];
-							}
-							if (typeOf(value) === 'array') {
-								// update combobox
-								if (update) {
-									// remove old classes
-									for (i = 0; i < opt.classes.length; i += 1) {
-										$('select[jec=' + id + ']').removeClass(opt.classes[i]);
-									}
-									
-									// add new classes
-									for (i = 0; i < value.length; i += 1) {
-										$('select[jec=' + id + ']').addClass(value[i]);
-									}
-								}
-								
-								// save new value
-								opt.classes = value;
-							}
-							break;
-						case 'styles':
-							if (typeOf(value) === 'object') {
-								// update combobox
-								if (update) {
-									// remove old styles
-									for (temp in opt.styles) {
-										if (!(Validators.empty(opt.styles[temp]))) {
-											$('select[jec=' + id + '] option.' + opt.pluginClass).
-												css(temp, '');
-										}
-									}
-									
-									// add new styles
-									for (temp in value) {
-										if (!(Validators.empty(value[temp]))) {
-											$('select[jec=' + id + '] option.' + opt.pluginClass).
-												css(temp, value[temp]);
-										}
-									}
-								}
-								
-								// save new value
-								opt.styles = value;
-							}
-							break;
-						case 'focusOnNewOption':
-							if (typeOf(value) === 'boolean') {
-								opt.focusOnNewOption = value;
-							}
-							break;
-						case 'useExistingOptions':
-							if (typeOf(value) === 'boolean') {
-								// update combobox
-								if (update && value !== opt.useExistingOptions) {
-									temp = $('select[jec=' + id + ']');
-									if (value) {
-										Combobox.setEditableOption(temp);
-										temp.bind('change', EventHandlers.change);
-									} else {
-										temp.unbind('change', EventHandlers.change);
-									}
-								}
-								
-								// save new value
-								opt.useExistingOptions = value;
-							}
-							break;
-						case 'ignoredKeys':
-							if (typeOf(value) === 'array') {
-								temp = [];
-								for (i = 0; i < value.length; i += 1) {
-									if (Validators.int(value[i])) {
-										temp[temp.length] = value[i];
-									}
-								}
-								
-								// save new value
-								opt.ignoredKeys = temp;
-							}
-							break;
-						case 'acceptedRanges':
-							if (typeOf(value) === 'array') {
-								temp = [];
-								for (i = 0; i < value.length; i += 1) {
-									if (typeOf(value[i]) === 'object' &&
-										((!(Validators.empty(value[i].min)) && 
-											!(Validators.empty(value[i].max)) &&
-											Validators.int(value[i].min) &&
-											Validators.int(value[i].max) &&
-											value[i].min <= value[i].max) ||
-										(!(Validators.empty(value[i].exact)) &&
-											Validators.int(value[i].exact)))) {
-										temp[temp.length] = value[i];
-									}
-								}
-								
-								// save new value
-								opt.acceptedRanges = temp;
-							}
-							break;
-						}
-					}
-				}
-			};
-			
 			// sets editable option to the value of currently selected option
 			setEditableOption = function (elem) {
-				var opt = options[elem.attr('jec')];
-				elem.children('option.' + opt.pluginClass).
+				elem.children('option.' + options[elem.attr('jec')].pluginClass).
 					val(elem.children('option:selected').text());
 			};
 			
@@ -471,7 +525,7 @@
 					if (typeOf(settings) === 'object') {
 						for (key in settings) {
 							if (settings[key] !== undefined) {
-								setParam(id, key, settings[key]);
+								Parameters.set(id, key, settings[key]);
 							}
 						}
 					}
@@ -553,7 +607,7 @@
 						} else {
 							// set preference
 							return $(this).filter(':editable').each(function () {
-								setParam($(this).attr('jec'), name, value, true);
+								Parameters.set($(this).attr('jec'), name, value, true);
 							});
 						}
 					}
