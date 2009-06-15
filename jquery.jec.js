@@ -1,13 +1,13 @@
 /**
  * jQuery jEC (jQuery Editable Combobox) 1.1.0
- * http://plugins.jquery.com/project/jEC
+ * http://code.google.com/p/jquery-jec
  *
  * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Documentation	:	http://code.google.com/p/jquery-jec/wiki/Documentation
- * Changelog:		:	http://code.google.com/p/jquery-jec/wiki/Changelog
+ * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
 /*global document, jQuery*/
@@ -433,7 +433,8 @@
 										((!(Validators.empty(value[i].min)) && 
 											!(Validators.empty(value[i].max)) &&
 											Validators.int(value[i].min) &&
-											Validators.int(value[i].max)) ||
+											Validators.int(value[i].max) &&
+											value[i].min <= value[i].max) ||
 										(!(Validators.empty(value[i].exact)) &&
 											Validators.int(value[i].exact)))) {
 										temp[temp.length] = value[i];
