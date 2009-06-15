@@ -179,10 +179,12 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	test('Option: styles', function () {
-		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', otherStyleValue = '200px', obj = {};
+		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
+			otherStyleValue = '200px', obj = {};
 		
 		$('#test').jec({styles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === 'auto', 
+		ok($('#test').children('option.jecEditableOption').css(styleName) === 'auto' ||
+			$('#test').children('option.jecEditableOption').css(styleName) === '0px', 
             'We expect new editable option to have no extra styles');
 		$('#test').jecKill();
 		
@@ -200,31 +202,38 @@ $(document).ready(function () {
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: 'width: 100px'});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 'We expect malformed styles option to be ignored (string)');
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
+			'We expect malformed styles option to be ignored (string)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: 10});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
             'We expect malformed styles option to be ignored (number)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: true});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
             'We expect malformed styles option to be ignored (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: null});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
             'We expect malformed styles option to be ignored (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: undefined});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
             'We expect malformed styles option to be ignored (undefined)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: [{styles: obj}]});
-		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined ||
+			$('#test').children('option.jecEditableOption').attr('style') === '', 
             'We expect malformed styles option to be ignored (array)');
 		$('#test').jecKill();
 	});
