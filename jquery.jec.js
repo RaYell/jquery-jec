@@ -81,6 +81,7 @@
 		// validator methods
 		(Validators = function () {
 			var int, empty;
+			
 			// check if value is empty (null, undefined, empty array or object)
 			empty = function (value) {
 				switch (typeOf(value)) {
@@ -115,10 +116,8 @@
 		
 		// browser hacks
 		(Hacks = function () {
-			var registerIndexOf;
-			
 			// register indexOf method on browsers that doesn't support it
-			registerIndexOf = function () {
+			var registerIndexOf = function () {
 				if (Array.prototype.indexOf === undefined) {
 					Array.prototype.indexOf = function (object) {
 						for (var i = 0; i < this.length; i += 1) {
@@ -318,8 +317,8 @@
 						case 'position':
 							if (Validators.int(value)) {
 								// update combobox
-								if (update && opt[name] !== value) {
-									temp = $('select[jec=' + id + '] option.' + opt[name]);
+								if (update && opt.position !== value) {
+									temp = $('select[jec=' + id + '] option.' + opt.pluginClass);
 									if ($('select[jec=' + id + ']').children().eq(value) !== 0) {
 										$('select[jec=' + id + ']').children().eq(value).
 											before(temp);
@@ -329,19 +328,19 @@
 								}
 								
 								// save new value
-								opt[name] = value;
+								opt.position = value;
 							}
 							break;
 						case 'pluginClass':
 							if (typeOf(value) === 'string') {
 								// update combobox
 								if (update) {
-									$('select[jec=' + id + '] option.' + opt[name]).
-										removeClass(opt[name]).addClass(value);
+									$('select[jec=' + id + '] option.' + opt.pluginClass).
+										removeClass(opt.pluginClass).addClass(value);
 								}
 								
 								// save new value
-								opt[name] = value;
+								opt.pluginClass = value;
 							}
 							break;
 						case 'classes':
@@ -352,8 +351,8 @@
 								// update combobox
 								if (update) {
 									// remove old classes
-									for (i = 0; i < opt[name].length; i += 1) {
-										$('select[jec=' + id + ']').removeClass(opt[name][i]);
+									for (i = 0; i < opt.classes.length; i += 1) {
+										$('select[jec=' + id + ']').removeClass(opt.classes[i]);
 									}
 									
 									// add new classes
@@ -363,7 +362,7 @@
 								}
 								
 								// save new value
-								opt[name] = value;
+								opt.classes = value;
 							}
 							break;
 						case 'styles':
@@ -371,8 +370,8 @@
 								// update combobox
 								if (update) {
 									// remove old styles
-									for (temp in opt[name]) {
-										if (!(Validators.empty(opt[name][temp]))) {
+									for (temp in opt.styles) {
+										if (!(Validators.empty(opt.styles[temp]))) {
 											$('select[jec=' + id + '] option.' + opt.pluginClass).
 												css(temp, '');
 										}
@@ -388,18 +387,18 @@
 								}
 								
 								// save new value
-								opt[name] = value;
+								opt.styles = value;
 							}
 							break;
 						case 'focusOnNewOption':
 							if (typeOf(value) === 'boolean') {
-								opt[name] = value;
+								opt.focusOnNewOption = value;
 							}
 							break;
 						case 'useExistingOptions':
 							if (typeOf(value) === 'boolean') {
 								// update combobox
-								if (update && value !== opt[name]) {
+								if (update && value !== opt.useExistingOptions) {
 									temp = $('select[jec=' + id + ']');
 									if (value) {
 										Combobox.setEditableOption(temp);
@@ -410,7 +409,7 @@
 								}
 								
 								// save new value
-								opt[name] = value;
+								opt.useExistingOptions = value;
 							}
 							break;
 						case 'ignoredKeys':
@@ -423,7 +422,7 @@
 								}
 								
 								// save new value
-								opt[name] = temp;
+								opt.ignoredKeys = temp;
 							}
 							break;
 						case 'acceptedRanges':
@@ -442,7 +441,7 @@
 								}
 								
 								// save new value
-								opt[name] = temp;
+								opt.acceptedRanges = temp;
 							}
 							break;
 						}
@@ -532,7 +531,7 @@
 							val();
 					} else if (typeOf(value) === 'string' || typeOf(value) === 'number') {
 						// set value
-						return $(this).filter('select').each(function () {
+						return $(this).filter(':editable').each(function () {
 							var option = $(this).children('option.' + opt.pluginClass);
 							option.val(value).text(value);
 							if (typeOf(setFocus) !== 'boolean' || setFocus) {
@@ -552,7 +551,7 @@
 							return options[$(this).attr('jec')][name];
 						} else {
 							// set preference
-							return $(this).filter('select').each(function () {
+							return $(this).filter(':editable').each(function () {
 								setParam($(this).attr('jec'), name, value, true);
 							});
 						}
