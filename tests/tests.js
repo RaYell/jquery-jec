@@ -3,18 +3,28 @@ $(document).ready(function () {
 	// hack for html validator (ol cannot be empty
 	$('li').remove();
 	
-	var defaults = {
+	var defaults, range, parsedRange;
+	
+	defaults = {
 		position: 0,
 		classes: '',
 		styles: {},
 		pluginClass: 'jecEditableOption',
 		useExistingOptions: false,
 		ignoredKeys: [],
-		acceptedRanges: [
+		acceptedKeys: [
 			{min: 32, max: 126},
 			{min: 191, max: 382}
 		]
 	};
+	
+	range = [
+		{min: 10, max: 15}, // min,max tuple
+		{exact: 35}, // exact value
+		55 // number value
+	];
+	
+	parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
 	
 	module('init');
 	test('Editable combobox initialization', function () {
@@ -23,6 +33,7 @@ $(document).ready(function () {
             'We expect new editable option element to be created');
 		$('#test').jecKill();
 	});
+	
 	test('Option: position', function () {
 		$('#test').jec({position: 0});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
@@ -79,6 +90,7 @@ $(document).ready(function () {
             'We expect malformed position option to be ignored (array)');
 		$('#test').jecKill();
 	});
+	
 	test('Option: pluginClass', function () {
 		var className = 'myClass', defaultClassName = 'jecEditableOption';
 		$('#test').jec({pluginClass: className});
@@ -116,6 +128,7 @@ $(document).ready(function () {
             'We expect malformed plugin class option to be ignored (array)');
 		$('#test').jecKill();
 	});
+	
 	test('Option: classes', function () {
 		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
 		$('#test').jec({classes: ''});
@@ -178,13 +191,13 @@ $(document).ready(function () {
             'We expect malformed classes option to be ignored (object)');
 		$('#test').jecKill();
 	});
+	
 	test('Option: styles', function () {
 		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
 			otherStyleValue = '200px', obj = {};
 		
 		$('#test').jec({styles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === 'auto' ||
-			$('#test').children('option.jecEditableOption').css(styleName) === '0px', 
+		ok($('#test').children('option.jecEditableOption').attr('style') === undefined, 
             'We expect new editable option to have no extra styles');
 		$('#test').jecKill();
 		
@@ -237,6 +250,7 @@ $(document).ready(function () {
             'We expect malformed styles option to be ignored (array)');
 		$('#test').jecKill();
 	});
+	
 	test('Option: focusOnNewOption', function () {
 		$('#test').jec({focusOnNewOption: false});
 		ok($('#test option:first:not(:selected)').length === 1, 
@@ -278,13 +292,15 @@ $(document).ready(function () {
             'We expect malformed focus option to be ignored (array)');
 		$('#test').jecKill();
 	});
+	
 	test('Option: useExistingOptions', function () {
 		// nothing to test here at the moment
 	});
+	
 	test('Option: ignoredKeys', function () {
 		// nothing to test here at the moment
 	});
-	test('Option: acceptedRanges', function () {
+	test('Option: acceptedKeys', function () {
 		// nothing to test here at the moment
 	});
 	
@@ -292,7 +308,7 @@ $(document).ready(function () {
 	test('Editable combobox deactivation', function () {
 		$('#test').jec();
 		$('#test').jecOff();
-		ok($('#test option').length === 3 && $('#test').attr('jec') !== undefined, 
+		ok($('#test option').length === 3 && $('#test[class*=jec]').length === 1, 
             'We expect editable combobox to be disabled');
 		$('#test').jecKill();
 	});
@@ -326,7 +342,7 @@ $(document).ready(function () {
 	});
 	
 	test('Setting value', function () {
-		var strValue = 'myString', intValue = 123, floatValue = 1.2, defaults;
+		var strValue = 'myString', intValue = 123, floatValue = 1.2;
 		
 		$('#test').jec();
 		$('#test').jecValue(strValue);
@@ -382,11 +398,34 @@ $(document).ready(function () {
 		ok($('#test').jecPref('dummy') === undefined, 
 			'We expect not-existing string preference to return nothing');
 		
-		var key;
+		var i, j, key, keys = [], value;
 		for (key in defaults) {
 			if (defaults[key] !== undefined) {
-				same($('#test').jecPref(key), defaults[key], 'We expect ' + key + 
-					' parameter value of ' + defaults[key] + ' to be returned');
+				if (key === 'acceptedKeys') {
+					value = defaults.acceptedKeys;
+					for (i = 0; i < value.length; i += 1) {
+						// min,max tuple
+						if (value[i] !== null && typeof value[i] === 'object' && 
+							typeof value[i].min === 'number' && 
+							typeof value[i].max === 'number' && value[i].min <= value[i].max) {
+							for (j = value[i].min; j <= value[i].max; j += 1) {
+								keys[keys.length] = j;
+							}
+						// exact tuple
+						} else if (value[i] !== null && typeof value[i] === 'object' && 
+							typeof value[i].exact === 'number') {
+							keys[keys.length] = value[i].exact;
+						// number
+						} else if (typeof value[i] === 'number') {
+							keys[keys.length] = value[i];
+						}
+					}
+					same($('#test').jecPref('acceptedKeys'), keys, 'We expect ' + key + 
+						' parameter value of ' + keys + ' to be returned');
+				} else {
+					same($('#test').jecPref(key), defaults[key], 'We expect ' + key + 
+						' parameter value of ' + defaults[key] + ' to be returned');
+				} 
 			}
 		}
 		
@@ -551,58 +590,53 @@ $(document).ready(function () {
 	});
 	
 	test('Setting preference: ignoredKeys', function () {
-		var range = [1, 2, 3];
 		$('#test').jec();
 		$('#test').jecPref('ignoredKeys', range);
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect array preference value to be handled');
 		$('#test').jecPref('ignoredKeys', true);
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect boolean preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', 'true');
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect string preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', {});
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect object preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', 1);
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect number preference value to be range');
 		$('#test').jecPref('ignoredKeys', undefined);
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect undefined preference value to be ignored');
 		$('#test').jecPref('ignoredKeys', null);
-		same($('#test').jecPref('ignoredKeys'), range, 
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 
 			'We expect null preference value to be ignored');
 		$('#test').jecKill();
 	});
 	
-	test('Setting preference: acceptedRanges', function () {
-		var range = [
-			{min: 10, max: 20},
-			{exact: 35}
-		];
+	test('Setting preference: acceptedKeys', function () {
 		$('#test').jec();
-		$('#test').jecPref('acceptedRanges', range);
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', range);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect array preference value to be handled');
-		$('#test').jecPref('acceptedRanges', true);
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', true);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect boolean preference value to be ignored');
-		$('#test').jecPref('acceptedRanges', 'true');
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', 'true');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect string preference value to be ignored');
-		$('#test').jecPref('acceptedRanges', {});
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', {});
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect object preference value to be ignored');
-		$('#test').jecPref('acceptedRanges', 1);
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', 1);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect number preference value to be range');
-		$('#test').jecPref('acceptedRanges', undefined);
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', undefined);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect undefined preference value to be ignored');
-		$('#test').jecPref('acceptedRanges', null);
-		same($('#test').jecPref('acceptedRanges'), range, 
+		$('#test').jecPref('acceptedKeys', null);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect null preference value to be ignored');
 		$('#test').jecKill();
 	});

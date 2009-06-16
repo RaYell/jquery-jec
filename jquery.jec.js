@@ -28,7 +28,7 @@
 			focusOnNewOption: false,
 			useExistingOptions: false,
 			ignoredKeys: [],
-			acceptedRanges: [
+			acceptedKeys: [
 				{min: 32, max: 126},
 				{min: 191, max: 382}
 			]
@@ -41,7 +41,7 @@
 		values = {};
 		
 		// special keys codes
-		specialKeys = [46, 37, 38, 39, 40];
+		specialKeys = [37, 38, 39, 40, 46];
 		
 		// last presses key's code
 		lastKeyCode = null;
@@ -155,7 +155,7 @@
 			keyDown = function (event) {
 				var keyCode, option, value, opt;
 				
-				opt = options[$(this).attr('jec')];
+				opt = options[Combobox.getId($(this))];
 				keyCode = getKeyCode(event);
 				lastKeyCode = keyCode;
 				
@@ -177,9 +177,9 @@
 			// handles the rest of the keys (keypress event gives more informations
 			// about pressed keys)
 			keyPress = function (event) {
-				var keyCode, keyValue, i, option, value, validKey, opt;
+				var keyCode, i, option, value, opt;
 				
-				opt = options[$(this).attr('jec')];
+				opt = options[Combobox.getId($(this))];
 				keyCode = getKeyCode(event);
 				
 				if (keyCode !== 9) {
@@ -196,24 +196,11 @@
 						// remove selection from all options
 						$(this).children(':selected').removeAttr('selected');
 						
-						keyValue = '';
-						// iterate through valid ranges
-						for (validKey in opt.acceptedRanges) {
-							// the range can be either a min,max tuple or exact value
-							if ((opt.acceptedRanges[validKey].exact !== undefined &&
-									opt.acceptedRanges[validKey].exact === keyCode) ||
-								(opt.acceptedRanges[validKey].min !== undefined &&
-									opt.acceptedRanges[validKey].max !== undefined &&
-									keyCode >= opt.acceptedRanges[validKey].min &&
-									keyCode <= opt.acceptedRanges[validKey].max)) {
-								keyValue = String.fromCharCode(keyCode);
-							}
+						if (opt.acceptedKeys.indexOf(keyCode) !== -1) {
+							option = $(this).children('option.' + opt.pluginClass);
+							value = option.val() + String.fromCharCode(keyCode);
+							option.val(value).text(value).attr('selected', 'selected');
 						}
-						
-						// add key value to proper option tag
-						option = $(this).children('option.' + opt.pluginClass);
-						value = option.val() + keyValue;
-						option.val(value).text(value).attr('selected', 'selected');
 					}
 					
 					return false;
@@ -236,7 +223,7 @@
 		// Combobox
 		(Combobox = function () {
 			var Parameters, generateId, setup, setEditableOption, init, destroy, enable, disable,
-				value, pref;
+				value, pref, getId;
 			
 			// find unique identifier
 			generateId = function () {
@@ -249,10 +236,15 @@
 				}
 			};
 			
+			// get combobox id
+			getId = function (elem) {
+				return elem.attr('class').match(/jec\d+/);
+			};
+			
 			// validates and set combobox parameters
 			(Parameters = function () {
 				var set, setPosition, setPluginClass, setClasses, setStyles, setFocusOnNewOption,
-					setUseExistingOptions, setIgnoredKeys, setAcceptedRanges;
+					setUseExistingOptions, setIgnoredKeys, setAcceptedKeys, parseKeys;
 				
 				// set position
 				setPosition = function (opt, id, value, update) {
@@ -370,40 +362,45 @@
 					}
 				};
 				
+				// parse keys collection
+				parseKeys = function (value) {
+					var i, j, keys = [];
+					if (typeOf(value) === 'array') {
+						for (i = 0; i < value.length; i += 1) {
+							// min,max tuple
+							if (typeOf(value[i]) === 'object' && !(Validators.empty(value[i].min)) && 
+								!(Validators.empty(value[i].max)) &&
+								Validators.int(value[i].min) && Validators.int(value[i].max) &&
+								value[i].min <= value[i].max) {
+								for (j = value[i].min; j <= value[i].max; j += 1) {
+									keys[keys.length] = j;
+								}
+							// exact tuple
+							} else if (typeOf(value[i]) === 'object' && 
+								!(Validators.empty(value[i].exact)) && Validators.int(value[i].exact)) {
+								keys[keys.length] = value[i].exact;
+							// number
+							} else if (typeOf(value[i]) === 'number' && Validators.int(value[i])) {
+								keys[keys.length] = value[i];
+							}
+						}
+					}
+					return keys;
+				};
+				
 				// set ignored keys
 				setIgnoredKeys = function (opt, id, value) {
 					if (typeOf(value) === 'array') {
-						var i, keys = [];
-						for (i = 0; i < value.length; i += 1) {
-							if (Validators.int(value[i])) {
-								keys[keys.length] = value[i];
-							}
-						}
-						
 						// save new value
-						opt.ignoredKeys = keys;
+						opt.ignoredKeys = parseKeys(value);
 					}
 				};
 				
-				// set accepted ranges
-				setAcceptedRanges = function (opt, id, value) {
+				// set accepted keys
+				setAcceptedKeys = function (opt, id, value) {
 					if (typeOf(value) === 'array') {
-						var i, keys = [];
-						for (i = 0; i < value.length; i += 1) {
-							if (typeOf(value[i]) === 'object' &&
-								((!(Validators.empty(value[i].min)) && 
-									!(Validators.empty(value[i].max)) &&
-									Validators.int(value[i].min) &&
-									Validators.int(value[i].max) &&
-									value[i].min <= value[i].max) ||
-								(!(Validators.empty(value[i].exact)) &&
-									Validators.int(value[i].exact)))) {
-								keys[keys.length] = value[i];
-							}
-						}
-						
 						// save new value
-						opt.acceptedRanges = keys;
+						opt.acceptedKeys = parseKeys(value);
 					}
 				};
 				
@@ -439,8 +436,8 @@
 							case 'ignoredKeys':
 								setIgnoredKeys(opt, id, value);
 								break;
-							case 'acceptedRanges':
-								setAcceptedRanges(opt, id, value);
+							case 'acceptedKeys':
+								setAcceptedKeys(opt, id, value);
 								break;
 							}
 						}
@@ -455,7 +452,7 @@
 			// sets combobox
 			setup = function (elem) {
 				var opt, editableOption, i, key;
-				opt = options[elem.attr('jec')];
+				opt = options[Combobox.getId(elem)];
 				
 				if (opt !== undefined) {
 					// add editable option tag if not exists
@@ -507,7 +504,7 @@
 			
 			// sets editable option to the value of currently selected option
 			setEditableOption = function (elem) {
-				elem.children('option.' + options[elem.attr('jec')].pluginClass).
+				elem.children('option.' + options[Combobox.getId(elem)].pluginClass).
 					val(elem.children('option:selected').text());
 			};
 			
@@ -517,10 +514,14 @@
 				
 				return $(this).filter(':uneditable').each(function () {
 					var id, key;
-					id = 'id' + generateId();
+					id = 'jec' + generateId();
 					
 					// override passed default options
 					options[id] = clone(defaults);
+					
+					// parse keys
+					Parameters.set(id, 'ignoredKeys', options[id].ignoredKeys);
+					Parameters.set(id, 'acceptedKeys', options[id].acceptedKeys);
 					
 					if (typeOf(settings) === 'object') {
 						for (key in settings) {
@@ -530,8 +531,8 @@
 						}
 					}
 					
-					// add unique id
-					$(this).attr('jec', id);
+					// add unique id to classes
+					$(this).addClass(id);
 					
 					setup($(this));
 				});
@@ -541,7 +542,7 @@
 			destroy = function () {
 				return $(this).filter(':editable').each(function () {
 					$(this).jecOff();
-					$(this).removeAttr('jec');
+					$(this).removeClass(Combobox.getId($(this)));
 				});
 			};
 			
@@ -549,7 +550,7 @@
 			enable = function () {
 				return $(this).filter(':editable').each(function () {
 					setup($(this));
-					var value = values[$(this).attr('jec')];
+					var value = values[Combobox.getId($(this))];
 					
 					if (value !== undefined) {
 						$(this).jecValue(value);
@@ -561,7 +562,7 @@
 			disable = function () {
 				return $(this).filter(':editable').each(function () {
 					var id, opt;
-					id = $(this).attr('jec');
+					id = Combobox.getId($(this));
 					opt = options[id];
 					values[id] = $(this).children('option.' + opt.pluginClass).val();
 					
@@ -579,7 +580,7 @@
 			// gets or sets editable option's value
 			value = function (value, setFocus) {
 				if ($(this).filter(':editable').length > 0) {
-					var opt = options[$(this).attr('jec')];
+					var opt = options[Combobox.getId($(this))];
 					if (Validators.empty(value)) {
 						// get value
 						return $(this).filter('select').children('option.' + opt.pluginClass).
@@ -603,11 +604,11 @@
 					if (!(Validators.empty(name))) {
 						if (Validators.empty(value)) {
 							// get preference
-							return options[$(this).attr('jec')][name];
+							return options[Combobox.getId($(this))][name];
 						} else {
 							// set preference
 							return $(this).filter(':editable').each(function () {
-								Parameters.set($(this).attr('jec'), name, value, true);
+								Parameters.set(Combobox.getId($(this)), name, value, true);
 							});
 						}
 					}
@@ -622,7 +623,8 @@
 				disable				: disable,
 				value				: value,
 				pref				: pref,
-				setEditableOption	: setEditableOption
+				setEditableOption	: setEditableOption,
+				getId				: getId
 			};
 		}());
 		
@@ -650,10 +652,10 @@
 	// register selectors
 	$.extend($.expr[':'], {
 		editable	: function (a) {
-			return $(a).filter('select[jec]').length !== 0;
+			return $(a).filter('select[class*=jec]').length !== 0;
 		},
 		uneditable	: function (a) {
-			return $(a).filter('select:not([jec])').length !== 0;
+			return $(a).filter('select:not([class*=jec])').length !== 0;
 		}
 	});
 
