@@ -16,11 +16,8 @@
 	// jEC Core class
 	$.jEC = (function () {
 		// variables declaration
-		var defaults, options, values, pluginClass, lastKeyCode, Validators, Hacks, EventHandlers,
-			Combobox, clone, typeOf;
-		
-		// jEC plugin class
-		pluginClass = 'jecEditableOption';
+		var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode = null,
+			defaults, Validators, Hacks, EventHandlers, Combobox, clone, typeOf;
 		
 		// default options
 		defaults = {
@@ -37,15 +34,6 @@
 				{min: 191, max: 382}
 			]
 		};
-		
-		// options
-		options = {};
-		
-		// values
-		values = {};
-		
-		// last presses key's code
-		lastKeyCode = null;
 		
 		// returns type of value
 		typeOf = function (value) {
@@ -68,15 +56,15 @@
 				return object;
 			}
 			
-			var key, temp = new object.constructor();
+			var obj = new object.constructor(), key;
 			
 			for (key in object) {
 				if (key !== undefined) {
-					temp[key] = clone(object[key]);
+					obj[key] = clone(object[key]);
 				}
 			}
 			
-			return temp;
+			return obj;
 		};
 		
 		// validator methods
@@ -90,8 +78,7 @@
 				empty: function (value) {
 					switch (typeOf(value)) {
 					case 'object':
-						var key;
-						for (key in value) {
+						for (var key in value) {
 							if (value[key] !== undefined) {
 								return false;
 							}
@@ -144,10 +131,8 @@
 				// handles keys pressed on select (backspace and delete must be handled
 				// in keydown event in order to work in IE)
 				keyDown: function (event) {
-					var keyCode, option, value, opt;
+					var keyCode = getKeyCode(event), option, value;
 					
-					opt = options[Combobox.getId($(this))];
-					keyCode = getKeyCode(event);
 					lastKeyCode = keyCode;
 					
 					switch (keyCode) {
@@ -167,10 +152,8 @@
 				// handles the rest of the keys (keypress event gives more informations
 				// about pressed keys)
 				keyPress: function (event) {
-					var keyCode, i, option, value, opt, specialKeys;
-					
-					opt = options[Combobox.getId($(this))];
-					keyCode = getKeyCode(event);
+					var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))], i, 
+						option, value, specialKeys;
 					
 					if (keyCode !== 9) {
 						// special keys codes
@@ -206,7 +189,7 @@
 		
 		// Combobox
 		(Combobox = function () {
-			var Parameters, generateId, setup;
+			var Parameters, EditableOption, generateId, setup;
 			
 			// validates and set combobox parameters
 			(Parameters = function () {
@@ -353,6 +336,12 @@
 								removeStyles($('select.' + id + ' option.' + pluginClass),
 									opt.optionStyles);
 							}
+						},
+						all: function (id) {
+							Remove.classes(id);
+							Remove.optionClasses(id);
+							Remove.styles(id);
+							Remove.optionStyles(id);
 						}
 					};
 				}());
@@ -432,6 +421,15 @@
 									elem.unbind('change', EventHandlers.change);
 								}
 							}
+						},
+						all: function (id) {
+							Handle.position(id);
+							Handle.classes(id);
+							Handle.optionClasses(id);
+							Handle.styles(id);
+							Handle.optionStyles(id);
+							Handle.focusOnNewOption(id);
+							Handle.useExistingOptions(id);
 						}
 					};
 				}());
@@ -440,6 +438,33 @@
 					Set		: Set,
 					Remove	: Remove,
 					Handle	: Handle
+				};
+			}());
+			
+			(EditableOption = function () {
+				return {
+					init: function (id) {
+						var editableOption = $(document.createElement('option')), 
+							select = $('select.' + id);
+						
+						editableOption.addClass(pluginClass);
+						
+						select.append(editableOption);
+						select.bind('keydown', EventHandlers.keyDown);
+						select.bind('keypress', EventHandlers.keyPress);
+					},
+					destroy: function (id) {
+						var select = $('select.' + id), opt = options[id];
+						
+						select.children('option.' + pluginClass).remove();
+						select.children('option:first').attr('selected', 'selected');
+						select.unbind('keydown', EventHandlers.keyDown);
+						select.unbind('keypress', EventHandlers.keyPress);
+						
+						if (opt !== undefined && opt.useExistingOptions) {
+							select.unbind('change', EventHandlers.change);
+						}
+					}
 				};
 			}());
 			
@@ -455,30 +480,9 @@
 			};
 			
 			// sets combobox
-			setup = function (elem) {
-				var id, editableOption;
-				id = Combobox.getId(elem);
-				
-				if (options[id] !== undefined) {
-					// add editable option tag if not exists
-					if (elem.children('option.' + pluginClass).length === 0) {
-						editableOption = $(document.createElement('option'));
-						editableOption.addClass(pluginClass);
-						elem.append(editableOption);
-						
-						Parameters.Handle.position(id);
-						Parameters.Handle.classes(id);
-						Parameters.Handle.optionClasses(id);
-						Parameters.Handle.styles(id);
-						Parameters.Handle.optionStyles(id);
-						Parameters.Handle.focusOnNewOption(id);
-					}
-					
-					elem.bind('keydown', EventHandlers.keyDown);
-					elem.bind('keypress', EventHandlers.keyPress);
-					
-					Parameters.Handle.useExistingOptions(id);
-				}
+			setup = function (id) {
+				EditableOption.init(id);
+				Parameters.Handle.all(id);
 			};
 			
 			// Combobox public members
@@ -488,8 +492,7 @@
 					Hacks.registerIndexOf();
 					
 					return $(this).filter(':uneditable').each(function () {
-						var id, key;
-						id = 'jec' + generateId();
+						var id = 'jec' + generateId(), key;
 						
 						// override passed default options
 						options[id] = clone(defaults);
@@ -537,7 +540,7 @@
 							}
 						}
 						
-						setup($(this));
+						setup(id);
 					});
 				},
 				// destroys editable combobox
@@ -550,8 +553,9 @@
 				// enable editablecombobox
 				enable: function () {
 					return $(this).filter(':editable').each(function () {
-						setup($(this));
-						var value = values[Combobox.getId($(this))];
+						var id = Combobox.getId($(this)), value = values[id];
+						
+						setup(id);
 						
 						if (value !== undefined) {
 							$(this).jecValue(value);
@@ -561,24 +565,11 @@
 				// disable editable combobox
 				disable: function () {
 					return $(this).filter(':editable').each(function () {
-						var id, opt;
-						id = Combobox.getId($(this));
-						opt = options[id];
+						var id = Combobox.getId($(this));
+						
 						values[id] = $(this).children('option.' + pluginClass).val();
-						
-						Parameters.Remove.classes(id);
-						Parameters.Remove.optionClasses(id);
-						Parameters.Remove.styles(id);
-						Parameters.Remove.optionStyles(id);
-						
-						$(this).children('option.' + pluginClass).remove();
-						$(this).children('option:first').attr('selected', 'selected');
-						$(this).unbind('keydown', EventHandlers.keyDown);
-						$(this).unbind('keypress', EventHandlers.keyPress);
-						
-						if (opt.useExistingOptions) {
-							$(this).unbind('change', EventHandlers.change);
-						}
+						Parameters.Remove.all(id);
+						EditableOption.destroy(id);
 					});
 				},
 				// gets or sets editable option's value
