@@ -3,7 +3,7 @@ $(document).ready(function () {
 	// hack for html validator (ol cannot be empty
 	$('li').remove();
 	
-	var defaults, range, parsedRange, styleEmpty;
+	var defaults, range, parsedRange, styleEmpty, combobox, checkOptions, cbOptions;
 	
 	defaults = {
 		position: 0,
@@ -27,8 +27,23 @@ $(document).ready(function () {
 	
 	parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
 	
+	cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}];
+	
 	styleEmpty = function (value) {
 		return value === 'auto' || value === '0px' || value === 'intrinsic';
+	};
+	
+	checkOptions = function (elem, expectedOptions) {
+		var key, option, status = true;
+		for (key in expectedOptions) {
+			if (expectedOptions[key] !== undefined) {
+				option = elem.children('option[value=' + key + ']');
+				if (option.length === 0 || option.text() !== expectedOptions[key]) {
+					return false;
+				}
+			}
+		}
+		return status;
 	};
 	
 	module('init');
@@ -39,7 +54,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: position', function () {
+	test('Setting: position', function () {
 		$('#test').jec({position: 0});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'We expect new editable option element to be on first position');
@@ -96,7 +111,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: classes', function () {
+	test('Setting: classes', function () {
 		var idRegex = /jec\d+/, className = 'c12', otherClassName = 'c2';
 		$('#test').jec({classes: ''});
 		ok(idRegex.test($('#test').attr('class')), 
@@ -154,7 +169,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: optionClasses', function () {
+	test('Setting: optionClasses', function () {
 		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
 		$('#test').jec({optionClasses: ''});
 		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
@@ -216,7 +231,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: styles', function () {
+	test('Setting: styles', function () {
 		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
 			otherStyleValue = '200px', obj = {};
 		
@@ -269,7 +284,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: optionStyles', function () {
+	test('Setting: optionStyles', function () {
 		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
 			otherStyleValue = '200px', obj = {};
 		
@@ -322,7 +337,7 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: focusOnNewOption', function () {
+	test('Setting: focusOnNewOption', function () {
 		$('#test').jec({focusOnNewOption: false});
 		ok($('#test option:first:not(:selected)').length === 1, 
             'We expect focus to be set on first option');
@@ -364,14 +379,14 @@ $(document).ready(function () {
 		$('#test').jecKill();
 	});
 	
-	test('Option: useExistingOptions', function () {
+	test('Setting: useExistingOptions', function () {
 		// nothing to test here at the moment
 	});
 	
-	test('Option: ignoredKeys', function () {
+	test('Setting: ignoredKeys', function () {
 		// nothing to test here at the moment
 	});
-	test('Option: acceptedKeys', function () {
+	test('Setting: acceptedKeys', function () {
 		// nothing to test here at the moment
 	});
 	
@@ -683,6 +698,393 @@ $(document).ready(function () {
 		same($('#test').jecPref('acceptedKeys'), parsedRange, 
 			'We expect null preference value to be ignored');
 		$('#test').jecKill();
+	});
+	
+	module('initJS');
+	test('Editable combobox initialization', function () {
+		combobox = $.jec();
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect new editable option element to be created');
+		combobox.jecKill();
+	});
+	
+	test('Options', function () {
+		var expectedOptions = {1: '1', 2.3: '2.3', val: 'val', test: 'val', test2: '1', 
+			test3: '2.3'};
+		combobox = $.jec([1, 2.3, 'val', {test: 'val'}, {test2: 1, test3: 2.3}, [], undefined, null,
+			true]);
+		ok(combobox.children('option.jecEditableOption').length === 1 && 
+			checkOptions(combobox, expectedOptions), 
+            'We expect new editable option element to be created with correct options');
+		combobox.jecKill();
+		
+		combobox = $.jec(undefined);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(null);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec('1');
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(1);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(true);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec({});
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'We expect malformed options parameter to be ignored (object)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: position', function () {
+		combobox = $.jec(cbOptions, {position: 0});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect new editable option element to be on first position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 1});
+		ok(combobox.children('option').eq(1).filter('.jecEditableOption').length === 1, 
+            'We expect new editable option element to be on second position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 3});
+		ok(combobox.children('option').eq(3).filter('.jecEditableOption').length === 1, 
+            'We expect new editable option element to be on last position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 100});
+		ok(combobox.children('option:last').filter('.jecEditableOption').length === 1, 
+            'We expect new editable option element to be on last position (value too big)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 4.2});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: '1'});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: true});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: null});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: undefined});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: {pos: 1}});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: [1]});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'We expect malformed position option to be ignored (array)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: classes', function () {
+		var idRegex = /jec\d+/, className = 'c12', otherClassName = 'c2';
+		
+		combobox = $.jec(cbOptions, {classes: ''});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect new editable option to have no extra classes');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: className});
+		ok(combobox.hasClass(className), 
+            'We expect new editable option to have one extra class (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: className + ' ' + otherClassName});
+		ok(combobox.hasClass(className) && combobox.hasClass(otherClassName), 
+            'We expect new editable option to have several extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: []});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect new editable option to have no extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: [className]});
+		ok(combobox.hasClass(className), 
+            'We expect new editable option to have one extra class (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: [className, otherClassName]});
+		ok(combobox.hasClass(className) && combobox.hasClass(otherClassName), 
+            'We expect new editable option to have several extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: 10});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect malformed classes option to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: true});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect malformed classes option to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: null});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect malformed classes option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: undefined});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect malformed classes option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: {cl: className}});
+		ok(idRegex.test(combobox.attr('class')), 
+            'We expect malformed classes option to be ignored (object)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: optionClasses', function () {
+		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
+		
+		combobox = $.jec(cbOptions, {optionClasses: ''});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect new editable option to have no extra classes');
+		combobox.jecKill();
+		
+		className = 'myClass';
+		combobox = $.jec(cbOptions, {optionClasses: className});
+		ok(combobox.children('option.jecEditableOption').hasClass(className), 
+            'We expect new editable option to have one extra class (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: className + ' ' + otherClassName});
+		ok(combobox.children('option.jecEditableOption').hasClass(className) && 
+            combobox.children('option.jecEditableOption').hasClass(otherClassName), 
+            'We expect new editable option to have several extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: []});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect new editable option to have no extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: [className]});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName) && 
+            combobox.children('option.jecEditableOption').hasClass(className), 
+            'We expect new editable option to have one extra class (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: [className, otherClassName]});
+		ok(combobox.children('option.jecEditableOption').hasClass(className) && 
+            combobox.children('option.jecEditableOption').hasClass(otherClassName), 
+            'We expect new editable option to have several extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: 10});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect malformed classes option to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: true});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect malformed classes option to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: null});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect malformed classes option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: undefined});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect malformed classes option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: {cl: className}});
+		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
+            'We expect malformed classes option to be ignored (object)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: styles', function () {
+		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
+			otherStyleValue = '200px', obj = {};
+		
+		combobox = $.jec(cbOptions, {styles: obj});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect new editable option to have no extra styles');
+		combobox.jecKill();
+		
+		obj[styleName] = styleValue;
+		combobox = $.jec(cbOptions, {styles: obj});
+		ok(combobox.css(styleName) === styleValue, 
+            'We expect new editable option to have one extra style');
+		combobox.jecKill();
+		
+		obj[otherStyleName] = otherStyleValue;
+		combobox = $.jec(cbOptions, {styles: obj});
+		ok(combobox.css(styleName) === styleValue && 
+            combobox.css(otherStyleName) === otherStyleValue,
+             'We expect new editable option to have several extra styles');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
+		ok(styleEmpty(combobox.css(styleName)),
+			'We expect malformed styles option to be ignored (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 10});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect malformed styles option to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: true});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect malformed styles option to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: null});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect malformed styles option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: undefined});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect malformed styles option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: [{styles: obj}]});
+		ok(styleEmpty(combobox.css(styleName)),
+            'We expect malformed styles option to be ignored (array)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: optionStyles', function () {
+		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
+			otherStyleValue = '200px', obj = {};
+		
+		combobox = $.jec(cbOptions, {optionStyles: obj});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)), 
+            'We expect new editable option to have no extra styles');
+		combobox.jecKill();
+		
+		obj[styleName] = styleValue;
+		combobox = $.jec(cbOptions, {optionStyles: obj});
+		ok(combobox.children('option.jecEditableOption').css(styleName) === styleValue, 
+            'We expect new editable option to have one extra style');
+		combobox.jecKill();
+		
+		obj[otherStyleName] = otherStyleValue;
+		combobox = $.jec(cbOptions, {optionStyles: obj});
+		ok(combobox.children('option.jecEditableOption').css(styleName) === styleValue && 
+            combobox.children('option.jecEditableOption').css(otherStyleName) === otherStyleValue,
+             'We expect new editable option to have several extra styles');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: 'width: 100px'});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+			'We expect malformed styles option to be ignored (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: 10});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+            'We expect malformed styles option to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: true});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+            'We expect malformed styles option to be ignored (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: null});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+            'We expect malformed styles option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: undefined});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+            'We expect malformed styles option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: [{styles: obj}]});
+		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
+            'We expect malformed styles option to be ignored (array)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: focusOnNewOption', function () {
+		combobox = $.jec(cbOptions, {focusOnNewOption: false});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect focus to be set on first option');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: true});
+		ok(combobox.children('option:first:selected').length === 1, 
+            'We expect focus to be moved to editable option');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: '1'});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: 1});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (number)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: null});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: undefined});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: [true]});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+            'We expect malformed focus option to be ignored (array)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: useExistingOptions', function () {
+		// nothing to test here at the moment
+	});
+	
+	test('Setting: ignoredKeys', function () {
+		// nothing to test here at the moment
+	});
+	test('Setting: acceptedKeys', function () {
+		// nothing to test here at the moment
 	});
 	
 	$('#test').hide();
