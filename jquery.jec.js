@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.1.0
+ * jQuery jEC (jQuery Editable Combobox) 1.2.0
  * http://code.google.com/p/jquery-jec
  *
  * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
