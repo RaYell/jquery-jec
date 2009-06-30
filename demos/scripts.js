@@ -30,4 +30,9 @@ $(document).ready(function () {
 	$('#setPref').click(function () {
 		$('#demo4').jecPref('position', Number($('#pref').val()));
 	});
+	
+	var options, cb;
+	options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
+	cb = $.jec(options);
+	$('#tabs-5 code').after(cb);
 });

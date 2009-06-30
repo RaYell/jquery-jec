@@ -18,6 +18,7 @@
 			<li><a href="#tabs-2">Disabling and enabling combobox</a></li>
 			<li><a href="#tabs-3">Setting values</a></li>
 			<li><a href="#tabs-4">Setting preferences</a></li>
+			<li><a href="#tabs-5">Creating from the scratch</a></li>
 		</ul>
 		
 		<div id="tabs-1" class="tab">
@@ -103,6 +104,16 @@ $('#setPref').click(function () {
 			<input id="pref" type="text" />
 			<input id="getPref" type="button" value="Get position" />
 			<input id="setPref" type="button" value="Set position" />
+		</div>
+		
+		<div id="tabs-5" class="tab">
+			<p>This demo show the creation of editable combobox from the scratch (pure JavaScript).</p>
+			<code>var options, cb;
+
+options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
+cb = $.jec(options);
+
+$('#tabs-5 code').after(cb);</code>
 		</div>
 	</div>
 </body>
