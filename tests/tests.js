@@ -1,4 +1,8 @@
 /*global $,document,module,test,ok,same*/
+/*members "1", "2.3", acceptedKeys, attr, children, cl, classes, css, eq, exact, filter, focus, 
+focusOnNewOption, hasClass, height, hide, ignoredKeys, jec, jecKill, jecOff, jecOn, jecPref, 
+jecValue, length, max, min, opt1, opt2, opt3, optionClasses, optionStyles, pos, position, ready, 
+remove, styles, test, test2, test3, text, toString, useExistingOptions, val, width*/
 $(document).ready(function () {
 	// hack for html validator (ol cannot be empty
 	$('li').remove();

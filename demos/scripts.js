@@ -1,4 +1,5 @@
 /*global $,document*/
+/*members "1", "2", "3", after, click, jec, jecOff, jecOn, jecPref, jecValue, ready, tabs, val*/
 $(document).ready(function () {
 	$('#tabs').tabs();
 	

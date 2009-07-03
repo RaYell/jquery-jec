@@ -11,6 +11,14 @@
  */
 
 /*global document, jQuery*/
+/*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
+bind, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
+each, editable, empty, enable, eq, exact, expr, extend, filter, floor, fn, focusOnNewOption, 
+fromCharCode, getId, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, 
+jecPref, jecValue, keyCode, keyDown, keyPress, length, match, max, min, optionClasses, optionStyles,
+position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, removeAttr, 
+removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
+useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
@@ -201,7 +209,7 @@
 							for (i = 0; i < value.length; i += 1) {
 								// min,max tuple
 								if (typeOf(value[i]) === 'object' && 
-									!Validators.empty(value[i].min) && 
+									!Validators.empty(value[i].min) &&
 									!Validators.empty(value[i].max) &&
 									Validators.int(value[i].min) && Validators.int(value[i].max) &&
 									value[i].min <= value[i].max) {
