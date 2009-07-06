@@ -10,22 +10,23 @@
  * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
-/*global document, jQuery*/
+/*global document, jQuery, setInterval, jecTests*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
 each, editable, empty, enable, eq, exact, expr, extend, filter, floor, fn, focusOnNewOption, 
-fromCharCode, getId, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, 
-jecPref, jecValue, keyCode, keyDown, keyPress, length, match, max, min, optionClasses, optionStyles,
-position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, removeAttr, 
-removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
-useExistingOptions, val, value*/
+fromCharCode, getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, 
+jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length, match, max, min, 
+optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
+registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, 
+text, unbind, uneditable, useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
 	$.jEC = (function () {
 		// variables declaration
-		var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode = null,
-			defaults, Validators, Hacks, EventHandlers, Combobox, clone, typeOf;
+		var pluginClass = 'jecEditableOption', cursorInterval = 1000, options = {}, values = {}, 
+			lastKeyCode = null, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
+			typeOf;
 		
 		// default options
 		defaults = {
@@ -123,13 +124,25 @@ useExistingOptions, val, value*/
 		
 		// event handlers
 		(EventHandlers = function () {
+			var getKeyCode, clearCursor;
+			
 			// returns key code
-			var getKeyCode = function (event) {
+			getKeyCode = function (event) {
 				if (event.charCode !== undefined && event.charCode !== 0) {
 					return event.charCode;
 				} else {
 					return event.keyCode;
 				}
+			};
+			
+			clearCursor = function (elem) {
+				// handle editable cursor
+				$(this).children('option').each(function () {
+					var text = elem.text();
+					if (text !== elem.val() && text.substring(text.length - 1) === '|') {
+						elem.text(text.substring(0, text.length - 1));
+					}
+				});
 			};
 			
 			// EventHandlers public members
@@ -162,6 +175,7 @@ useExistingOptions, val, value*/
 					var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))], i, 
 						option, value, specialKeys;
 					
+					clearCursor($(this));
 					if (keyCode !== 9) {
 						// special keys codes
 						specialKeys = [37, 38, 39, 40, 46];
@@ -189,7 +203,11 @@ useExistingOptions, val, value*/
 				},
 				// change event handler
 				change: function () {
-					Combobox.setEditableOption($(this));
+					var opt = options[Combobox.getId($(this))];
+					if (opt.useExistingOptions) {
+						Combobox.setEditableOption($(this));
+					}
+					clearCursor($(this));
 				}
 			};
 		}());
@@ -211,7 +229,8 @@ useExistingOptions, val, value*/
 								if (typeOf(value[i]) === 'object' && 
 									!Validators.empty(value[i].min) &&
 									!Validators.empty(value[i].max) &&
-									Validators.int(value[i].min) && Validators.int(value[i].max) &&
+									Validators.int(value[i].min) && 
+									Validators.int(value[i].max) &&
 									value[i].min <= value[i].max) {
 									for (j = value[i].min; j <= value[i].max; j += 1) {
 										keys[keys.length] = j;
@@ -414,7 +433,8 @@ useExistingOptions, val, value*/
 						focusOnNewOption: function (elem) {
 							var id = Combobox.getId(elem), opt = options[id];
 							if (opt !== undefined && opt.focusOnNewOption) {
-								elem.children('option.' + pluginClass).attr('selected', 'selected');
+								elem.children('option.' + pluginClass).
+									attr('selected', 'selected');
 							}
 						},
 						useExistingOptions: function (elem) {
@@ -422,10 +442,8 @@ useExistingOptions, val, value*/
 							if (opt !== undefined) {
 								if (opt.useExistingOptions) {
 									Combobox.setEditableOption(elem);
-									elem.bind('change', EventHandlers.change);
-								} else {
-									elem.unbind('change', EventHandlers.change);
 								}
+								elem.bind('change', EventHandlers.change);
 							}
 						},
 						all: function (elem) {
@@ -459,16 +477,11 @@ useExistingOptions, val, value*/
 						elem.bind('keypress', EventHandlers.keyPress);
 					},
 					destroy: function (elem) {
-						var id = Combobox.getId(elem), opt = options[id];
-						
 						elem.children('option.' + pluginClass).remove();
 						elem.children('option:first').attr('selected', 'selected');
 						elem.unbind('keydown', EventHandlers.keyDown);
 						elem.unbind('keypress', EventHandlers.keyPress);
-						
-						if (opt !== undefined && opt.useExistingOptions) {
-							elem.unbind('change', EventHandlers.change);
-						}
+						elem.unbind('change', EventHandlers.change);
 					}
 				};
 			}());
@@ -488,6 +501,9 @@ useExistingOptions, val, value*/
 			setup = function (elem) {
 				EditableOption.init(elem);
 				Parameters.Handle.all(elem);
+				if ($.jECTimer === undefined) {
+					$.jECTimer = setInterval($.jEC.handleCursor, cursorInterval);
+				}
 			};
 			
 			// Combobox public members
@@ -684,19 +700,31 @@ useExistingOptions, val, value*/
 				// get combobox id
 				getId: function (elem) {
 					return elem.attr('class').match(/jec\d+/);
+				},
+				//handles editable cursor
+				handleCursor: function () {
+					$(':editable').each(function () {
+						var elem = $(this).children('option:selected'), text = elem.text();
+						if (text !== elem.val() && text.substring(text.length - 1) === '|') {
+							elem.text(text.substring(0, text.length - 1));
+						} else {
+							elem.text(text + '|');
+						}
+					});
 				}
 			};
 		}());
 		
 		// jEC public members
 		return {
-			init	: Combobox.init,
-			enable	: Combobox.enable,
-			disable	: Combobox.disable,
-			destroy	: Combobox.destroy,
-			value	: Combobox.value,
-			pref	: Combobox.pref,
-			initJS	: Combobox.initJS
+			init			: Combobox.init,
+			enable			: Combobox.enable,
+			disable			: Combobox.disable,
+			destroy			: Combobox.destroy,
+			value			: Combobox.value,
+			pref			: Combobox.pref,
+			initJS			: Combobox.initJS,
+			handleCursor	: Combobox.handleCursor
 		};
 	}());
 
