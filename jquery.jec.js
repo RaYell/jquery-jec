@@ -76,7 +76,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 		};
 		
 		// validator methods
-		(Validators = function () {
+		Validators = (function () {
 			return {
 				// check if value is an integer
 				int: function (value) {
@@ -104,7 +104,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 		}());
 		
 		// Browser hacks
-		(Hacks = function () {
+		Hacks = (function () {
 			return {
 				// register indexOf method on browsers that doesn't support it
 				registerIndexOf: function () {
@@ -123,7 +123,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 		}());
 		
 		// event handlers
-		(EventHandlers = function () {
+		EventHandlers = (function () {
 			var getKeyCode, clearCursor;
 			
 			// returns key code
@@ -213,11 +213,11 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 		}());
 		
 		// Combobox
-		(Combobox = function () {
+		Combobox = (function () {
 			var Parameters, EditableOption, generateId, setup;
 			
 			// validates and set combobox parameters
-			(Parameters = function () {
+			Parameters = (function () {
 				var Set, Remove, Handle;
 					
 				(Set = function () {
@@ -319,7 +319,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 					};
 				}());
 				
-				(Remove = function () {
+				Remove = (function () {
 					var removeClasses, removeStyles;
 					
 					removeClasses = function (elem, classes) {
@@ -372,7 +372,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 					};
 				}());
 				
-				(Handle = function () {
+				Handle = (function () {
 					var setClasses, setStyles;
 					
 					setClasses = function (elem, classes) {
@@ -466,7 +466,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 				};
 			}());
 			
-			(EditableOption = function () {
+			EditableOption = (function () {
 				return {
 					init: function (elem) {
 						var editableOption = $(document.createElement('option'));
