@@ -1,5 +1,5 @@
 /*global $,document,module,test,ok,same*/
-/*members "1", "2.3", acceptedKeys, attr, children, cl, classes, css, eq, exact, filter, focus, 
+/*members "1", "2.3", acceptedKeys, attr, children, cl, classes, css, eq, filter, focus, 
 focusOnNewOption, hasClass, height, hide, ignoredKeys, jec, jecKill, jecOff, jecOn, jecPref, 
 jECTimer, jecValue, length, max, min, opt1, opt2, opt3, optionClasses, optionStyles, pos, position, 
 ready, remove, styles, test, test2, test3, text, toString, useExistingOptions, val, width*/
@@ -27,8 +27,7 @@ $(document).ready(function () {
 	
 	range = [
 		{min: 10, max: 15}, // min,max tuple
-		{exact: 35}, // exact value
-		55 // number value
+		35, 55 // number values
 	];
 	
 	parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
@@ -503,10 +502,6 @@ $(document).ready(function () {
 							for (j = value[i].min; j <= value[i].max; j += 1) {
 								keys[keys.length] = j;
 							}
-						// exact tuple
-						} else if (value[i] !== null && typeof value[i] === 'object' && 
-							typeof value[i].exact === 'number') {
-							keys[keys.length] = value[i].exact;
 						// number
 						} else if (typeof value[i] === 'number') {
 							keys[keys.length] = value[i];

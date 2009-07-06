@@ -13,12 +13,12 @@
 /*global document, jQuery, setInterval, jecTests*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
-each, editable, empty, enable, eq, exact, expr, extend, filter, floor, fn, focusOnNewOption, 
-fromCharCode, getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, 
-jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length, match, max, min, 
-optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
-registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, 
-text, unbind, uneditable, useExistingOptions, val, value*/
+each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focusOnNewOption, fromCharCode, 
+getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, 
+jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length, match, max, min, optionClasses, 
+optionStyles, position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, 
+removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
+useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
@@ -235,11 +235,6 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 									for (j = value[i].min; j <= value[i].max; j += 1) {
 										keys[keys.length] = j;
 									}
-								// exact tuple
-								} else if (typeOf(value[i]) === 'object' && 
-									!Validators.empty(value[i].exact) && 
-									Validators.int(value[i].exact)) {
-									keys[keys.length] = value[i].exact;
 								// number
 								} else if (typeOf(value[i]) === 'number' && 
 								Validators.int(value[i])) {
