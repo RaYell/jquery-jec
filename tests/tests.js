@@ -1,13 +1,15 @@
 /*global $,document,module,test,ok,same*/
 /*members "1", "2.3", acceptedKeys, attr, children, cl, classes, css, eq, exact, filter, focus, 
 focusOnNewOption, hasClass, height, hide, ignoredKeys, jec, jecKill, jecOff, jecOn, jecPref, 
-jecValue, length, max, min, opt1, opt2, opt3, optionClasses, optionStyles, pos, position, ready, 
-remove, styles, test, test2, test3, text, toString, useExistingOptions, val, width*/
+jECTimer, jecValue, length, max, min, opt1, opt2, opt3, optionClasses, optionStyles, pos, position, 
+ready, remove, styles, test, test2, test3, text, toString, useExistingOptions, val, width*/
 $(document).ready(function () {
 	// hack for html validator (ol cannot be empty
 	$('li').remove();
 	
 	var defaults, range, parsedRange, styleEmpty, combobox, checkOptions, cbOptions;
+	
+	$.jECTimer = null;
 	
 	defaults = {
 		position: 0,
@@ -34,7 +36,7 @@ $(document).ready(function () {
 	cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}];
 	
 	styleEmpty = function (value) {
-		return value === 'auto' || value === '0px' || value === 'intrinsic';
+		return value === 'auto' || value === '0px' || value === 'intrinsic' || value === '';
 	};
 	
 	checkOptions = function (elem, expectedOptions) {
