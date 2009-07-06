@@ -432,6 +432,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 						},
 						focusOnNewOption: function (elem) {
 							var id = Combobox.getId(elem), opt = options[id];
+							elem.children('option:not(.' + pluginClass + '):first').attr('selected', 'selected');
 							if (opt !== undefined && opt.focusOnNewOption) {
 								elem.children('option.' + pluginClass).
 									attr('selected', 'selected');
