@@ -1,351 +1,362 @@
-/*global $,document,module,test,ok,same*/
-/*members "1", "2.3", acceptedKeys, attr, children, cl, classes, css, eq, filter, focus, 
-focusOnNewOption, hasClass, height, hide, ignoredKeys, jec, jecKill, jecOff, jecOn, jecPref, 
-jECTimer, jecValue, length, max, min, opt1, opt2, opt3, optionClasses, optionStyles, pos, position, 
-ready, remove, styles, test, test2, test3, text, toString, useExistingOptions, val, width*/
+/*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
+/*members acceptedKeys, attr, children, classes, css, display, done, eq, filter, focus, 
+focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, 
+jecPref, jecValue, k1, k2, k3, k4, length, log, max, min, ok, opt1, opt2, opt3, optionClasses, 
+optionStyles, position, ready, remove, replace, styles, test, testDone, text, useExistingOptions, 
+val*/
 $(document).ready(function () {
-	// hack for html validator (ol cannot be empty
+	
+	if (typeof fireunit === "object") {
+        QUnit.log = fireunit.ok;
+        QUnit.done = fireunit.testDone;
+	}
+
+	// hack for html validator (ol cannot be empty)
 	$('li').remove();
 	
-	var defaults, range, parsedRange, styleEmpty, combobox, checkOptions, cbOptions;
-	
+	// disable timers in order not to hang up the browser
 	$.jECTimer = null;
 	
-	defaults = {
-		position: 0,
-		classes: [],
-		styles: {},
-		optionClasses: [],
-		optionStyles: {},
-		useExistingOptions: false,
-		ignoredKeys: [],
-		acceptedKeys: [
-			{min: 32, max: 126},
-			{min: 191, max: 382}
-		]
-	};
-	
-	range = [
-		{min: 10, max: 15}, // min,max tuple
-		35, 55 // number values
-	];
-	
-	parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
-	
-	cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}];
-	
-	styleEmpty = function (value) {
-		return value === 'auto' || value === '0px' || value === 'intrinsic' || value === '';
-	};
-	
-	checkOptions = function (elem, expectedOptions) {
-		var key, option, status = true;
-		for (key in expectedOptions) {
-			if (expectedOptions[key] !== undefined) {
-				option = elem.children('option[value=' + key + ']');
-				if (option.length === 0 || option.text() !== expectedOptions[key]) {
-					return false;
-				}
-			}
-		}
-		return status;
+	var trim = function (str) {
+		return str.replace(/(^\s+)|(\s+$)/, "");
 	};
 	
 	module('init');
 	test('Editable combobox initialization', function () {
+		expect(1);
+		
 		$('#test').jec();
 		ok($('#test option.jecEditableOption').length === 1, 
-            'We expect new editable option element to be created');
+            'Create combobox without any preferences');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: position', function () {
+		expect(13);
+		
 		$('#test').jec({position: 0});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on first position');
+            'Editable option on first position');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 1});
 		ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on second position');
+            'Editable option on second position');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 3});
 		ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on last position');
+            'Editable option on last position');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: 100});
 		ok($('#test').children('option:last').filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on last position (value too big)');
+            'Editable option on last position (value greater then number of options)');
 		$('#test').jecKill();
 		
-		$('#test').jec({position: 4.2});
+		$('#test').jec({position: -1});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (float)');
+            'Editable option on first position (negative int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({position: 1.2});
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: '1'});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (string)');
+            'Editable option on first position (string)');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: true});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (boolean)');
+            'Editable option on first position (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: null});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (null)');
+            'Editable option on first position (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({position: undefined});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (undefined)');
+            'Editable option on first position (undefined)');
 		$('#test').jecKill();
 		
-		$('#test').jec({position: {pos: 1}});
+		$('#test').jec({position: {}});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (object)');
+            'Editable option on first position (object)');
 		$('#test').jecKill();
 		
-		$('#test').jec({position: [1]});
+		$('#test').jec({position: []});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (array)');
+            'Editable option on first position (array)');
+		$('#test').jecKill();
+		
+		$('#test').jec({position: $});
+		ok($('#test').children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: classes', function () {
-		var idRegex = /jec\d+/, className = 'c12', otherClassName = 'c2';
+		expect(13);
+		
+		var idRegex = /jec\d+/, c1 = 'class1', c2 = 'class2';
+		
 		$('#test').jec({classes: ''});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect new editable option to have no extra classes');
+            'No extra classes (string)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: className});
-		ok($('#test').hasClass(className), 
-            'We expect new editable option to have one extra class (string)');
+		$('#test').jec({classes: c1});
+		ok($('#test').hasClass(c1), 
+            'One extra class (string)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: className + ' ' + otherClassName});
-		ok($('#test').hasClass(className) && $('#test').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (string)');
+		$('#test').jec({classes: c1 + ' ' + c2});
+		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 
+            'Several extra classes (string)');
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: []});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect new editable option to have no extra classes (array)');
+            'No extra classes (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: [className]});
-		ok($('#test').hasClass(className), 
-            'We expect new editable option to have one extra class (array)');
+		$('#test').jec({classes: [c1]});
+		ok($('#test').hasClass(c1), 
+            'One extra class (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: [className, otherClassName]});
-		ok($('#test').hasClass(className) && $('#test').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (array)');
+		$('#test').jec({classes: [c1, c2]});
+		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 
+            'Several extra classes (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: 10});
+		$('#test').jec({classes: 1});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect malformed classes option to be ignored (number)');
+            'No extra classes (int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({classes: 1.2});
+		ok(idRegex.test($('#test').attr('class')), 
+            'No extra classes (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: true});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect malformed classes option to be ignored (boolean)');
+            'No extra classes (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: null});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect malformed classes option to be ignored (null)');
+            'No extra classes (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({classes: undefined});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect malformed classes option to be ignored (undefined)');
+            'No extra classes (undefined)');
 		$('#test').jecKill();
 		
-		$('#test').jec({classes: {cl: className}});
+		$('#test').jec({classes: {}});
 		ok(idRegex.test($('#test').attr('class')), 
-            'We expect malformed classes option to be ignored (object)');
+            'No extra classes (object)');
+		$('#test').jecKill();
+		
+		$('#test').jec({classes: $});
+		ok(idRegex.test($('#test').attr('class')), 
+            'No extra classes (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: optionClasses', function () {
-		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
+		expect(13);
+		
+		var c1 = 'c1', c2 = 'c2';
+		
 		$('#test').jec({optionClasses: ''});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect new editable option to have no extra classes');
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (string)');
 		$('#test').jecKill();
 		
-		className = 'myClass';
-		$('#test').jec({optionClasses: className});
-		ok($('#test').children('option.jecEditableOption').hasClass(className), 
-            'We expect new editable option to have one extra class (string)');
+		$('#test').jec({optionClasses: c1});
+		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
+            'One extra class (string)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionClasses: className + ' ' + otherClassName});
-		ok($('#test').children('option.jecEditableOption').hasClass(className) && 
-            $('#test').children('option.jecEditableOption').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (string)');
+		$('#test').jec({optionClasses: c1 + ' ' + c2});
+		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
+            $('#test').children('option.jecEditableOption').hasClass(c2), 
+            'Several extra classes (string)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionClasses: []});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect new editable option to have no extra classes (array)');
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionClasses: [className]});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName) && 
-            $('#test').children('option.jecEditableOption').hasClass(className), 
-            'We expect new editable option to have one extra class (array)');
+		$('#test').jec({optionClasses: [c1]});
+		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
+            'One extra class (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionClasses: [className, otherClassName]});
-		ok($('#test').children('option.jecEditableOption').hasClass(className) && 
-            $('#test').children('option.jecEditableOption').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (array)');
+		$('#test').jec({optionClasses: [c1, c2]});
+		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
+            $('#test').children('option.jecEditableOption').hasClass(c2), 
+             'Several extra classes (array)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionClasses: 10});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (number)');
+		$('#test').jec({optionClasses: 1});
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({optionClasses: 1.2});
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionClasses: true});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (boolean)');
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionClasses: null});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (null)');
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionClasses: undefined});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (undefined)');
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (undefined)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionClasses: {cl: className}});
-		ok($('#test').children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (object)');
+		$('#test').jec({optionClasses: {}});
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (object)');
+		$('#test').jecKill();
+		
+		$('#test').jec({optionClasses: $});
+		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: styles', function () {
-		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
-			otherStyleValue = '200px', obj = {};
+		expect(12);
+		
+		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
 		
 		$('#test').jec({styles: obj});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect new editable option to have no extra styles');
+		same($('#test').css(s1), '1', 'No extra styles');
 		$('#test').jecKill();
 		
-		obj[styleName] = styleValue;
+		obj[s1] = v1;
 		$('#test').jec({styles: obj});
-		ok($('#test').css(styleName) === styleValue, 
-            'We expect new editable option to have one extra style');
+		same($('#test').css(s1), v1, 'Opacity changed');
 		$('#test').jecKill();
 		
-		obj[otherStyleName] = otherStyleValue;
+		obj[s2] = v2;
 		$('#test').jec({styles: obj});
-		ok($('#test').css(styleName) === styleValue && 
-            $('#test').css(otherStyleName) === otherStyleValue,
-             'We expect new editable option to have several extra styles');
+		same($('#test').css(s1), v1, 'Opacity and font-size changed, checking opacity');
+        same($('#test').css(s2), v2, 'Opacity and font-size changed, checking font-size');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: 'width: 100px'});
-		ok(styleEmpty($('#test').css(styleName)),
-			'We expect malformed styles option to be ignored (string)');
+		same($('#test').css(s1), '1', 'No extra styles (string)');
 		$('#test').jecKill();
 		
-		$('#test').jec({styles: 10});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect malformed styles option to be ignored (number)');
+		$('#test').jec({styles: 0});
+		same($('#test').css(s1), '1', 'No extra styles (int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: 0.5});
+		same($('#test').css(s1), '1', 'No extra styles (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: true});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect malformed styles option to be ignored (boolean)');
+		same($('#test').css(s1), '1', 'No extra styles (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: null});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect malformed styles option to be ignored (null)');
+		same($('#test').css(s1), '1', 'No extra styles (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({styles: undefined});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect malformed styles option to be ignored (undefined)');
+		same($('#test').css(s1), '1', 'No extra styles (undefined)');
 		$('#test').jecKill();
 		
-		$('#test').jec({styles: [{styles: obj}]});
-		ok(styleEmpty($('#test').css(styleName)),
-            'We expect malformed styles option to be ignored (array)');
+		$('#test').jec({styles: []});
+		same($('#test').css(s1), '1', 'No extra styles (array)');
+		$('#test').jecKill();
+		
+		$('#test').jec({styles: $});
+		same($('#test').css(s1), '1', 'No extra styles (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: optionStyles', function () {
-		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
-			otherStyleValue = '200px', obj = {};
+		expect(12);
+		
+		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
 		
 		$('#test').jec({optionStyles: obj});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)), 
-            'We expect new editable option to have no extra styles');
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles');
 		$('#test').jecKill();
 		
-		obj[styleName] = styleValue;
+		obj[s1] = v1;
 		$('#test').jec({optionStyles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue, 
-            'We expect new editable option to have one extra style');
+		same($('#test option.jecEditableOption').css(s1), v1, 'Opacity changed');
 		$('#test').jecKill();
 		
-		obj[otherStyleName] = otherStyleValue;
+		obj[s2] = v2;
 		$('#test').jec({optionStyles: obj});
-		ok($('#test').children('option.jecEditableOption').css(styleName) === styleValue && 
-            $('#test').children('option.jecEditableOption').css(otherStyleName) === otherStyleValue,
-             'We expect new editable option to have several extra styles');
+		same($('#test option.jecEditableOption').css(s1), v1, 
+			'Opacity and font-size changed, checking opacity');
+        same($('#test option.jecEditableOption').css(s2), v2, 
+			'Opacity and font-size changed, checking font-size');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionStyles: 'width: 100px'});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-			'We expect malformed styles option to be ignored (string)');
+		$('#test').jec({styles: 'width: 100px'});
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionStyles: 10});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (number)');
+		$('#test').jec({optionStyles: 0});
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({optionStyles: 0.5});
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionStyles: true});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (boolean)');
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionStyles: null});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (null)');
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({optionStyles: undefined});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (undefined)');
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
 		$('#test').jecKill();
 		
-		$('#test').jec({optionStyles: [{styles: obj}]});
-		ok(styleEmpty($('#test').children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (array)');
+		$('#test').jec({optionStyles: []});
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (array)');
+		$('#test').jecKill();
+		
+		$('#test').jec({optionStyles: $});
+		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: focusOnNewOption', function () {
+		expect(9);
+		
 		$('#test').jec({focusOnNewOption: false});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect focus to be set on first option');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: true});
@@ -354,142 +365,604 @@ $(document).ready(function () {
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: '1'});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (string)');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (string)');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: 1});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (number)');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (int)');
+		$('#test').jecKill();
+		
+		$('#test').jec({focusOnNewOption: 1.2});
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (float)');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: null});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (null)');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (null)');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: undefined});
 		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (undefined)');
+			'Focus on first option (undefined)');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: {focus: true}});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (object)');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (object)');
 		$('#test').jecKill();
 		
 		$('#test').jec({focusOnNewOption: [true]});
-		ok($('#test option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (array)');
+		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (array)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting: useExistingOptions', function () {
 		// nothing to test here at the moment
+		expect(0);
 	});
 	
 	test('Setting: ignoredKeys', function () {
 		// nothing to test here at the moment
+		expect(0);
 	});
 	test('Setting: acceptedKeys', function () {
 		// nothing to test here at the moment
+		expect(0);
+	});
+	
+	module('initJS');
+	test('Editable combobox initialization', function () {
+		expect(1);
+		
+		var combobox = $.jec();
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+            'Create pure JS combobox without any preferences');
+		combobox.jecKill();
+	});
+	
+	test('Options', function () {
+		expect(23);
+		
+		var op = [1, 1.2, 'v1', {k1: 'v1'}, {k2: 1, k3: 1.2, k4: 'v4'}, [], undefined, null, true],
+			combobox = $.jec(op);
+		
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created');
+		same(combobox.children('option:eq(1)').val(), '1', 'Checking option #1 key');
+		same(combobox.children('option:eq(1)').text(), '1', 'Checking option #1 value');
+		same(combobox.children('option:eq(2)').val(), '1.2', 'Checking option #2 key');
+		same(combobox.children('option:eq(2)').text(), '1.2', 'Checking option #2 value');
+		same(combobox.children('option:eq(3)').val(), 'v1', 'Checking option #3 key');
+		same(combobox.children('option:eq(3)').text(), 'v1', 'Checking option #3 value');
+		same(combobox.children('option:eq(4)').val(), 'k1', 'Checking option #4 key');
+		same(combobox.children('option:eq(4)').text(), 'v1', 'Checking option #4 value');
+		same(combobox.children('option:eq(5)').val(), 'k2', 'Checking option #5 key');
+		same(combobox.children('option:eq(5)').text(), '1', 'Checking option #5 value');
+		same(combobox.children('option:eq(6)').val(), 'k3', 'Checking option #6 key');
+		same(combobox.children('option:eq(6)').text(), '1.2', 'Checking option #6 value');
+		same(combobox.children('option:eq(7)').val(), 'k4', 'Checking option #7 key');
+		same(combobox.children('option:eq(7)').text(), 'v4', 'Checking option #7 value');
+		same(combobox.children('option').length, 8, 'Checking option array length');
+		combobox.jecKill();
+		
+		combobox = $.jec(undefined);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+			'Combobox created (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(null);
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec('1');
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+			'Combobox created (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(1);
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(1.2);
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(true);
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+			'Combobox created (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec({});
+		ok(combobox.children('option.jecEditableOption').length === 1, 
+			'Combobox created (boolean)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: position', function () {
+		expect(13);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],	
+			combobox = $.jec(cbOptions, {position: 0});
+		
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 1});
+		ok(combobox.children('option').eq(1).filter('.jecEditableOption').length === 1, 
+            'Editable option on second position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 3});
+		ok(combobox.children('option').eq(3).filter('.jecEditableOption').length === 1, 
+            'Editable option on last position');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 100});
+		ok(combobox.children('option:last').filter('.jecEditableOption').length === 1, 
+            'Editable option on last position (value greater then number of options)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: -1});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (negative int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: 1.2});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: '1'});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: true});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: null});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: undefined});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: {}});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: []});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {position: $});
+		ok(combobox.children('option:first.jecEditableOption').length === 1, 
+            'Editable option on first position (function)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: classes', function () {
+		expect(13);
+		
+		var idRegex = /jec\d+/, c1 = 'class1', c2 = 'class2', 
+			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {classes: ''});
+		
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: c1});
+		ok(combobox.hasClass(c1), 
+            'One extra class (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: c1 + ' ' + c2});
+		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 
+            'Several extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: []});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: [c1]});
+		ok(combobox.hasClass(c1), 
+            'One extra class (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: [c1, c2]});
+		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 
+            'Several extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: 1});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: 1.2});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: true});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: null});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: undefined});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: {}});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {classes: $});
+		ok(idRegex.test(combobox.attr('class')), 
+            'No extra classes (function)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: optionClasses', function () {
+		expect(13);
+		
+		var c1 = 'c1', c2 = 'c2', cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {optionClasses: ''});
+		
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: c1});
+		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
+            'One extra class (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: c1 + ' ' + c2});
+		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
+            combobox.children('option.jecEditableOption').hasClass(c2), 
+            'Several extra classes (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: []});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: [c1]});
+		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
+            'One extra class (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: [c1, c2]});
+		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
+            combobox.children('option.jecEditableOption').hasClass(c2), 
+             'Several extra classes (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: 1});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: 1.2});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: true});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: null});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: undefined});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: {}});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionClasses: $});
+		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
+			'jecEditableOption', 'No extra classes (function)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: styles', function () {
+		expect(12);
+		
+		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {},
+			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {styles: obj});
+		
+		same(combobox.css(s1), '1', 'No extra styles');
+		combobox.jecKill();
+		
+		obj[s1] = v1;
+		combobox = $.jec(cbOptions, {styles: obj});
+		same(combobox.css(s1), v1, 'Opacity changed');
+		combobox.jecKill();
+		
+		obj[s2] = v2;
+		combobox = $.jec(cbOptions, {styles: obj});
+		same(combobox.css(s1), v1, 'Opacity and font-size changed, checking opacity');
+        same(combobox.css(s2), v2, 'Opacity and font-size changed, checking font-size');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
+		same(combobox.css(s1), '1', 'No extra styles (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 0});
+		same(combobox.css(s1), '1', 'No extra styles (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 0.5});
+		same(combobox.css(s1), '1', 'No extra styles (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: true});
+		same(combobox.css(s1), '1', 'No extra styles (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: null});
+		same(combobox.css(s1), '1', 'No extra styles (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: undefined});
+		same(combobox.css(s1), '1', 'No extra styles (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: []});
+		same(combobox.css(s1), '1', 'No extra styles (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: $});
+		same(combobox.css(s1), '1', 'No extra styles (function)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: optionStyles', function () {
+		expect(12);
+		
+		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {},
+			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {optionStyles: obj});
+		
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles');
+		combobox.jecKill();
+		
+		obj[s1] = v1;
+		combobox = $.jec(cbOptions, {optionStyles: obj});
+		same(combobox.children('option.jecEditableOption').css(s1), v1, 'Opacity changed');
+		combobox.jecKill();
+		
+		obj[s2] = v2;
+		combobox = $.jec(cbOptions, {optionStyles: obj});
+		same(combobox.children('option.jecEditableOption').css(s1), v1, 
+			'Opacity and font-size changed, checking opacity');
+        same(combobox.children('option.jecEditableOption').css(s2), v2, 
+			'Opacity and font-size changed, checking font-size');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: 0});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: 0.5});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: true});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: null});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: undefined});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: []});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (array)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {optionStyles: $});
+		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: focusOnNewOption', function () {
+		expect(9);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {focusOnNewOption: false});
+		
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: true});
+		ok(combobox.children('option:first:selected').length === 1, 
+            'We expect focus to be moved to editable option');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: '1'});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (string)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: 1});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (int)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: 1.2});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (float)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: null});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (null)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: undefined});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 
+			'Focus on first option (undefined)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (object)');
+		combobox.jecKill();
+		
+		combobox = $.jec(cbOptions, {focusOnNewOption: [true]});
+		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (array)');
+		combobox.jecKill();
+	});
+	
+	test('Setting: useExistingOptions', function () {
+		// nothing to test here at the moment
+		expect(0);
+	});
+	
+	test('Setting: ignoredKeys', function () {
+		// nothing to test here at the moment
+		expect(0);
+	});
+	test('Setting: acceptedKeys', function () {
+		// nothing to test here at the moment
+		expect(0);
 	});
 	
 	module('disable');
 	test('Editable combobox deactivation', function () {
+		expect(2);
+		
 		$('#test').jec();
 		$('#test').jecOff();
-		ok($('#test option').length === 3 && $('#test[class*=jec]').length === 1, 
-            'We expect editable combobox to be disabled');
+		ok($('#test option').length === 3, 'Check if editable option was removed');
+        ok($('#test[class*=jec]').length === 1, 'Check if id is still present');
 		$('#test').jecKill();
 	});
 	
 	module('enable');
 	test('Editable combobox activation', function () {
+		expect(1);
+		
 		$('#test').jec();
 		$('#test').jecOff();
 		$('#test').jecOn();
-		ok($('#test option.jecEditableOption').length === 1, 
-            'We expect editable combobox to be enabled');
+		ok($('#test option.jecEditableOption').length === 1, 'Check if editable option was added');
 		$('#test').jecKill();
 	});
 	
 	module('kill');
 	test('Editable combobox destruction', function () {
+		expect(2);
+		
 		$('#test').jec();
 		$('#test').jecKill();
-		ok($('#test option').length === 3 && $('#test').attr('jec') === undefined, 
-            'We expect editable combobox to be destroyed');
+		ok($('#test option').length === 3, 'Check if editable option was removed');
+        ok($('#test[class*=jec]').length === 0, 'Check if id was removed');
 	});
 	
 	module('value');
 	test('Getting value', function () {
-		var testValue = 'myTestValue';
+		expect(3);
+		
+		var v1 = 'v1', v2 = 1, v3 = 1.2;
+		
 		$('#test').jec();
-		$('#test option.jecEditableOption').text(testValue).val(testValue);
-		same($('#test').jecValue(), testValue, 
-            'We expect value of ' + testValue + ' to be retrieved');
+		$('#test option.jecEditableOption').text(v1).val(v1);
+		same($('#test').jecValue(), v1, 'Get value (string)');
+		$('#test option.jecEditableOption').text(v2).val(v2);
+		same($('#test').jecValue(), String(v2), 'Get value (int)');
+		$('#test option.jecEditableOption').text(v3).val(v3);
+		same($('#test').jecValue(), String(v3), 'Get value (float)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting value', function () {
-		var strValue = 'myString', intValue = 123, floatValue = 1.2;
+		expect(9);
+		
+		var v1 = 'v1', v2 = 1, v3 = 1.2;
 		
 		$('#test').jec();
-		$('#test').jecValue(strValue);
-		same($('#test').jecValue(), strValue, 'We expect value of ' + strValue + ' to be set');
-		
-		$('#test').jecValue(floatValue);
-		same($('#test').jecValue(), floatValue.toString(), 
-            'We expect value of ' + floatValue + ' to be set');
-		
-		$('#test').jecValue(intValue);
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect value of ' + intValue + ' to be set');
-		
+		$('#test').jecValue(v1);
+		same($('#test').jecValue(), v1, 'Get value (string)');
+		$('#test').jecValue(v2);
+		same($('#test').jecValue(), String(v2), 'Get value (int)');
+		$('#test').jecValue(v3);
+		same($('#test').jecValue(), String(v3), 'Get value (float)');
 		$('#test').jecValue({});
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect object value to be ignored and value of ' + intValue + ' be still set');
-		
+		same($('#test').jecValue(), String(v3), 'Get value (object)');
 		$('#test').jecValue([]);
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect array value to be ignored and value of ' + intValue + ' be still set');
-		
+		same($('#test').jecValue(), String(v3), 'Get value (array)');
 		$('#test').jecValue(null);
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect null value to be ignored and value of ' + intValue + ' be still set');
-		
+		same($('#test').jecValue(), String(v3), 'Get value (null)');
 		$('#test').jecValue(undefined);
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect undefined value to be ignored and value of ' + intValue + ' be still set');
-            
-        $('#test').jecValue(true);
-		same($('#test').jecValue(), intValue.toString(), 
-            'We expect boolean value to be ignored and value of ' + intValue + ' be still set');
-		
+		same($('#test').jecValue(), String(v3), 'Get value (undefined)');
+		$('#test').jecValue(true);
+		same($('#test').jecValue(), String(v3), 'Get value (boolean)');
+		$('#test').jecValue($);
+		same($('#test').jecValue(), String(v3), 'Get value (function)');
 		$('#test').jecKill();
 	});
 	
 	module('pref');
 	test('Getting preference', function () {
+		expect(16);
+		
 		$('#test').jec();
-		ok($('#test').jecPref() === undefined, 'We expect empty preference to return nothing');
+		ok($('#test').jecPref() === undefined, 'Get preference (undefined)');
+		ok($('#test').jecPref(null) === undefined, 'Get preference (null)');
+		ok($('#test').jecPref({}) === undefined, 'Get preference (object)');
+		ok($('#test').jecPref(1) === undefined, 'Get preference (int)');
+		ok($('#test').jecPref(1.2) === undefined, 'Get preference (float)');
+		ok($('#test').jecPref(true) === undefined, 'Get preference (boolean)');
+		ok($('#test').jecPref($) === undefined, 'Get preference (function)');
+		ok($('#test').jecPref('dummy') === undefined, 'Get preference (not-existing string)');
 		
-		ok($('#test').jecPref(undefined) === undefined, 
-			'We expect null preference to return nothing');
+		var i, j, key, keys = [], value, defaults;
+		defaults = {
+			position: 0,
+			classes: [],
+			styles: {},
+			optionClasses: [],
+			optionStyles: {},
+			useExistingOptions: false,
+			ignoredKeys: [],
+			acceptedKeys: [
+				{min: 32, max: 126},
+				{min: 191, max: 382}
+			]
+		};
 		
-		ok($('#test').jecPref(null) === undefined, 'We expect null preference to return nothing');
-		
-		ok($('#test').jecPref([]) === undefined, 'We expect array preference to return nothing');
-		
-		ok($('#test').jecPref({}) === undefined, 'We expect object preference to return nothing');
-		
-		ok($('#test').jecPref(1) === undefined, 'We expect number preference to return nothing');
-		
-		ok($('#test').jecPref('dummy') === undefined, 
-			'We expect not-existing string preference to return nothing');
-		
-		var i, j, key, keys = [], value;
 		for (key in defaults) {
 			if (defaults[key] !== undefined) {
 				if (key === 'acceptedKeys') {
@@ -507,11 +980,9 @@ $(document).ready(function () {
 							keys[keys.length] = value[i];
 						}
 					}
-					same($('#test').jecPref('acceptedKeys'), keys, 'We expect ' + key + 
-						' parameter value of ' + keys + ' to be returned');
+					same($('#test').jecPref('acceptedKeys'), keys, 'Get ' + key + ' value');
 				} else {
-					same($('#test').jecPref(key), defaults[key], 'We expect ' + key + 
-						' parameter value of ' + defaults[key] + ' to be returned');
+					same($('#test').jecPref(key), defaults[key], 'Get ' + key + ' value');
 				} 
 			}
 		}
@@ -520,572 +991,193 @@ $(document).ready(function () {
 	});
 	
 	test('Setting preference: position', function () {
+		expect(9);
+		
 		$('#test').jec();
 		$('#test').jecPref('position', 1);
-		same($('#test').jecPref('position'), 1, 'We expect preference to have value of 1');
+		same($('#test').jecPref('position'), 1, 'Set preference (int)');
 		$('#test').jecPref('position', 1.2);
-		ok($('#test').jecPref('position') === 1, 'We expect float preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (float)');
 		$('#test').jecPref('position', '2');
-		ok($('#test').jecPref('position') === 1, 'We expect string preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (string)');
 		$('#test').jecPref('position', {});
-		ok($('#test').jecPref('position') === 1, 'We expect object preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (object)');
 		$('#test').jecPref('position', []);
-		ok($('#test').jecPref('position') === 1, 'We expect array preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (array)');
 		$('#test').jecPref('position', false);
-		ok($('#test').jecPref('position') === 1, 
-			'We expect boolean preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (boolean)');
 		$('#test').jecPref('position', undefined);
-		ok($('#test').jecPref('position') === 1, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (undefined)');
 		$('#test').jecPref('position', null);
-		ok($('#test').jecPref('position') === 1, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('position'), 1, 'Set preference (null)');
+		$('#test').jecPref('position', $);
+		same($('#test').jecPref('position'), 1, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: classes', function () {
-		var className = 'myClass', classArr = [className];
+		expect(9);
+		
+		var c1 = 'c1';
 		$('#test').jec();
-		$('#test').jecPref('classes', classArr);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect array preference value to be handled');
-		$('#test').jecPref('classes', className);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect string preference value to be handled');
+		$('#test').jecPref('classes', [c1]);
+		same($('#test').jecPref('classes'), [c1], 'Set preference (array)');
+		$('#test').jecPref('classes', c1);
+		same($('#test').jecPref('classes'), [c1], 'Set preference (string)');
 		$('#test').jecPref('classes', 1);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect number preference value to be ignored');
+		same($('#test').jecPref('classes'), [c1], 'Set preference (int)');
+		$('#test').jecPref('classes', 1.2);
+		same($('#test').jecPref('classes'), [c1], 'Set preference (float)');
 		$('#test').jecPref('classes', {});
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect object preference value to be ignored');
+		same($('#test').jecPref('classes'), [c1], 'Set preference (object)');
 		$('#test').jecPref('classes', false);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect boolean preference value to be ignored');
+		same($('#test').jecPref('classes'), [c1], 'Set preference (boolean)');
 		$('#test').jecPref('classes', undefined);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('classes'), [c1], 'Set preference (undefined)');
 		$('#test').jecPref('classes', null);
-		same($('#test').jecPref('classes'), classArr, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('classes'), [c1], 'Set preference (null)');
+		$('#test').jecPref('classes', $);
+		same($('#test').jecPref('classes'), [c1], 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: styles', function () {
-		var styles = {width: '100px', height: '200px'};
+		expect(9);
+		
+		var styles = {display: 'none', 'font-size': '30px'};
+		
 		$('#test').jec();
 		$('#test').jecPref('styles', styles);
-		same($('#test').jecPref('styles'), styles, 
-			'We expect object preference value to be handled');
+		same($('#test').jecPref('styles'), styles, 'Set preference (object)');
 		$('#test').jecPref('styles', []);
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect array preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (array)');
 		$('#test').jecPref('styles', 'width: 100px;');
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect string preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (string)');
 		$('#test').jecPref('styles', 1);
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect number preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (int)');
+		$('#test').jecPref('styles', 1.2);
+		same($('#test').jecPref('styles'), styles, 'Set preference (float)');
 		$('#test').jecPref('styles', false);
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect boolean preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (boolean)');
 		$('#test').jecPref('styles', undefined);
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (undefined)');
 		$('#test').jecPref('styles', null);
-		ok($('#test').jecPref('styles') === styles, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('styles'), styles, 'Set preference (null)');
+		$('#test').jecPref('styles', $);
+		same($('#test').jecPref('styles'), styles, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: focusOnNewOption', function () {
+		expect(9);
+		
 		$('#test').jec();
 		$('#test').jecPref('focusOnNewOption', true);
-		same($('#test').jecPref('focusOnNewOption'), true, 
-			'We expect boolean preference value to be handled');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (boolean)');
 		$('#test').jecPref('focusOnNewOption', 'true');
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect string preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (string)');
 		$('#test').jecPref('focusOnNewOption', {});
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect object preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (object)');
 		$('#test').jecPref('focusOnNewOption', []);
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect array preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (array)');
 		$('#test').jecPref('focusOnNewOption', 1);
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect number preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (int)');
+		$('#test').jecPref('focusOnNewOption', 1.2);
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (float)');
 		$('#test').jecPref('focusOnNewOption', undefined);
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (undefined)');
 		$('#test').jecPref('focusOnNewOption', null);
-		ok($('#test').jecPref('focusOnNewOption') === true, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (null)');
+		$('#test').jecPref('focusOnNewOption', $);
+		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: useExistingOptions', function () {
+		expect(9);
+		
 		$('#test').jec();
 		$('#test').jecPref('useExistingOptions', true);
-		same($('#test').jecPref('useExistingOptions'), true, 
-			'We expect boolean preference value to be handled');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (boolean)');
 		$('#test').jecPref('useExistingOptions', 'true');
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect string preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (string)');
 		$('#test').jecPref('useExistingOptions', {});
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect object preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (object)');
 		$('#test').jecPref('useExistingOptions', []);
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect array preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (array)');
 		$('#test').jecPref('useExistingOptions', 1);
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect number preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (int)');
+		$('#test').jecPref('useExistingOptions', 1.2);
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (float)');
 		$('#test').jecPref('useExistingOptions', undefined);
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (undefined)');
 		$('#test').jecPref('useExistingOptions', null);
-		ok($('#test').jecPref('useExistingOptions') === true, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (null)');
+		$('#test').jecPref('useExistingOptions', $);
+		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: ignoredKeys', function () {
+		expect(9);
+		
+		var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
+		range = [
+			{min: 10, max: 15}, // (min, max) tuple
+			35, 55 // number values
+		];
+		
 		$('#test').jec();
 		$('#test').jecPref('ignoredKeys', range);
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect array preference value to be handled');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (array)');
 		$('#test').jecPref('ignoredKeys', true);
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect boolean preference value to be ignored');
-		$('#test').jecPref('ignoredKeys', 'true');
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect string preference value to be ignored');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (boolean)');
+		$('#test').jecPref('ignoredKeys', '');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (string)');
 		$('#test').jecPref('ignoredKeys', {});
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect object preference value to be ignored');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (object)');
 		$('#test').jecPref('ignoredKeys', 1);
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect number preference value to be range');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (int)');
+		$('#test').jecPref('ignoredKeys', 1.2);
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (float)');
 		$('#test').jecPref('ignoredKeys', undefined);
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (undefined)');
 		$('#test').jecPref('ignoredKeys', null);
-		same($('#test').jecPref('ignoredKeys'), parsedRange, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (null)');
+		$('#test').jecPref('ignoredKeys', $);
+		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	
 	test('Setting preference: acceptedKeys', function () {
+		expect(9);
+		
+		var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
+		range = [
+			{min: 10, max: 15}, // (min, max) tuple
+			35, 55 // number values
+		];
+		
 		$('#test').jec();
 		$('#test').jecPref('acceptedKeys', range);
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect array preference value to be handled');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (array)');
 		$('#test').jecPref('acceptedKeys', true);
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect boolean preference value to be ignored');
-		$('#test').jecPref('acceptedKeys', 'true');
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect string preference value to be ignored');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (boolean)');
+		$('#test').jecPref('acceptedKeys', '');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (string)');
 		$('#test').jecPref('acceptedKeys', {});
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect object preference value to be ignored');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (object)');
 		$('#test').jecPref('acceptedKeys', 1);
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect number preference value to be range');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (int)');
+		$('#test').jecPref('acceptedKeys', 1.2);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (float)');
 		$('#test').jecPref('acceptedKeys', undefined);
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect undefined preference value to be ignored');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (undefined)');
 		$('#test').jecPref('acceptedKeys', null);
-		same($('#test').jecPref('acceptedKeys'), parsedRange, 
-			'We expect null preference value to be ignored');
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (null)');
+		$('#test').jecPref('acceptedKeys', $);
+		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
 		$('#test').jecKill();
-	});
-	
-	module('initJS');
-	test('Editable combobox initialization', function () {
-		combobox = $.jec();
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect new editable option element to be created');
-		combobox.jecKill();
-	});
-	
-	test('Options', function () {
-		var expectedOptions = {1: '1', 2.3: '2.3', val: 'val', test: 'val', test2: '1', 
-			test3: '2.3'};
-		combobox = $.jec([1, 2.3, 'val', {test: 'val'}, {test2: 1, test3: 2.3}, [], undefined, null,
-			true]);
-		ok(combobox.children('option.jecEditableOption').length === 1 && 
-			checkOptions(combobox, expectedOptions), 
-            'We expect new editable option element to be created with correct options');
-		combobox.jecKill();
-		
-		combobox = $.jec(undefined);
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(null);
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec('1');
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(1);
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(true);
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec({});
-		ok(combobox.children('option.jecEditableOption').length === 1, 
-            'We expect malformed options parameter to be ignored (object)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: position', function () {
-		combobox = $.jec(cbOptions, {position: 0});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on first position');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: 1});
-		ok(combobox.children('option').eq(1).filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on second position');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: 3});
-		ok(combobox.children('option').eq(3).filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on last position');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: 100});
-		ok(combobox.children('option:last').filter('.jecEditableOption').length === 1, 
-            'We expect new editable option element to be on last position (value too big)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: 4.2});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (float)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: '1'});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: true});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: null});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: undefined});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: {pos: 1}});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (object)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {position: [1]});
-		ok(combobox.children('option:first.jecEditableOption').length === 1, 
-            'We expect malformed position option to be ignored (array)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: classes', function () {
-		var idRegex = /jec\d+/, className = 'c12', otherClassName = 'c2';
-		
-		combobox = $.jec(cbOptions, {classes: ''});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect new editable option to have no extra classes');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: className});
-		ok(combobox.hasClass(className), 
-            'We expect new editable option to have one extra class (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: className + ' ' + otherClassName});
-		ok(combobox.hasClass(className) && combobox.hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: []});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect new editable option to have no extra classes (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: [className]});
-		ok(combobox.hasClass(className), 
-            'We expect new editable option to have one extra class (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: [className, otherClassName]});
-		ok(combobox.hasClass(className) && combobox.hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: 10});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect malformed classes option to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: true});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect malformed classes option to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: null});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect malformed classes option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: undefined});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect malformed classes option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {classes: {cl: className}});
-		ok(idRegex.test(combobox.attr('class')), 
-            'We expect malformed classes option to be ignored (object)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: optionClasses', function () {
-		var defaultClassName = 'jecEditableOption', className = 'c1', otherClassName = 'c2';
-		
-		combobox = $.jec(cbOptions, {optionClasses: ''});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect new editable option to have no extra classes');
-		combobox.jecKill();
-		
-		className = 'myClass';
-		combobox = $.jec(cbOptions, {optionClasses: className});
-		ok(combobox.children('option.jecEditableOption').hasClass(className), 
-            'We expect new editable option to have one extra class (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: className + ' ' + otherClassName});
-		ok(combobox.children('option.jecEditableOption').hasClass(className) && 
-            combobox.children('option.jecEditableOption').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: []});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect new editable option to have no extra classes (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: [className]});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName) && 
-            combobox.children('option.jecEditableOption').hasClass(className), 
-            'We expect new editable option to have one extra class (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: [className, otherClassName]});
-		ok(combobox.children('option.jecEditableOption').hasClass(className) && 
-            combobox.children('option.jecEditableOption').hasClass(otherClassName), 
-            'We expect new editable option to have several extra classes (array)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: 10});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: true});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: null});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: undefined});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionClasses: {cl: className}});
-		ok(combobox.children('option.jecEditableOption').hasClass(defaultClassName), 
-            'We expect malformed classes option to be ignored (object)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: styles', function () {
-		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
-			otherStyleValue = '200px', obj = {};
-		
-		combobox = $.jec(cbOptions, {styles: obj});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect new editable option to have no extra styles');
-		combobox.jecKill();
-		
-		obj[styleName] = styleValue;
-		combobox = $.jec(cbOptions, {styles: obj});
-		ok(combobox.css(styleName) === styleValue, 
-            'We expect new editable option to have one extra style');
-		combobox.jecKill();
-		
-		obj[otherStyleName] = otherStyleValue;
-		combobox = $.jec(cbOptions, {styles: obj});
-		ok(combobox.css(styleName) === styleValue && 
-            combobox.css(otherStyleName) === otherStyleValue,
-             'We expect new editable option to have several extra styles');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
-		ok(styleEmpty(combobox.css(styleName)),
-			'We expect malformed styles option to be ignored (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: 10});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect malformed styles option to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: true});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect malformed styles option to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: null});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect malformed styles option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: undefined});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect malformed styles option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {styles: [{styles: obj}]});
-		ok(styleEmpty(combobox.css(styleName)),
-            'We expect malformed styles option to be ignored (array)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: optionStyles', function () {
-		var styleName = 'width', styleValue = '100px', otherStyleName = 'height', 
-			otherStyleValue = '200px', obj = {};
-		
-		combobox = $.jec(cbOptions, {optionStyles: obj});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)), 
-            'We expect new editable option to have no extra styles');
-		combobox.jecKill();
-		
-		obj[styleName] = styleValue;
-		combobox = $.jec(cbOptions, {optionStyles: obj});
-		ok(combobox.children('option.jecEditableOption').css(styleName) === styleValue, 
-            'We expect new editable option to have one extra style');
-		combobox.jecKill();
-		
-		obj[otherStyleName] = otherStyleValue;
-		combobox = $.jec(cbOptions, {optionStyles: obj});
-		ok(combobox.children('option.jecEditableOption').css(styleName) === styleValue && 
-            combobox.children('option.jecEditableOption').css(otherStyleName) === otherStyleValue,
-             'We expect new editable option to have several extra styles');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: 'width: 100px'});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-			'We expect malformed styles option to be ignored (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: 10});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: true});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (boolean)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: null});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: undefined});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {optionStyles: [{styles: obj}]});
-		ok(styleEmpty(combobox.children('option.jecEditableOption').css(styleName)),
-            'We expect malformed styles option to be ignored (array)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: focusOnNewOption', function () {
-		combobox = $.jec(cbOptions, {focusOnNewOption: false});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect focus to be set on first option');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: true});
-		ok(combobox.children('option:first:selected').length === 1, 
-            'We expect focus to be moved to editable option');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: '1'});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (string)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: 1});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (number)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: null});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (null)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: undefined});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (undefined)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (object)');
-		combobox.jecKill();
-		
-		combobox = $.jec(cbOptions, {focusOnNewOption: [true]});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
-            'We expect malformed focus option to be ignored (array)');
-		combobox.jecKill();
-	});
-	
-	test('Setting: useExistingOptions', function () {
-		// nothing to test here at the moment
-	});
-	
-	test('Setting: ignoredKeys', function () {
-		// nothing to test here at the moment
-	});
-	test('Setting: acceptedKeys', function () {
-		// nothing to test here at the moment
 	});
 	
 	$('#test').hide();
