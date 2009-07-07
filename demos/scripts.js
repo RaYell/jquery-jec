@@ -1,4 +1,4 @@
-/*global $,document*/
+/*global $, Number, document*/
 /*members "1", "2", "3", after, click, jec, jecOff, jecOn, jecPref, jecValue, ready, tabs, 
 useExistingOptions, val*/
 $(document).ready(function () {

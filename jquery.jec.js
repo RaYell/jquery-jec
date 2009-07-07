@@ -10,7 +10,7 @@
  * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
-/*global document, jQuery, setInterval, jecTests*/
+/*global Array, Math, String, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
 each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focusOnNewOption, fromCharCode, 
