@@ -10,10 +10,10 @@
  * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
-/*global Array, Math, String, document, jQuery, setInterval*/
+/*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
-bind, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
-each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focusOnNewOption, fromCharCode, 
+bind, blur, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
+each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, 
 getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, 
 jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length, match, max, min, optionClasses, 
 optionStyles, position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, 
@@ -25,8 +25,8 @@ useExistingOptions, val, value*/
 	$.jEC = (function () {
 		// variables declaration
 		var pluginClass = 'jecEditableOption', cursorInterval = 1000, options = {}, values = {}, 
-			lastKeyCode = null, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
-			typeOf;
+			lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
+			typeOf, activeCombobox;
 		
 		// default options
 		defaults = {
@@ -144,6 +144,22 @@ useExistingOptions, val, value*/
 			
 			// EventHandlers public members
 			return {
+				/// focus event handler
+				/// enabled blinking cursor
+				focus: function (event) {
+					activeCombobox = $(this);
+					if ($.jECTimer === undefined) {
+						$.jECTimer = setInterval($.jEC.handleCursor, cursorInterval);
+					}
+				},
+				/// blur event handler
+				/// disables blinking cursor
+				blur: function (event) {
+					clearInterval($.jECTimer);
+					delete $.jECTimer;
+					delete activeCombobox;
+					clearCursor($(this));
+				},
 				// keydown event handler
 				// handles keys pressed on select (backspace and delete must be handled
 				// in keydown event in order to work in IE)
@@ -467,6 +483,8 @@ useExistingOptions, val, value*/
 						elem.bind('keydown', EventHandlers.keyDown);
 						elem.bind('keypress', EventHandlers.keyPress);
 						elem.bind('change', EventHandlers.change);
+						elem.bind('focus', EventHandlers.focus);
+						elem.bind('blur', EventHandlers.blur);
 					},
 					destroy: function (elem) {
 						elem.children('option.' + pluginClass).remove();
@@ -493,9 +511,6 @@ useExistingOptions, val, value*/
 			setup = function (elem) {
 				EditableOption.init(elem);
 				Parameters.Handle.all(elem);
-				if ($.jECTimer === undefined) {
-					$.jECTimer = setInterval($.jEC.handleCursor, cursorInterval);
-				}
 			};
 			
 			// Combobox public members
@@ -695,14 +710,14 @@ useExistingOptions, val, value*/
 				},
 				//handles editable cursor
 				handleCursor: function () {
-					$(':editable').each(function () {
-						var elem = $(this).children('option:selected'), text = elem.text();
+					if (activeCombobox !== undefined && activeCombobox !== null) {
+						var elem = activeCombobox.children('option:selected'), text = elem.text();
 						if (text !== elem.val() && text.substring(text.length - 1) === '|') {
 							elem.text(text.substring(0, text.length - 1));
 						} else {
 							elem.text(text + '|');
 						}
-					});
+					}
 				}
 			};
 		}());
