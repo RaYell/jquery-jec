@@ -1,9 +1,19 @@
-.ui-helper-reset {
-	font-size: 50%;
+body {
+	font-family: Tahoma, sans-serif;
 }
 
-.tab p {
-	font-size: 60%;
+a, a:hover, a:link, a:visited {
+	color: black;
+	background-color: inherit;
+}
+
+div.tab {
+	padding-bottom: 1em;
+	border-bottom: 0.1em solid black;
+}
+
+div.tab p {
+	font-size: 1em;
 }
 
 select {
@@ -16,6 +26,4 @@ code {
 	margin: 1em;
 	padding: 1em;
 	white-space: pre-wrap;
-	white-space: -moz-pre-wrap;
-	white-space: o-pre-wrap;
 }

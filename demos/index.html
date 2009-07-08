@@ -7,22 +7,20 @@
 	<link type="text/css" href="styles.css" rel="stylesheet" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 	<script type="text/javascript" src="../jquery.jec.js"></script>
-	<script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/ui.core.js"></script>
-	<script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/ui.tabs.js"></script>
 	<script type="text/javascript" src="scripts.js"></script>
 </head>
 <body>
-	<div id="tabs">
+	<div>
 		<ul>
-			<li><a href="#tabs-1">Default functionality</a></li>
-			<li><a href="#tabs-2">Using existing options</a></li>
-			<li><a href="#tabs-3">Disabling and enabling combobox</a></li>
-			<li><a href="#tabs-4">Setting values</a></li>
-			<li><a href="#tabs-5">Setting preferences</a></li>
-			<li><a href="#tabs-6">Creating from the scratch</a></li>
+			<li><a href="#demo-1">Default functionality</a></li>
+			<li><a href="#demo-2">Using existing options</a></li>
+			<li><a href="#demo-3">Disabling and enabling combobox</a></li>
+			<li><a href="#demo-4">Setting values</a></li>
+			<li><a href="#demo-5">Setting preferences</a></li>
+			<li><a href="#demo-6">Creating from the scratch</a></li>
 		</ul>
 		
-		<div id="tabs-1" class="tab">
+		<div id="demo-1" class="tab">
 			<p>This demo shows the default combobox behavior. Select the combobox below and start typing to see the effect.</p>
 			<code>$('#demo1').jec();</code>
 			<select id="demo1">
@@ -35,7 +33,7 @@
 			</select>
 		</div>
 		
-		<div id="tabs-2" class="tab">
+		<div id="demo-2" class="tab">
 			<p>This demo shows the default combobox behavior. Select the combobox below and start typing to see the effect.</p>
 			<code>$('#demo2').jec({useExistingOptions: true});</code>
 			<select id="demo2">
@@ -48,7 +46,7 @@
 			</select>
 		</div>
 		
-		<div id="tabs-3" class="tab">
+		<div id="demo-3" class="tab">
 			<p>This demo allows you to dynamically disable and enable combobox features.</p>
 			<code>$('#demo3').jec();
 
@@ -72,7 +70,7 @@ $('#disable').click(function () {
 			<input id="disable" type="button" value="Disable" />
 		</div>
 		
-		<div id="tabs-4" class="tab">
+		<div id="demo-4" class="tab">
 			<p>This demo allows you to get and set combobox value.</p>
 			<code>$('#demo4').jec();
 
@@ -96,7 +94,7 @@ $('#setVal').click(function () {
 			<input id="setVal" type="button" value="Set value" />
 		</div>
 		
-		<div id="tabs-5" class="tab">
+		<div id="demo-5" class="tab">
 			<p>This demo allows you to get and set one of the combobox' preferences (editable option's position).</p>
 			<code>$('#demo5').jec();
 
@@ -120,14 +118,14 @@ $('#setPref').click(function () {
 			<input id="setPref" type="button" value="Set position" />
 		</div>
 		
-		<div id="tabs-6" class="tab">
+		<div id="demo-6" class="tab">
 			<p>This demo show the creation of editable combobox from the scratch (pure JavaScript).</p>
 			<code>var options, cb;
 
 options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
 cb = $.jec(options);
 
-$('#tabs-6 code').after(cb);</code>
+$('#demo-6 code').after(cb);</code>
 		</div>
 	</div>
 </body>

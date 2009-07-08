@@ -2,8 +2,6 @@
 /*members "1", "2", "3", after, click, jec, jecOff, jecOn, jecPref, jecValue, ready, tabs, 
 useExistingOptions, val*/
 $(document).ready(function () {
-	$('#tabs').tabs();
-	
 	$('#demo1').jec();
 	
 	$('#demo2').jec({useExistingOptions: true});
