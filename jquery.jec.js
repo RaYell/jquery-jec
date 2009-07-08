@@ -12,13 +12,13 @@
 
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
-bind, blur, ceil, change, charCode, children, classes, constructor, createElement, css, destroy, disable, 
-each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, 
-getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, 
-jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length, match, max, min, optionClasses, 
-optionStyles, position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, 
-removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
-useExistingOptions, val, value*/
+bind, blur, browser, ceil, change, charCode, children, classes, constructor, createElement, css, 
+destroy, disable, each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focus, 
+focusOnNewOption, fromCharCode, getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, 
+jec, jecKill, jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length,
+match, max, min, msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, 
+prototype, random, registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, 
+styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
@@ -157,8 +157,8 @@ useExistingOptions, val, value*/
 				blur: function (event) {
 					if ($.jECTimer !== undefined && !$.browser.msie) {
 						clearInterval($.jECTimer);
-						delete $.jECTimer;
-						delete activeCombobox;
+						$.jECTimer = undefined;
+						activeCombobox = undefined;
 						clearCursor($(this));
 					}
 				},
