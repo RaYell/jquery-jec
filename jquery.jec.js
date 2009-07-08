@@ -147,18 +147,20 @@ useExistingOptions, val, value*/
 				/// focus event handler
 				/// enabled blinking cursor
 				focus: function (event) {
-					activeCombobox = $(this);
-					if ($.jECTimer === undefined) {
+					if ($.jECTimer === undefined && !$.browser.msie) {
+						activeCombobox = $(this);
 						$.jECTimer = setInterval($.jEC.handleCursor, cursorInterval);
 					}
 				},
 				/// blur event handler
 				/// disables blinking cursor
 				blur: function (event) {
-					clearInterval($.jECTimer);
-					delete $.jECTimer;
-					delete activeCombobox;
-					clearCursor($(this));
+					if ($.jECTimer !== undefined && !$.browser.msie) {
+						clearInterval($.jECTimer);
+						delete $.jECTimer;
+						delete activeCombobox;
+						clearCursor($(this));
+					}
 				},
 				// keydown event handler
 				// handles keys pressed on select (backspace and delete must be handled
