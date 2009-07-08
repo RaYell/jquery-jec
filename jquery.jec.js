@@ -137,11 +137,8 @@ useExistingOptions, val, value*/
 			
 			clearCursor = function (elem) {
 				// handle editable cursor
-				$(this).children('option').each(function () {
-					var text = elem.text();
-					if (text !== elem.val() && text.substring(text.length - 1) === '|') {
-						elem.text(text.substring(0, text.length - 1));
-					}
+				$(elem).children('option').each(function () {
+					$(this).text($(this).val());
 				});
 			};
 			
@@ -182,7 +179,7 @@ useExistingOptions, val, value*/
 						// handle special keys
 						for (i = 0; i < specialKeys.length; i += 1) {
 							if (keyCode === specialKeys[i] && keyCode === lastKeyCode) {
-								return;
+								return false;
 							}
 						}
 						
@@ -203,11 +200,11 @@ useExistingOptions, val, value*/
 				},
 				// change event handler
 				change: function () {
+					clearCursor($(this));
 					var opt = options[Combobox.getId($(this))];
 					if (opt.useExistingOptions) {
 						Combobox.setEditableOption($(this));
 					}
-					clearCursor($(this));
 				}
 			};
 		}());
@@ -427,7 +424,8 @@ useExistingOptions, val, value*/
 						},
 						focusOnNewOption: function (elem) {
 							var id = Combobox.getId(elem), opt = options[id];
-							elem.children('option:not(.' + pluginClass + '):first').attr('selected', 'selected');
+							elem.children('option:not(.' + pluginClass + '):first').
+								attr('selected', 'selected');
 							if (opt !== undefined && opt.focusOnNewOption) {
 								elem.children('option.' + pluginClass).
 									attr('selected', 'selected');
@@ -435,11 +433,8 @@ useExistingOptions, val, value*/
 						},
 						useExistingOptions: function (elem) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined) {
-								if (opt.useExistingOptions) {
-									Combobox.setEditableOption(elem);
-								}
-								elem.bind('change', EventHandlers.change);
+							if (opt !== undefined && opt.useExistingOptions) {
+								Combobox.setEditableOption(elem);
 							}
 						},
 						all: function (elem) {
@@ -471,6 +466,7 @@ useExistingOptions, val, value*/
 						elem.append(editableOption);
 						elem.bind('keydown', EventHandlers.keyDown);
 						elem.bind('keypress', EventHandlers.keyPress);
+						elem.bind('change', EventHandlers.change);
 					},
 					destroy: function (elem) {
 						elem.children('option.' + pluginClass).remove();
@@ -690,8 +686,8 @@ useExistingOptions, val, value*/
 				},
 				// sets editable option to the value of currently selected option
 				setEditableOption: function (elem) {
-					elem.children('option.' + pluginClass).
-						val(elem.children('option:selected').text());
+					elem.children('option.' + pluginClass).attr('value', elem.val()).text(elem.val()).
+						attr('selected', 'selected');
 				},
 				// get combobox id
 				getId: function (elem) {
