@@ -1,6 +1,6 @@
 /*global $, Number, document*/
-/*members "1", "2", "3", after, click, jec, jecOff, jecOn, jecPref, jecValue, ready, tabs, 
-useExistingOptions, val*/
+/*members "1", "2", "3", after, blinkingCursor, click, jec, jecOff, jecOn, jecPref, jecValue, 
+ready, useExistingOptions, val*/
 $(document).ready(function () {
 	$('#demo1').jec();
 	
@@ -37,4 +37,6 @@ $(document).ready(function () {
 	options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
 	cb = $.jec(options);
 	$('#tabs-6 code').after(cb);
+	
+	$('#demo7').jec({blinkingCursor: true, blinkingCursorInterval: 500});
 });

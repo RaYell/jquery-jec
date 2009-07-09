@@ -18,6 +18,7 @@
 			<li><a href="#demo-4">Setting values</a></li>
 			<li><a href="#demo-5">Setting preferences</a></li>
 			<li><a href="#demo-6">Creating from the scratch</a></li>
+			<li><a href="#demo-7">Blinking cursor</a></li>
 		</ul>
 		
 		<div id="demo-1" class="tab">
@@ -126,6 +127,19 @@ options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
 cb = $.jec(options);
 
 $('#demo-6 code').after(cb);</code>
+		</div>
+		
+		<div id="demo-7" class="tab">
+			<p>This demo shows the blinking cursor. This feature doesn't work on Internet Explorer.</p>
+			<code>$('#demo7').jec({blinkingCursor: true, blinkingCursorInterval: 500});</code>
+			<select id="demo7">
+				<option value="BMW">BMW</option>
+				<option value="Ford">Ford</option>
+				<option value="Mercedes">Mercedes</option>
+				<option value="Opel">Opel</option>
+				<option value="Peugeot">Peugeot</option>
+				<option value="Renault">Renault</option>
+			</select>
 		</div>
 	</div>
 </body>

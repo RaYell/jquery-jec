@@ -1,9 +1,9 @@
 /*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
-/*members acceptedKeys, attr, children, classes, css, display, done, eq, filter, focus, 
-focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, 
-jecPref, jecValue, k1, k2, k3, k4, length, log, max, min, ok, opt1, opt2, opt3, optionClasses, 
-optionStyles, position, ready, remove, replace, styles, test, testDone, text, useExistingOptions, 
-val*/
+/*members acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, css, 
+display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, 
+jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, length, log, max, min, 
+ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, replace, styles, test, 
+testDone, text, useExistingOptions, val*/
 $(document).ready(function () {
 	
 	if (typeof fireunit === "object") {
@@ -392,6 +392,16 @@ $(document).ready(function () {
 		$('#test').jec({focusOnNewOption: [true]});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (array)');
 		$('#test').jecKill();
+	});
+	
+	test('Setting: blinkingCursor', function () {
+		// nothing to test here at the moment
+		expect(0);
+	});
+	
+	test('Setting: blinkingCursorInterval', function () {
+		// nothing to test here at the moment
+		expect(0);
 	});
 	
 	test('Setting: useExistingOptions', function () {
@@ -845,6 +855,16 @@ $(document).ready(function () {
 		combobox.jecKill();
 	});
 	
+	test('Setting: blinkingCursor', function () {
+		// nothing to test here at the moment
+		expect(0);
+	});
+	
+	test('Setting: blinkingCursorInterval', function () {
+		// nothing to test here at the moment
+		expect(0);
+	});
+	
 	test('Setting: useExistingOptions', function () {
 		// nothing to test here at the moment
 		expect(0);
@@ -936,7 +956,7 @@ $(document).ready(function () {
 	
 	module('pref');
 	test('Getting preference', function () {
-		expect(16);
+		expect(19);
 		
 		$('#test').jec();
 		ok($('#test').jecPref() === undefined, 'Get preference (undefined)');
@@ -955,7 +975,10 @@ $(document).ready(function () {
 			styles: {},
 			optionClasses: [],
 			optionStyles: {},
+			focusOnNewOption: false,
 			useExistingOptions: false,
+			blinkingCursor: false,
+			blinkingCursorInterval: 1000,
 			ignoredKeys: [],
 			acceptedKeys: [
 				{min: 32, max: 126},
@@ -1115,6 +1138,56 @@ $(document).ready(function () {
 		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (null)');
 		$('#test').jecPref('useExistingOptions', $);
 		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (function)');
+		$('#test').jecKill();
+	});
+	
+	test('Setting preference: blinkingCursor', function () {
+		expect(9);
+		
+		$('#test').jec();
+		$('#test').jecPref('blinkingCursor', true);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (boolean)');
+		$('#test').jecPref('blinkingCursor', 'true');
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (string)');
+		$('#test').jecPref('blinkingCursor', {});
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (object)');
+		$('#test').jecPref('blinkingCursor', []);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (array)');
+		$('#test').jecPref('blinkingCursor', 1);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (int)');
+		$('#test').jecPref('blinkingCursor', 1.2);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (float)');
+		$('#test').jecPref('blinkingCursor', undefined);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (undefined)');
+		$('#test').jecPref('blinkingCursor', null);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (null)');
+		$('#test').jecPref('blinkingCursor', $);
+		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (function)');
+		$('#test').jecKill();
+	});
+	
+	test('Setting preference: blinkingCursorInterval', function () {
+		expect(9);
+		
+		$('#test').jec();
+		$('#test').jecPref('blinkingCursorInterval', 1);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (int)');
+		$('#test').jecPref('blinkingCursorInterval', 1.2);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (float)');
+		$('#test').jecPref('blinkingCursorInterval', '2');
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (string)');
+		$('#test').jecPref('blinkingCursorInterval', {});
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (object)');
+		$('#test').jecPref('blinkingCursorInterval', []);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (array)');
+		$('#test').jecPref('blinkingCursorInterval', false);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (boolean)');
+		$('#test').jecPref('blinkingCursorInterval', undefined);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (undefined)');
+		$('#test').jecPref('blinkingCursorInterval', null);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (null)');
+		$('#test').jecPref('blinkingCursorInterval', $);
+		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (function)');
 		$('#test').jecKill();
 	});
 	

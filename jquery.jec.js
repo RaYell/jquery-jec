@@ -12,19 +12,20 @@
 
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
-bind, blur, browser, ceil, change, charCode, children, classes, constructor, createElement, css, 
-destroy, disable, each, editable, empty, enable, eq, expr, extend, filter, floor, fn, focus, 
-focusOnNewOption, fromCharCode, getId, handleCursor, ignoredKeys, indexOf, init, initJS, int, jEC, 
-jec, jecKill, jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, length,
-match, max, min, msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, 
-prototype, random, registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, 
-styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
+bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
+classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
+expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
+ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, jecPref, jECTimer, 
+jecValue, keyCode, keyDown, keyPress, length,match, max, min, msie, optionClasses, optionStyles, 
+position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, removeAttr, 
+removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
+useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
 	$.jEC = (function () {
 		// variables declaration
-		var pluginClass = 'jecEditableOption', cursorInterval = 1000, options = {}, values = {}, 
+		var pluginClass = 'jecEditableOption', options = {}, values = {}, 
 			lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
 			typeOf, activeCombobox;
 		
@@ -37,6 +38,8 @@ styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 			optionStyles: {},
 			focusOnNewOption: false,
 			useExistingOptions: false,
+			blinkingCursor: false,
+			blinkingCursorInterval: 1000,
 			ignoredKeys: [],
 			acceptedKeys: [
 				{min: 32, max: 126},
@@ -147,9 +150,10 @@ styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 				/// focus event handler
 				/// enabled blinking cursor
 				focus: function (event) {
-					if ($.jECTimer === undefined && !$.browser.msie) {
+					var opt = options[Combobox.getId($(this))];
+					if (opt.blinkingCursor && $.jECTimer === undefined && !$.browser.msie) {
 						activeCombobox = $(this);
-						$.jECTimer = setInterval($.jEC.handleCursor, cursorInterval);
+						$.jECTimer = setInterval($.jEC.handleCursor, opt.blinkingCursorInterval);
 					}
 				},
 				/// blur event handler
@@ -312,6 +316,18 @@ styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 							var id = Combobox.getId(elem), opt = options[id];
 							if (opt !== undefined && typeOf(value) === 'boolean') {
 								opt.useExistingOptions = value;
+							}
+						},
+						blinkingCursor: function (elem, value) {
+							var id = Combobox.getId(elem), opt = options[id];
+							if (opt !== undefined && typeOf(value) === 'boolean') {
+								opt.blinkingCursor = value;
+							}
+						},
+						blinkingCursorInterval: function (elem, value) {
+							var id = Combobox.getId(elem), opt = options[id];
+							if (opt !== undefined && Validators.int(value)) {
+								opt.blinkingCursorInterval = value;
 							}
 						},
 						ignoredKeys: function (elem, value) {
@@ -559,6 +575,13 @@ styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 									case 'useExistingOptions':
 										Parameters.Set.useExistingOptions($(this), settings[key]);
 										break;
+									case 'blinkingCursor':
+										Parameters.Set.blinkingCursor($(this), settings[key]);
+										break;
+									case 'blinkingCursorInterval':
+										Parameters.Set.blinkingCursorInterval($(this), 
+											settings[key]);
+										break;
 									case 'ignoredKeys':
 										Parameters.Set.ignoredKeys($(this), settings[key]);
 										break;
@@ -688,6 +711,12 @@ styles, substring, text, unbind, uneditable, useExistingOptions, val, value*/
 									case 'useExistingOptions':
 										Parameters.Set.useExistingOptions($(this), value);
 										Parameters.Handle.useExistingOptions($(this));
+										break;
+									case 'blinkingCursor':
+										Parameters.Set.blinkingCursor($(this), value);
+										break;
+									case 'blinkingCursorInterval':
+										Parameters.Set.blinkingCursorInterval($(this), value);
 										break;
 									case 'ignoredKeys':
 										Parameters.Set.ignoredKeys($(this), value);
