@@ -10,24 +10,25 @@
  * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
+/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
+plusplus: true, regexp: true, undef: true, white: true, indent: 4 */
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
 expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
 ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, jecPref, jECTimer, 
-jecValue, keyCode, keyDown, keyPress, length,match, max, min, msie, optionClasses, optionStyles, 
-position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, removeAttr, 
-removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
+jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, msie, optionClasses, 
+optionStyles, position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, 
+removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
 useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
 	$.jEC = (function () {
 		// variables declaration
-		var pluginClass = 'jecEditableOption', options = {}, values = {}, 
-			lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
-			typeOf, activeCombobox;
+		var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode, defaults, 
+			Validators, Hacks, EventHandlers, Combobox, clone, typeOf, activeCombobox;
 		
 		// default options
 		defaults = {
@@ -102,6 +103,11 @@ useExistingOptions, val, value*/
 						return true;
 					}
 					return false;
+				},
+				// check if object is correctly defined key code range
+				keyRange: function (value) {
+					return typeOf(value) === 'object' && Validators.int(value.min) && 
+						Validators.int(value.max) && value.min <= value.max;
 				}
 			};
 		}());
@@ -245,12 +251,7 @@ useExistingOptions, val, value*/
 						if (typeOf(value) === 'array') {
 							for (i = 0; i < value.length; i += 1) {
 								// min,max tuple
-								if (typeOf(value[i]) === 'object' && 
-									!Validators.empty(value[i].min) &&
-									!Validators.empty(value[i].max) &&
-									Validators.int(value[i].min) && 
-									Validators.int(value[i].max) &&
-									value[i].min <= value[i].max) {
+								if (Validators.keyRange(value[i])) {
 									for (j = value[i].min; j <= value[i].max; j += 1) {
 										keys[keys.length] = j;
 									}
@@ -732,8 +733,8 @@ useExistingOptions, val, value*/
 				},
 				// sets editable option to the value of currently selected option
 				setEditableOption: function (elem) {
-					elem.children('option.' + pluginClass).attr('value', elem.val()).text(elem.val()).
-						attr('selected', 'selected');
+					elem.children('option.' + pluginClass).attr('value', elem.val()).
+						text(elem.val()).attr('selected', 'selected');
 				},
 				// get combobox id
 				getId: function (elem) {
