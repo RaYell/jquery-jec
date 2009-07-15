@@ -1,3 +1,5 @@
+/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
+plusplus: true, regexp: true, undef: true, white: true, indent: 4*/
 /*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
 /*members acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, css, 
 display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, 

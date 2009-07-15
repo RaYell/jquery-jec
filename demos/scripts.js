@@ -1,3 +1,5 @@
+/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
+plusplus: true, regexp: true, undef: true, white: true, indent: 4*/
 /*global $, Number, document*/
 /*members "1", "2", "3", after, blinkingCursor, click, jec, jecOff, jecOn, jecPref, jecValue, 
 ready, useExistingOptions, val*/
