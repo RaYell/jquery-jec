@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.2.0
+ * jQuery jEC (jQuery Editable Combobox) 1.2.1
  * http://code.google.com/p/jquery-jec
  *
  * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
@@ -27,8 +27,9 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 	// jEC Core class
 	$.jEC = (function () {
 		// variables declaration
-		var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode, defaults, 
-			Validators, Hacks, EventHandlers, Combobox, clone, typeOf, activeCombobox;
+		var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, 
+			values = {}, lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
+			typeOf, activeCombobox;
 		
 		// default options
 		defaults = {
@@ -146,9 +147,9 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			
 			clearCursor = function (elem) {
 				// handle editable cursor
-				$(elem).children('option.hasCursor').each(function () {
-					$(this).removeClass('hasCursor').
-						text($(this).text().substring(0, $(this).text().length - 1));
+				$(elem).children('option.' + cursorClass).each(function () {
+					var text = $(this).text();
+					$(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
 				});
 			};
 			
@@ -746,10 +747,10 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 				handleCursor: function () {
 					if (activeCombobox !== undefined && activeCombobox !== null) {
 						var elem = activeCombobox.children('option:selected'), text = elem.text();
-						if (elem.hasClass('hasCursor')) {
-							elem.removeClass('hasCursor').text(text.substring(0, text.length - 1));
+						if (elem.hasClass(cursorClass)) {
+							elem.removeClass(cursorClass).text(text.substring(0, text.length - 1));
 						} else {
-							elem.addClass('hasCursor').text(text + '|');
+							elem.addClass(cursorClass).text(text + '|');
 						}
 					}
 				}
