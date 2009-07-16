@@ -17,11 +17,11 @@ plusplus: true, regexp: true, undef: true, white: true, indent: 4 */
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
 expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
-ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, jecPref, jECTimer, 
-jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, msie, optionClasses, 
-optionStyles, position, pref, propertyIsEnumerable, prototype, random, registerIndexOf, remove, 
-removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
-useExistingOptions, val, value*/
+hasClass, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, jecPref, 
+jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, msie, 
+optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
+registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, 
+text, unbind, uneditable, useExistingOptions, val, value*/
 (function ($) {
 
 	// jEC Core class
@@ -146,8 +146,9 @@ useExistingOptions, val, value*/
 			
 			clearCursor = function (elem) {
 				// handle editable cursor
-				$(elem).children('option').each(function () {
-					$(this).text($(this).val());
+				$(elem).children('option.hasCursor').each(function () {
+					$(this).removeClass('hasCursor').
+						text($(this).text().substring(0, $(this).text().length - 1));
 				});
 			};
 			
@@ -185,7 +186,7 @@ useExistingOptions, val, value*/
 					case 46: // delete
 						option = $(this).children('option.' + pluginClass);
 						if (option.val().length >= 1) {
-							value = option.val().substring(0, option.val().length - 1);
+							value = option.text().substring(0, option.text().length - 1);
 							option.val(value).text(value).attr('selected', 'selected');
 						}
 						return (keyCode !== 8);
@@ -218,7 +219,7 @@ useExistingOptions, val, value*/
 							
 							if (opt.acceptedKeys.indexOf(keyCode) !== -1) {
 								option = $(this).children('option.' + pluginClass);
-								value = option.val() + String.fromCharCode(keyCode);
+								value = option.text() + String.fromCharCode(keyCode);
 								option.val(value).text(value).attr('selected', 'selected');
 							}
 						}
@@ -733,8 +734,9 @@ useExistingOptions, val, value*/
 				},
 				// sets editable option to the value of currently selected option
 				setEditableOption: function (elem) {
+					var value = elem.children('option:selected').text();
 					elem.children('option.' + pluginClass).attr('value', elem.val()).
-						text(elem.val()).attr('selected', 'selected');
+						text(value).attr('selected', 'selected');
 				},
 				// get combobox id
 				getId: function (elem) {
@@ -744,10 +746,10 @@ useExistingOptions, val, value*/
 				handleCursor: function () {
 					if (activeCombobox !== undefined && activeCombobox !== null) {
 						var elem = activeCombobox.children('option:selected'), text = elem.text();
-						if (text !== elem.val() && text.substring(text.length - 1) === '|') {
-							elem.text(text.substring(0, text.length - 1));
+						if (elem.hasClass('hasCursor')) {
+							elem.removeClass('hasCursor').text(text.substring(0, text.length - 1));
 						} else {
-							elem.text(text + '|');
+							elem.addClass('hasCursor').text(text + '|');
 						}
 					}
 				}
