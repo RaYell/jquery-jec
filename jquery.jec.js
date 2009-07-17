@@ -33,20 +33,17 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 		
 		// default options
 		defaults = {
-			position: 0,
-			classes: [],
-			styles: {},
-			optionClasses: [],
-			optionStyles: {},
-			focusOnNewOption: false,
-			useExistingOptions: false,
-			blinkingCursor: false,
-			blinkingCursorInterval: 1000,
-			ignoredKeys: [],
-			acceptedKeys: [
-				{min: 32, max: 126},
-				{min: 191, max: 382}
-			]
+			position				: 0,
+			classes					: [],
+			styles					: {},
+			optionClasses			: [],
+			optionStyles			: {},
+			focusOnNewOption		: false,
+			useExistingOptions		: false,
+			blinkingCursor			: false,
+			blinkingCursorInterval	: 1000,
+			ignoredKeys				: [],
+			acceptedKeys			: [{min: 32, max: 126}, {min: 191, max: 382}]
 		};
 		
 		// returns type of value
@@ -741,7 +738,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 				},
 				// get combobox id
 				getId: function (elem) {
-					return elem.attr('class').match(/jec\d+/);
+					return elem.attr('class').match(/(jec\d+)/)[1];
 				},
 				//handles editable cursor
 				handleCursor: function () {
