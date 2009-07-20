@@ -1,11 +1,11 @@
 /*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
 plusplus: true, regexp: true, undef: true, white: true, indent: 4*/
 /*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
-/*members acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, css, 
-display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, 
-jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, length, log, max, min, 
-ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, replace, styles, test, 
-testDone, text, useExistingOptions, val*/
+/*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
+css, display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, 
+jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, length, log, 
+max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, replace, 
+styles, test, testDone, text, trigger, useExistingOptions, val*/
 $(document).ready(function () {
 	
 	if (typeof fireunit === "object") {
@@ -19,8 +19,19 @@ $(document).ready(function () {
 	// disable timers in order not to hang up the browser
 	$.jECTimer = null;
 	
-	var trim = function (str) {
+	var trim, key;
+	
+	trim = function (str) {
 		return str.replace(/(^\s+)|(\s+$)/, "");
+	};
+	
+	key = function (elem, code) {
+		var event, i, list = ['keydown', 'keypress', 'keyup'];
+		for (i = 0; i < list.length; i += 1) {
+			event = $.Event(list[i]);
+			event.keyCode = code;
+			elem.trigger(event);
+		}
 	};
 	
 	module('init');
@@ -30,6 +41,25 @@ $(document).ready(function () {
 		$('#test').jec();
 		ok($('#test option.jecEditableOption').length === 1, 
             'Create combobox without any preferences');
+		$('#test').jecKill();
+	});
+	
+	test('Keyboard', function () {
+		expect(6);
+		
+		$('#test').jec();
+		key($('#test'), 72);
+		same($('#test').jecValue(), 'H', 'Type letter H');
+		key($('#test'), 105);
+		same($('#test').jecValue(), 'Hi', 'Type letter i');
+		key($('#test'), 32);
+		same($('#test').jecValue(), 'Hi ', 'Type space');
+		key($('#test'), 33);
+		same($('#test').jecValue(), 'Hi !', 'Type !');
+		key($('#test'), 8);
+		same($('#test').jecValue(), 'Hi ', 'Backspace');
+		key($('#test'), 46);
+		same($('#test').jecValue(), 'Hi', 'Delete');
 		$('#test').jecKill();
 	});
 	
@@ -412,12 +442,29 @@ $(document).ready(function () {
 	});
 	
 	test('Setting: ignoredKeys', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		$('#test').jec({ignoredKeys: [72, {min: 73, max: 75}]});
+		key($('#test'), 72);
+		ok($('#test').jecValue() === '', 'Ignored key pressed (number)');
+		key($('#test'), 74);
+		ok($('#test').jecValue() === '', 'Ignored key pressed (range)');
+		key($('#test'), 76);
+		ok($('#test').jecValue() !== '', 'Key outside of ignores pressed');
+		$('#test').jecKill();
 	});
+	
 	test('Setting: acceptedKeys', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		$('#test').jec({acceptedKeys: [72, {min: 73, max: 75}]});
+		key($('#test'), 72);
+		ok($('#test').jecValue() === 'H', 'Accepted key pressed (number)');
+		key($('#test'), 74);
+		ok($('#test').jecValue() === 'HJ', 'Accepted key pressed (range)');
+		key($('#test'), 76);
+		ok($('#test').jecValue() === 'HJ', 'Key outside of accepted pressed');
+		$('#test').jecKill();
 	});
 	
 	module('initJS');
@@ -484,6 +531,28 @@ $(document).ready(function () {
 		combobox = $.jec({});
 		ok(combobox.children('option.jecEditableOption').length === 1, 
 			'Combobox created (boolean)');
+		combobox.jecKill();
+	});
+	
+	test('Keyboard', function () {
+		expect(6);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],	
+			combobox = $.jec(cbOptions, {position: 0});
+		
+		combobox.jec();
+		key(combobox, 72);
+		same(combobox.jecValue(), 'H', 'Type letter H');
+		key(combobox, 105);
+		same(combobox.jecValue(), 'Hi', 'Type letter i');
+		key(combobox, 32);
+		same(combobox.jecValue(), 'Hi ', 'Type space');
+		key(combobox, 33);
+		same(combobox.jecValue(), 'Hi !', 'Type !');
+		key(combobox, 8);
+		same(combobox.jecValue(), 'Hi ', 'Backspace');
+		key(combobox, 46);
+		same(combobox.jecValue(), 'Hi', 'Delete');
 		combobox.jecKill();
 	});
 	
@@ -873,12 +942,33 @@ $(document).ready(function () {
 	});
 	
 	test('Setting: ignoredKeys', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {ignoredKeys: [72, {min: 73, max: 75}]});
+		
+		key(combobox, 72);
+		ok(combobox.jecValue() === '', 'Ignored key pressed (number)');
+		key(combobox, 74);
+		ok(combobox.jecValue() === '', 'Ignored key pressed (range)');
+		key(combobox, 76);
+		ok(combobox.jecValue() !== '', 'Key outside of ignores pressed');
+		combobox.jecKill();
 	});
+	
 	test('Setting: acceptedKeys', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {acceptedKeys: [72, {min: 73, max: 75}]});
+		
+		key(combobox, 72);
+		ok(combobox.jecValue() === 'H', 'Accepted key pressed (number)');
+		key(combobox, 74);
+		ok(combobox.jecValue() === 'HJ', 'Accepted key pressed (range)');
+		key(combobox, 76);
+		ok(combobox.jecValue() === 'HJ', 'Key outside of accepted pressed');
+		combobox.jecKill();
 	});
 	
 	module('disable');
