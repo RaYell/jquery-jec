@@ -437,8 +437,19 @@ $(document).ready(function () {
 	});
 	
 	test('Setting: useExistingOptions', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		$('#test').jec({useExistingOptions: true});	
+		$('#test option:eq(1)').attr('selected', 'selected');
+		$('#test').trigger('change');
+		same($('#test').jecValue(), 'opt1', 'Select first option');		
+		$('#test option:eq(2)').attr('selected', 'selected');
+		$('#test').trigger('change');
+		same($('#test').jecValue(), 'opt2', 'Select second option');
+		$('#test option:last').attr('selected', 'selected');
+		$('#test').trigger('change');
+		same($('#test').jecValue(), 'opt3', 'Select last option');
+		$('#test').jecKill();
 	});
 	
 	test('Setting: ignoredKeys', function () {
@@ -937,8 +948,21 @@ $(document).ready(function () {
 	});
 	
 	test('Setting: useExistingOptions', function () {
-		// nothing to test here at the moment
-		expect(0);
+		expect(3);
+		
+		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+			combobox = $.jec(cbOptions, {useExistingOptions: true});
+		
+		combobox.children('option:eq(1)').attr('selected', 'selected');
+		combobox.trigger('change');
+		same(combobox.jecValue(), 'opt1', 'Select first option');		
+		combobox.children('option:eq(2)').attr('selected', 'selected');
+		combobox.trigger('change');
+		same(combobox.jecValue(), 'opt2', 'Select second option');
+		combobox.children('option:last').attr('selected', 'selected');
+		combobox.trigger('change');
+		same(combobox.jecValue(), 'opt3', 'Select last option');
+		combobox.jecKill();
 	});
 	
 	test('Setting: ignoredKeys', function () {
