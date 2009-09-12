@@ -897,43 +897,50 @@ $(document).ready(function () {
 		expect(9);
 		
 		var cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
-			combobox = $.jec(cbOptions, {focusOnNewOption: false});
+			combobox = $.jec(cbOptions, {focusOnNewOption: false, position: 1});
 		
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option');
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: true});
-		ok(combobox.children('option:first:selected').length === 1, 
+		combobox = $.jec(cbOptions, {focusOnNewOption: true, position: 1});
+		ok(combobox.children('option.jecEditableOption:selected').length === 1, 
             'We expect focus to be moved to editable option');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: '1'});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (string)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: '1', position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (string)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: 1});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (int)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: 1, position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (int)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: 1.2});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (float)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: 1.2, position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (float)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: null});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (null)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: null, position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (null)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: undefined});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 
+		combobox = $.jec(cbOptions, {focusOnNewOption: undefined, position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (undefined)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (object)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}, position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (object)');
 		combobox.jecKill();
 		
-		combobox = $.jec(cbOptions, {focusOnNewOption: [true]});
-		ok(combobox.children('option:first:not(:selected)').length === 1, 'Focus on first option (array)');
+		combobox = $.jec(cbOptions, {focusOnNewOption: [true], position: 1});
+		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
+			'Focus on first option (array)');
 		combobox.jecKill();
 	});
 	
