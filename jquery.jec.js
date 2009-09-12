@@ -17,21 +17,18 @@ plusplus: true, regexp: true, undef: true, white: true, indent: 4 */
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
 expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
-hasClass, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, jecOn, jecPref, 
-jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, msie, 
-optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
+hasClass, hasOwnProperty, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, 
+jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, 
+msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
 registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, 
 text, unbind, uneditable, useExistingOptions, val, value*/
 (function ($) {
 
-	// jEC Core class
 	$.jEC = (function () {
-		// variables declaration
 		var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, 
-			values = {}, lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, clone, 
-			typeOf, activeCombobox;
+			values = {}, lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, typeOf,
+			activeCombobox;
 		
-		// default options
 		defaults = {
 			position				: 0,
 			classes					: [],
@@ -46,7 +43,6 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			acceptedKeys			: [{min: 32, max: 126}, {min: 191, max: 382}]
 		};
 		
-		// returns type of value
 		typeOf = function (value) {
 			var type = typeof value;
 			if (type === 'object') {
@@ -60,36 +56,16 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			return type;
 		};
 		
-		// clone object
-		clone = function (object) {
-			if (typeOf(object) !== 'object') {
-				return object;
-			}
-			
-			var obj = new object.constructor(), key;
-			
-			for (key in object) {
-				if (key !== undefined) {
-					obj[key] = clone(object[key]);
-				}
-			}
-			
-			return obj;
-		};
-		
-		// validator methods
 		Validators = (function () {
 			return {
-				// check if value is an integer
 				int: function (value) {
 					return typeOf(value) === 'number' && Math.ceil(value) === Math.floor(value);
 				},
-				// check if value is empty (null, undefined, empty array or object)
 				empty: function (value) {
 					switch (typeOf(value)) {
 					case 'object':
 						for (var key in value) {
-							if (value[key] !== undefined) {
+							if (value.hasOwnProperty(key)) {
 								return false;
 							}
 						}
@@ -102,18 +78,16 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 					}
 					return false;
 				},
-				// check if object is correctly defined key code range
 				keyRange: function (value) {
-					return typeOf(value) === 'object' && Validators.int(value.min) && 
-						Validators.int(value.max) && value.min <= value.max;
+					var min = value.min, max = value.max;
+					return typeOf(value) === 'object' && Validators.int(min) && 
+						Validators.int(max) && min <= max;
 				}
 			};
 		}());
 		
-		// Browser hacks
 		Hacks = (function () {
 			return {
-				// register indexOf method on browsers that doesn't support it
 				registerIndexOf: function () {
 					if (Array.prototype.indexOf === undefined) {
 						Array.prototype.indexOf = function (object) {
@@ -129,28 +103,25 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			};
 		}());
 		
-		// event handlers
 		EventHandlers = (function () {
 			var getKeyCode, clearCursor;
 			
-			// returns key code
 			getKeyCode = function (event) {
-				if (event.charCode !== undefined && event.charCode !== 0) {
-					return event.charCode;
+				var charCode = event.charCode;
+				if (charCode !== undefined && charCode !== 0) {
+					return charCode;
 				} else {
 					return event.keyCode;
 				}
 			};
 			
 			clearCursor = function (elem) {
-				// handle editable cursor
 				$(elem).children('option.' + cursorClass).each(function () {
 					var text = $(this).text();
 					$(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
 				});
 			};
 			
-			// EventHandlers public members
 			return {
 				/// focus event handler
 				/// enabled blinking cursor
@@ -539,7 +510,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 						var id = 'jec' + generateId(), key;
 						
 						// override passed default options
-						options[id] = clone(defaults);
+						options[id] = $.extend(true, {}, defaults);
 						
 						// add unique id to classes
 						$(this).addClass(id);
