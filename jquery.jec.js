@@ -10,23 +10,24 @@
  * Changelog		:	http://code.google.com/p/jquery-jec/wiki/Changelog
  */
 
-/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
-plusplus: true, regexp: true, undef: true, white: true, indent: 4 */
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4 */
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
 expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
-hasClass, hasOwnProperty, ignoredKeys, indexOf, init, initJS, int, jEC, jec, jecKill, jecOff, 
-jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, max, min, 
-msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, 
-registerIndexOf, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, 
-text, unbind, uneditable, useExistingOptions, val, value*/
+hasClass, hasOwnProperty, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jec, jecKill, 
+jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, 
+max, min, msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, 
+random, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, text, 
+unbind, uneditable, useExistingOptions, val, value*/
+"use strict";
 (function ($) {
 
 	$.jEC = (function () {
 		var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, 
-			values = {}, lastKeyCode, defaults, Validators, Hacks, EventHandlers, Combobox, typeOf,
+			values = {}, lastKeyCode, defaults, Validators, EventHandlers, Combobox,
 			activeCombobox;
 		
 		defaults = {
@@ -43,62 +44,31 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			acceptedKeys			: [{min: 32, max: 126}, {min: 191, max: 382}]
 		};
 		
-		typeOf = function (value) {
-			var type = typeof value;
-			if (type === 'object') {
-				if (value === null) {
-					type = 'null';
-				} else if (typeof value.length === 'number' &&
-					typeof value.splice === 'function' && !value.propertyIsEnumerable('length')) {
-					type = 'array';
-				}
-			}
-			return type;
-		};
-		
 		Validators = (function () {
 			return {
 				int: function (value) {
-					return typeOf(value) === 'number' && Math.ceil(value) === Math.floor(value);
+					return typeof value === 'number' && Math.ceil(value) === Math.floor(value);
 				},
 				empty: function (value) {
-					switch (typeOf(value)) {
-					case 'object':
+					if (value === undefined || value === null) {
+						return true;
+					} else if ($.isArray(value)) {
+						return value.length === 0;
+					} else if (typeof value === 'object') {
 						for (var key in value) {
 							if (value.hasOwnProperty(key)) {
 								return false;
 							}
 						}
-						break;
-					case 'array':
-						return value.length === 0;
-					case 'undefined':
-					case 'null':
-						return true;
 					}
 					return false;
 				},
 				keyRange: function (value) {
-					var min = value.min, max = value.max;
-					return typeOf(value) === 'object' && Validators.int(min) && 
-						Validators.int(max) && min <= max;
-				}
-			};
-		}());
-		
-		Hacks = (function () {
-			return {
-				registerIndexOf: function () {
-					if (Array.prototype.indexOf === undefined) {
-						Array.prototype.indexOf = function (object) {
-							for (var i = 0; i < this.length; i += 1) {
-								if (this[i] === object) {
-									return i;
-								}
-							}
-							return -1;
-						};
+					if (typeof value === 'object' && !$.isArray(value)) {
+						var min = value.min, max = value.max;
+						return Validators.int(min) && Validators.int(max) && min <= max;
 					}
+					return false;
 				}
 			};
 		}());
@@ -182,11 +152,11 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 						}
 						
 						// don't handle ignored keys
-						if (opt.ignoredKeys.indexOf(keyCode) === -1) {
+						if ($.inArray(keyCode, opt.ignoredKeys) === -1) {
 							// remove selection from all options
 							$(this).children(':selected').removeAttr('selected');
 							
-							if (opt.acceptedKeys.indexOf(keyCode) !== -1) {
+							if ($.inArray(keyCode, opt.acceptedKeys) !== -1) {
 								option = $(this).children('option.' + pluginClass);
 								value = option.text() + String.fromCharCode(keyCode);
 								option.val(value).text(value).attr('selected', 'selected');
@@ -218,7 +188,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 				(Set = function () {
 					var parseKeys = function (value) {
 						var i, j, keys = [];
-						if (typeOf(value) === 'array') {
+						if ($.isArray(value)) {
 							for (i = 0; i < value.length; i += 1) {
 								// min,max tuple
 								if (Validators.keyRange(value[i])) {
@@ -226,7 +196,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 										keys[keys.length] = j;
 									}
 								// number
-								} else if (typeOf(value[i]) === 'number' && 
+								} else if (typeof value[i] === 'number' && 
 								Validators.int(value[i])) {
 									keys[keys.length] = value[i];
 								}
@@ -248,50 +218,52 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 							}
 						},
 						classes: function (elem, value) {
-							if (typeOf(value) === 'string') {
+							if (typeof value === 'string') {
 								value = [value];
 							}
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'array') {
+							if (opt !== undefined && $.isArray(value)) {
 								opt.classes = value;
 							}
 						},
 						optionClasses: function (elem, value) {
-							if (typeOf(value) === 'string') {
+							if (typeof value === 'string') {
 								value = [value];
 							}
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'array') {
+							if (opt !== undefined && $.isArray(value)) {
 								opt.optionClasses = value;
 							}
 						},
 						styles: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'object') {
+							if (opt !== undefined && typeof value === 'object' && 
+								!$.isArray(value)) {
 								opt.styles = value;
 							}
 						},
 						optionStyles: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'object') {
+							if (opt !== undefined && typeof value === 'object' &&
+								!$.isArray(value)) {
 								opt.optionStyles = value;
 							}
 						},
 						focusOnNewOption: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'boolean') {
+							if (opt !== undefined && typeof value === 'boolean') {
 								opt.focusOnNewOption = value;
 							}
 						},
 						useExistingOptions: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'boolean') {
+							if (opt !== undefined && typeof value === 'boolean') {
 								opt.useExistingOptions = value;
 							}
 						},
 						blinkingCursor: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'boolean') {
+							if (opt !== undefined && typeof value === 'boolean') {
 								opt.blinkingCursor = value;
 							}
 						},
@@ -303,13 +275,13 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 						},
 						ignoredKeys: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'array') {
+							if (opt !== undefined && $.isArray(value)) {
 								opt.ignoredKeys = parseKeys(value);
 							}
 						},
 						acceptedKeys: function (elem, value) {
 							var id = Combobox.getId(elem), opt = options[id];
-							if (opt !== undefined && typeOf(value) === 'array') {
+							if (opt !== undefined && $.isArray(value)) {
 								opt.acceptedKeys = parseKeys(value);
 							}
 						}
@@ -504,8 +476,6 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 			return {
 				// create editable combobox
 				init: function (settings) {
-					Hacks.registerIndexOf();
-					
 					return $(this).filter(':uneditable').each(function () {
 						var id = 'jec' + generateId(), key;
 						
@@ -519,7 +489,7 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 						Parameters.Set.ignoredKeys($(this), options[id].ignoredKeys);
 						Parameters.Set.acceptedKeys($(this), options[id].acceptedKeys);
 						
-						if (typeOf(settings) === 'object') {
+						if (typeof settings === 'object' && !$.isArray(settings)) {
 							for (key in settings) {
 								if (settings[key] !== undefined) {
 									switch (key) {
@@ -571,18 +541,18 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 					
 					select = $('<select>');
 					
-					if (typeOf(options) === 'array') {
+					if ($.isArray(options)) {
 						for (i = 0; i < options.length; i += 1) {
-							if (typeOf(options[i]) === 'object') {
+							if (typeof options[i] === 'object' && !$.isArray(options[i])) {
 								for (key in options[i]) {
-									if (typeOf(options[i][key]) === 'number' ||
-										typeOf(options[i][key]) === 'string') {
+									if (typeof options[i][key]  === 'number' ||
+										typeof options[i][key] === 'string') {
 										$('<option>').text(options[i][key]).attr('value', key).
 											appendTo(select);
 									}
 								}
-							} else if (typeOf(options[i]) === 'string' ||
-								typeOf(options[i]) === 'number') {
+							} else if (typeof options[i] === 'string' ||
+								typeof options[i] === 'number') {
 								$('<option>').text(options[i]).attr('value', options[i]).
 									appendTo(select);
 							}
@@ -626,12 +596,12 @@ text, unbind, uneditable, useExistingOptions, val, value*/
 							// get value
 							return $(this).filter('select').children('option.' + pluginClass).
 								val();
-						} else if (typeOf(value) === 'string' || typeOf(value) === 'number') {
+						} else if (typeof value === 'string' || typeof value === 'number') {
 							// set value
 							return $(this).filter(':editable').each(function () {
 								var option = $(this).children('option.' + pluginClass);
 								option.val(value).text(value);
-								if (typeOf(setFocus) !== 'boolean' || setFocus) {
+								if (typeof setFocus !== 'boolean' || setFocus) {
 									option.attr('selected', 'selected');
 								}
 							});
