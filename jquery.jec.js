@@ -16,12 +16,12 @@ bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
-expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
+expr, exec, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
 hasClass, hasOwnProperty, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jec, jecKill, 
-jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length,match, 
-max, min, msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, 
-random, remove, removeAttr, removeClass, setEditableOption, splice, styles, substring, text, 
-unbind, uneditable, useExistingOptions, val, value*/
+jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, 
+msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, remove, 
+removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
+useExistingOptions, val, value*/
 "use strict";
 (function ($) {
 
@@ -93,8 +93,8 @@ unbind, uneditable, useExistingOptions, val, value*/
 			};
 			
 			return {
-				/// focus event handler
-				/// enabled blinking cursor
+				// focus event handler
+				// enabled blinking cursor
 				focus: function (event) {
 					var opt = options[Combobox.getId($(this))];
 					if (opt.blinkingCursor && $.jECTimer === undefined && !$.browser.msie) {
@@ -102,8 +102,8 @@ unbind, uneditable, useExistingOptions, val, value*/
 						$.jECTimer = setInterval($.jEC.handleCursor, opt.blinkingCursorInterval);
 					}
 				},
-				/// blur event handler
-				/// disables blinking cursor
+				// blur event handler
+				// disables blinking cursor
 				blur: function (event) {
 					if ($.jECTimer !== undefined && !$.browser.msie) {
 						clearInterval($.jECTimer);
@@ -677,7 +677,7 @@ unbind, uneditable, useExistingOptions, val, value*/
 				},
 				// get combobox id
 				getId: function (elem) {
-					return elem.attr('class').match(/(jec\d+)/)[1];
+					return (/(jec\d+)/).exec(elem.attr('class'))[1];
 				},
 				//handles editable cursor
 				handleCursor: function () {
