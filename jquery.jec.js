@@ -11,17 +11,17 @@
  */
 
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
-bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4 */
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
-classes, constructor, createElement, css, destroy, disable, each, editable, empty, enable, eq, 
-expr, exec, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, getId, handleCursor, 
-hasClass, hasOwnProperty, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jec, jecKill, 
-jecOff, jecOn, jecPref, jECTimer, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, 
-msie, optionClasses, optionStyles, position, pref, propertyIsEnumerable, prototype, random, remove, 
-removeAttr, removeClass, setEditableOption, splice, styles, substring, text, unbind, uneditable, 
-useExistingOptions, val, value*/
+classes, createElement, css, data, destroy, disable, each, editable, empty, enable, eq, expr, 
+extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, handleCursor, 
+hasClass, hasOwnProperty, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, 
+jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, 
+msie, optionClasses, optionStyles, position, pref, random, remove, removeAttr, removeClass, 
+removeData, setEditableOption, styles, substring, text, unbind, uneditable, useExistingOptions, 
+val, value*/
 "use strict";
 (function ($) {
 
@@ -477,13 +477,12 @@ useExistingOptions, val, value*/
 				// create editable combobox
 				init: function (settings) {
 					return $(this).filter(':uneditable').each(function () {
-						var id = 'jec' + generateId(), key;
+						var id = generateId(), key;
+						
+						$.data($(this).get(0), "jecId", id);
 						
 						// override passed default options
 						options[id] = $.extend(true, {}, defaults);
-						
-						// add unique id to classes
-						$(this).addClass(id);
 						
 						// parse keys
 						Parameters.Set.ignoredKeys($(this), options[id].ignoredKeys);
@@ -565,7 +564,7 @@ useExistingOptions, val, value*/
 				destroy: function () {
 					return $(this).filter(':editable').each(function () {
 						$(this).jecOff();
-						$(this).removeClass(Combobox.getId($(this)));
+						$.removeData($(this).get(0), 'jecId');
 					});
 				},
 				// enable editablecombobox
@@ -677,7 +676,7 @@ useExistingOptions, val, value*/
 				},
 				// get combobox id
 				getId: function (elem) {
-					return (/(jec\d+)/).exec(elem.attr('class'))[1];
+					return $.data(elem.get(0), "jecId");
 				},
 				//handles editable cursor
 				handleCursor: function () {
@@ -723,10 +722,10 @@ useExistingOptions, val, value*/
 	// register selectors
 	$.extend($.expr[':'], {
 		editable	: function (a) {
-			return $(a).filter('select[class*=jec]').length !== 0;
+			return $.data($(a).get(0), 'jecId') !== undefined;
 		},
 		uneditable	: function (a) {
-			return $(a).filter('select:not([class*=jec])').length !== 0;
+			return $.data($(a).get(0), 'jecId') === undefined;
 		}
 	});
 

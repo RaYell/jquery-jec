@@ -1,11 +1,12 @@
-/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
-plusplus: true, regexp: true, undef: true, white: true, indent: 4*/
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
-css, display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, ignoredKeys, 
-jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, length, log, 
-max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, replace, 
-styles, test, testDone, text, trigger, useExistingOptions, val*/
+css, data, display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, 
+ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
+length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, 
+replace, styles, test, testDone, text, trigger, useExistingOptions, val*/
+"use strict";
 $(document).ready(function () {
 	
 	if (typeof fireunit === "object") {
@@ -135,72 +136,72 @@ $(document).ready(function () {
 	test('Setting: classes', function () {
 		expect(13);
 		
-		var idRegex = /jec\d+/, c1 = 'class1', c2 = 'class2';
+		var c1 = 'class1', c2 = 'class2';
 		
 		$('#test').jec({classes: ''});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (string)');
+		ok($('#test').attr('class') === '', 'No extra classes (string)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: c1});
-		ok($('#test').hasClass(c1), 
-            'One extra class (string)');
+		ok($('#test').hasClass(c1), 'One extra class (string)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: c1 + ' ' + c2});
-		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 
-            'Several extra classes (string)');
+		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (string)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: []});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (array)');
+		ok($('#test').attr('class') === '', 'No extra classes (array)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: [c1]});
-		ok($('#test').hasClass(c1), 
-            'One extra class (array)');
+		ok($('#test').hasClass(c1), 'One extra class (array)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: [c1, c2]});
-		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 
-            'Several extra classes (array)');
+		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (array)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: 1});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (int)');
+		ok($('#test').attr('class') === '', 'No extra classes (int)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: 1.2});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (float)');
+		ok($('#test').attr('class') === '', 'No extra classes (float)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: true});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (boolean)');
+		ok($('#test').attr('class') === '', 'No extra classes (boolean)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: null});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (null)');
+		ok($('#test').attr('class') === '', 'No extra classes (null)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: undefined});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (undefined)');
+		ok($('#test').attr('class') === '', 'No extra classes (undefined)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: {}});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (object)');
+		ok($('#test').attr('class') === '', 'No extra classes (object)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 		
 		$('#test').jec({classes: $});
-		ok(idRegex.test($('#test').attr('class')), 
-            'No extra classes (function)');
+		ok($('#test').attr('class') === '', 'No extra classes (function)');
 		$('#test').jecKill();
+		$('#test').attr('class', '');
 	});
 	
 	test('Setting: optionClasses', function () {
@@ -212,68 +213,81 @@ $(document).ready(function () {
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (string)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: c1});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
             'One extra class (string)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: c1 + ' ' + c2});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
             $('#test').children('option.jecEditableOption').hasClass(c2), 
             'Several extra classes (string)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: []});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (array)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: [c1]});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
             'One extra class (array)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: [c1, c2]});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
             $('#test').children('option.jecEditableOption').hasClass(c2), 
              'Several extra classes (array)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: 1});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (int)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: 1.2});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (float)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: true});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (boolean)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: null});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (null)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: undefined});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (undefined)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: {}});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (object)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 		
 		$('#test').jec({optionClasses: $});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (function)');
 		$('#test').jecKill();
+		$('#test').children('option').attr('class', '');
 	});
 	
 	test('Setting: styles', function () {
@@ -641,73 +655,73 @@ $(document).ready(function () {
 	test('Setting: classes', function () {
 		expect(13);
 		
-		var idRegex = /jec\d+/, c1 = 'class1', c2 = 'class2', 
+		var c1 = 'class1', c2 = 'class2', 
 			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
 			combobox = $.jec(cbOptions, {classes: ''});
 		
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (string)');
+		ok(combobox.attr('class') === '', 'No extra classes (string)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: c1});
-		ok(combobox.hasClass(c1), 
-            'One extra class (string)');
+		ok(combobox.hasClass(c1), 'One extra class (string)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: c1 + ' ' + c2});
-		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 
-            'Several extra classes (string)');
+		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (string)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: []});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (array)');
+		ok(combobox.attr('class') === '', 'No extra classes (array)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: [c1]});
-		ok(combobox.hasClass(c1), 
-            'One extra class (array)');
+		ok(combobox.hasClass(c1), 'One extra class (array)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: [c1, c2]});
-		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 
-            'Several extra classes (array)');
+		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (array)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: 1});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (int)');
+		ok(combobox.attr('class') === '', 'No extra classes (int)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: 1.2});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (float)');
+		ok(combobox.attr('class') === '', 'No extra classes (float)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: true});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (boolean)');
+		ok(combobox.attr('class') === '', 'No extra classes (boolean)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: null});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (null)');
+		ok(combobox.attr('class') === '', 'No extra classes (null)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: undefined});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (undefined)');
+		ok(combobox.attr('class') === '', 'No extra classes (undefined)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: {}});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (object)');
+		ok(combobox.attr('class') === '', 'No extra classes (object)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 		
 		combobox = $.jec(cbOptions, {classes: $});
-		ok(idRegex.test(combobox.attr('class')), 
-            'No extra classes (function)');
+		ok(combobox.attr('class') === '', 'No extra classes (function)');
 		combobox.jecKill();
+		combobox.attr('class', '');
 	});
 	
 	test('Setting: optionClasses', function () {
@@ -719,68 +733,81 @@ $(document).ready(function () {
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (string)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: c1});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
             'One extra class (string)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: c1 + ' ' + c2});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
             combobox.children('option.jecEditableOption').hasClass(c2), 
             'Several extra classes (string)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: []});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (array)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: [c1]});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
             'One extra class (array)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: [c1, c2]});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
             combobox.children('option.jecEditableOption').hasClass(c2), 
              'Several extra classes (array)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: 1});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (int)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: 1.2});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (float)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: true});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (boolean)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: null});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (null)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: undefined});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (undefined)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: {}});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (object)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 		
 		combobox = $.jec(cbOptions, {optionClasses: $});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (function)');
 		combobox.jecKill();
+		combobox.children('option').attr('class', '');
 	});
 	
 	test('Setting: styles', function () {
@@ -1009,7 +1036,7 @@ $(document).ready(function () {
 		$('#test').jec();
 		$('#test').jecOff();
 		ok($('#test option').length === 3, 'Check if editable option was removed');
-        ok($('#test[class*=jec]').length === 1, 'Check if id is still present');
+        ok($.data($('#test'), 'jecId') === undefined, 'Check if id is still present');
 		$('#test').jecKill();
 	});
 	
