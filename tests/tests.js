@@ -20,7 +20,7 @@ $(document).ready(function () {
 	// disable timers in order not to hang up the browser
 	$.jECTimer = null;
 	
-	var trim, key;
+	var trim, key, reset;
 	
 	trim = function (str) {
 		return str.replace(/(^\s+)|(\s+$)/, "");
@@ -35,6 +35,14 @@ $(document).ready(function () {
 		}
 	};
 	
+	reset = function (elem) {
+		elem.jecKill();
+		elem.attr('class', '');
+		elem.attr('style', '');
+		elem.children().attr('class', '');
+		elem.children().attr('style', '');
+	};
+	
 	module('init');
 	test('Editable combobox initialization', function () {
 		expect(1);
@@ -42,7 +50,7 @@ $(document).ready(function () {
 		$('#test').jec();
 		ok($('#test option.jecEditableOption').length === 1, 
             'Create combobox without any preferences');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Keyboard', function () {
@@ -61,7 +69,7 @@ $(document).ready(function () {
 		same($('#test').jecValue(), 'Hi ', 'Backspace');
 		key($('#test'), 46);
 		same($('#test').jecValue(), 'Hi', 'Delete');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: position', function () {
@@ -70,67 +78,67 @@ $(document).ready(function () {
 		$('#test').jec({position: 0});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: 1});
 		ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1, 
             'Editable option on second position');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: 3});
 		ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1, 
             'Editable option on last position');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: 100});
 		ok($('#test').children('option:last').filter('.jecEditableOption').length === 1, 
             'Editable option on last position (value greater then number of options)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: -1});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (negative int)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: 1.2});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (float)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: '1'});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (string)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: true});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (boolean)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: null});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (null)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: undefined});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (undefined)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: {}});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (object)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: []});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (array)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({position: $});
 		ok($('#test').children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: classes', function () {
@@ -140,68 +148,55 @@ $(document).ready(function () {
 		
 		$('#test').jec({classes: ''});
 		ok($('#test').attr('class') === '', 'No extra classes (string)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: c1});
 		ok($('#test').hasClass(c1), 'One extra class (string)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: c1 + ' ' + c2});
 		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (string)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: []});
 		ok($('#test').attr('class') === '', 'No extra classes (array)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: [c1]});
 		ok($('#test').hasClass(c1), 'One extra class (array)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: [c1, c2]});
 		ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (array)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: 1});
 		ok($('#test').attr('class') === '', 'No extra classes (int)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: 1.2});
 		ok($('#test').attr('class') === '', 'No extra classes (float)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: true});
 		ok($('#test').attr('class') === '', 'No extra classes (boolean)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: null});
 		ok($('#test').attr('class') === '', 'No extra classes (null)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: undefined});
 		ok($('#test').attr('class') === '', 'No extra classes (undefined)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: {}});
 		ok($('#test').attr('class') === '', 'No extra classes (object)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({classes: $});
 		ok($('#test').attr('class') === '', 'No extra classes (function)');
-		$('#test').jecKill();
-		$('#test').attr('class', '');
+		reset($('#test'));
 	});
 	
 	test('Setting: optionClasses', function () {
@@ -212,82 +207,69 @@ $(document).ready(function () {
 		$('#test').jec({optionClasses: ''});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (string)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: c1});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
             'One extra class (string)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: c1 + ' ' + c2});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
             $('#test').children('option.jecEditableOption').hasClass(c2), 
             'Several extra classes (string)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: []});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (array)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: [c1]});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1), 
             'One extra class (array)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: [c1, c2]});
 		ok($('#test').children('option.jecEditableOption').hasClass(c1) && 
             $('#test').children('option.jecEditableOption').hasClass(c2), 
              'Several extra classes (array)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: 1});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (int)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: 1.2});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (float)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: true});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (boolean)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: null});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (null)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: undefined});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (undefined)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: {}});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (object)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 		
 		$('#test').jec({optionClasses: $});
 		ok(trim($('#test').children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (function)');
-		$('#test').jecKill();
-		$('#test').children('option').attr('class', '');
+		reset($('#test'));
 	});
 	
 	test('Setting: styles', function () {
@@ -297,50 +279,50 @@ $(document).ready(function () {
 		
 		$('#test').jec({styles: obj});
 		same($('#test').css(s1), '1', 'No extra styles');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		obj[s1] = v1;
 		$('#test').jec({styles: obj});
 		same($('#test').css(s1), v1, 'Opacity changed');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		obj[s2] = v2;
 		$('#test').jec({styles: obj});
 		same($('#test').css(s1), v1, 'Opacity and font-size changed, checking opacity');
         same($('#test').css(s2), v2, 'Opacity and font-size changed, checking font-size');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: 'width: 100px'});
 		same($('#test').css(s1), '1', 'No extra styles (string)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: 0});
 		same($('#test').css(s1), '1', 'No extra styles (int)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: 0.5});
 		same($('#test').css(s1), '1', 'No extra styles (float)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: true});
 		same($('#test').css(s1), '1', 'No extra styles (boolean)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: null});
 		same($('#test').css(s1), '1', 'No extra styles (null)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: undefined});
 		same($('#test').css(s1), '1', 'No extra styles (undefined)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: []});
 		same($('#test').css(s1), '1', 'No extra styles (array)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: $});
 		same($('#test').css(s1), '1', 'No extra styles (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: optionStyles', function () {
@@ -350,12 +332,12 @@ $(document).ready(function () {
 		
 		$('#test').jec({optionStyles: obj});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		obj[s1] = v1;
 		$('#test').jec({optionStyles: obj});
 		same($('#test option.jecEditableOption').css(s1), v1, 'Opacity changed');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		obj[s2] = v2;
 		$('#test').jec({optionStyles: obj});
@@ -363,39 +345,39 @@ $(document).ready(function () {
 			'Opacity and font-size changed, checking opacity');
         same($('#test option.jecEditableOption').css(s2), v2, 
 			'Opacity and font-size changed, checking font-size');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({styles: 'width: 100px'});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: 0});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (int)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: 0.5});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (float)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: true});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: null});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (null)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: undefined});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: []});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (array)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({optionStyles: $});
 		same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: focusOnNewOption', function () {
@@ -403,41 +385,41 @@ $(document).ready(function () {
 		
 		$('#test').jec({focusOnNewOption: false});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: true});
 		ok($('#test option:first:selected').length === 1, 
             'We expect focus to be moved to editable option');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: '1'});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (string)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: 1});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (int)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: 1.2});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (float)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: null});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (null)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: undefined});
 		ok($('#test option:first:not(:selected)').length === 1, 
 			'Focus on first option (undefined)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: {focus: true}});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (object)');
-		$('#test').jecKill();
+		reset($('#test'));
 		
 		$('#test').jec({focusOnNewOption: [true]});
 		ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (array)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: blinkingCursor', function () {
@@ -463,7 +445,7 @@ $(document).ready(function () {
 		$('#test option:last').attr('selected', 'selected');
 		$('#test').trigger('change');
 		same($('#test').jecValue(), 'opt3', 'Select last option');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: ignoredKeys', function () {
@@ -476,7 +458,7 @@ $(document).ready(function () {
 		ok($('#test').jecValue() === '', 'Ignored key pressed (range)');
 		key($('#test'), 76);
 		ok($('#test').jecValue() !== '', 'Key outside of ignores pressed');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting: acceptedKeys', function () {
@@ -489,7 +471,7 @@ $(document).ready(function () {
 		ok($('#test').jecValue() === 'HJ', 'Accepted key pressed (range)');
 		key($('#test'), 76);
 		ok($('#test').jecValue() === 'HJ', 'Key outside of accepted pressed');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	module('initJS');
@@ -499,7 +481,7 @@ $(document).ready(function () {
 		var combobox = $.jec();
 		ok(combobox.children('option.jecEditableOption').length === 1, 
             'Create pure JS combobox without any preferences');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Options', function () {
@@ -524,39 +506,39 @@ $(document).ready(function () {
 		same(combobox.children('option:eq(7)').val(), 'k4', 'Checking option #7 key');
 		same(combobox.children('option:eq(7)').text(), 'v4', 'Checking option #7 value');
 		same(combobox.children('option').length, 8, 'Checking option array length');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(undefined);
 		ok(combobox.children('option.jecEditableOption').length === 1, 
 			'Combobox created (undefined)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(null);
 		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (null)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec('1');
 		ok(combobox.children('option.jecEditableOption').length === 1, 
 			'Combobox created (string)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(1);
 		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (int)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(1.2);
 		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (float)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(true);
 		ok(combobox.children('option.jecEditableOption').length === 1, 
 			'Combobox created (boolean)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec({});
 		ok(combobox.children('option.jecEditableOption').length === 1, 
 			'Combobox created (boolean)');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Keyboard', function () {
@@ -578,7 +560,7 @@ $(document).ready(function () {
 		same(combobox.jecValue(), 'Hi ', 'Backspace');
 		key(combobox, 46);
 		same(combobox.jecValue(), 'Hi', 'Delete');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: position', function () {
@@ -589,67 +571,67 @@ $(document).ready(function () {
 		
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: 1});
 		ok(combobox.children('option').eq(1).filter('.jecEditableOption').length === 1, 
             'Editable option on second position');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: 3});
 		ok(combobox.children('option').eq(3).filter('.jecEditableOption').length === 1, 
             'Editable option on last position');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: 100});
 		ok(combobox.children('option:last').filter('.jecEditableOption').length === 1, 
             'Editable option on last position (value greater then number of options)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: -1});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (negative int)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: 1.2});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (float)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: '1'});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (string)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: true});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (boolean)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: null});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (null)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: undefined});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (undefined)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: {}});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (object)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: []});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (array)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {position: $});
 		ok(combobox.children('option:first.jecEditableOption').length === 1, 
             'Editable option on first position (function)');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: classes', function () {
@@ -660,68 +642,55 @@ $(document).ready(function () {
 			combobox = $.jec(cbOptions, {classes: ''});
 		
 		ok(combobox.attr('class') === '', 'No extra classes (string)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: c1});
 		ok(combobox.hasClass(c1), 'One extra class (string)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: c1 + ' ' + c2});
 		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (string)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: []});
 		ok(combobox.attr('class') === '', 'No extra classes (array)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: [c1]});
 		ok(combobox.hasClass(c1), 'One extra class (array)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: [c1, c2]});
 		ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (array)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: 1});
 		ok(combobox.attr('class') === '', 'No extra classes (int)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: 1.2});
 		ok(combobox.attr('class') === '', 'No extra classes (float)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: true});
 		ok(combobox.attr('class') === '', 'No extra classes (boolean)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: null});
 		ok(combobox.attr('class') === '', 'No extra classes (null)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: undefined});
 		ok(combobox.attr('class') === '', 'No extra classes (undefined)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: {}});
 		ok(combobox.attr('class') === '', 'No extra classes (object)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {classes: $});
 		ok(combobox.attr('class') === '', 'No extra classes (function)');
-		combobox.jecKill();
-		combobox.attr('class', '');
+		reset(combobox);
 	});
 	
 	test('Setting: optionClasses', function () {
@@ -732,152 +701,139 @@ $(document).ready(function () {
 		
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (string)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: c1});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
             'One extra class (string)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: c1 + ' ' + c2});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
             combobox.children('option.jecEditableOption').hasClass(c2), 
             'Several extra classes (string)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: []});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (array)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: [c1]});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1), 
             'One extra class (array)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: [c1, c2]});
 		ok(combobox.children('option.jecEditableOption').hasClass(c1) && 
             combobox.children('option.jecEditableOption').hasClass(c2), 
              'Several extra classes (array)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: 1});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (int)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: 1.2});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (float)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: true});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (boolean)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: null});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (null)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: undefined});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (undefined)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: {}});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (object)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionClasses: $});
 		ok(trim(combobox.children('option.jecEditableOption').attr('class')) === 
 			'jecEditableOption', 'No extra classes (function)');
-		combobox.jecKill();
-		combobox.children('option').attr('class', '');
+		reset(combobox);
 	});
 	
 	test('Setting: styles', function () {
 		expect(12);
 		
-		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {},
+		var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'block', obj = {},
 			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
 			combobox = $.jec(cbOptions, {styles: obj});
 		
 		same(combobox.css(s1), '1', 'No extra styles');
-		combobox.jecKill();
+		reset(combobox);
 		
 		obj[s1] = v1;
 		combobox = $.jec(cbOptions, {styles: obj});
 		same(combobox.css(s1), v1, 'Opacity changed');
-		combobox.jecKill();
+		reset(combobox);
 		
 		obj[s2] = v2;
 		combobox = $.jec(cbOptions, {styles: obj});
 		same(combobox.css(s1), v1, 'Opacity and font-size changed, checking opacity');
         same(combobox.css(s2), v2, 'Opacity and font-size changed, checking font-size');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
 		same(combobox.css(s1), '1', 'No extra styles (string)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: 0});
 		same(combobox.css(s1), '1', 'No extra styles (int)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: 0.5});
 		same(combobox.css(s1), '1', 'No extra styles (float)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: true});
 		same(combobox.css(s1), '1', 'No extra styles (boolean)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: null});
 		same(combobox.css(s1), '1', 'No extra styles (null)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: undefined});
 		same(combobox.css(s1), '1', 'No extra styles (undefined)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: []});
 		same(combobox.css(s1), '1', 'No extra styles (array)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: $});
 		same(combobox.css(s1), '1', 'No extra styles (function)');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: optionStyles', function () {
 		expect(12);
 		
-		var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {},
+		var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'block', obj = {},
 			cbOptions = [{opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
 			combobox = $.jec(cbOptions, {optionStyles: obj});
 		
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles');
-		combobox.jecKill();
+		reset(combobox);
 		
 		obj[s1] = v1;
 		combobox = $.jec(cbOptions, {optionStyles: obj});
 		same(combobox.children('option.jecEditableOption').css(s1), v1, 'Opacity changed');
-		combobox.jecKill();
+		reset(combobox);
 		
 		obj[s2] = v2;
 		combobox = $.jec(cbOptions, {optionStyles: obj});
@@ -885,39 +841,39 @@ $(document).ready(function () {
 			'Opacity and font-size changed, checking opacity');
         same(combobox.children('option.jecEditableOption').css(s2), v2, 
 			'Opacity and font-size changed, checking font-size');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {styles: 'width: 100px'});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: 0});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (int)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: 0.5});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (float)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: true});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: null});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (null)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: undefined});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: []});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (array)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {optionStyles: $});
 		same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: focusOnNewOption', function () {
@@ -928,47 +884,47 @@ $(document).ready(function () {
 		
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: true, position: 1});
 		ok(combobox.children('option.jecEditableOption:selected').length === 1, 
             'We expect focus to be moved to editable option');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: '1', position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (string)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: 1, position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (int)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: 1.2, position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (float)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: null, position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (null)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: undefined, position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (undefined)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: {focus: true}, position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (object)');
-		combobox.jecKill();
+		reset(combobox);
 		
 		combobox = $.jec(cbOptions, {focusOnNewOption: [true], position: 1});
 		ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1, 
 			'Focus on first option (array)');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: blinkingCursor', function () {
@@ -996,7 +952,7 @@ $(document).ready(function () {
 		combobox.children('option:last').attr('selected', 'selected');
 		combobox.trigger('change');
 		same(combobox.jecValue(), 'opt3', 'Select last option');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: ignoredKeys', function () {
@@ -1011,7 +967,7 @@ $(document).ready(function () {
 		ok(combobox.jecValue() === '', 'Ignored key pressed (range)');
 		key(combobox, 76);
 		ok(combobox.jecValue() !== '', 'Key outside of ignores pressed');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	test('Setting: acceptedKeys', function () {
@@ -1026,7 +982,7 @@ $(document).ready(function () {
 		ok(combobox.jecValue() === 'HJ', 'Accepted key pressed (range)');
 		key(combobox, 76);
 		ok(combobox.jecValue() === 'HJ', 'Key outside of accepted pressed');
-		combobox.jecKill();
+		reset(combobox);
 	});
 	
 	module('disable');
@@ -1037,7 +993,7 @@ $(document).ready(function () {
 		$('#test').jecOff();
 		ok($('#test option').length === 3, 'Check if editable option was removed');
         ok($.data($('#test'), 'jecId') === undefined, 'Check if id is still present');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	module('enable');
@@ -1048,7 +1004,7 @@ $(document).ready(function () {
 		$('#test').jecOff();
 		$('#test').jecOn();
 		ok($('#test option.jecEditableOption').length === 1, 'Check if editable option was added');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	module('kill');
@@ -1056,7 +1012,7 @@ $(document).ready(function () {
 		expect(2);
 		
 		$('#test').jec();
-		$('#test').jecKill();
+		reset($('#test'));
 		ok($('#test option').length === 3, 'Check if editable option was removed');
         ok($('#test[class*=jec]').length === 0, 'Check if id was removed');
 	});
@@ -1074,7 +1030,7 @@ $(document).ready(function () {
 		same($('#test').jecValue(), String(v2), 'Get value (int)');
 		$('#test option.jecEditableOption').text(v3).val(v3);
 		same($('#test').jecValue(), String(v3), 'Get value (float)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting value', function () {
@@ -1101,7 +1057,7 @@ $(document).ready(function () {
 		same($('#test').jecValue(), String(v3), 'Get value (boolean)');
 		$('#test').jecValue($);
 		same($('#test').jecValue(), String(v3), 'Get value (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	module('pref');
@@ -1160,7 +1116,7 @@ $(document).ready(function () {
 			}
 		}
 		
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: position', function () {
@@ -1185,7 +1141,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('position'), 1, 'Set preference (null)');
 		$('#test').jecPref('position', $);
 		same($('#test').jecPref('position'), 1, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: classes', function () {
@@ -1211,7 +1167,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('classes'), [c1], 'Set preference (null)');
 		$('#test').jecPref('classes', $);
 		same($('#test').jecPref('classes'), [c1], 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: styles', function () {
@@ -1238,7 +1194,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('styles'), styles, 'Set preference (null)');
 		$('#test').jecPref('styles', $);
 		same($('#test').jecPref('styles'), styles, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: focusOnNewOption', function () {
@@ -1263,7 +1219,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (null)');
 		$('#test').jecPref('focusOnNewOption', $);
 		same($('#test').jecPref('focusOnNewOption'), true, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: useExistingOptions', function () {
@@ -1288,7 +1244,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (null)');
 		$('#test').jecPref('useExistingOptions', $);
 		same($('#test').jecPref('useExistingOptions'), true, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: blinkingCursor', function () {
@@ -1313,7 +1269,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (null)');
 		$('#test').jecPref('blinkingCursor', $);
 		same($('#test').jecPref('blinkingCursor'), true, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: blinkingCursorInterval', function () {
@@ -1338,7 +1294,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (null)');
 		$('#test').jecPref('blinkingCursorInterval', $);
 		same($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: ignoredKeys', function () {
@@ -1369,7 +1325,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (null)');
 		$('#test').jecPref('ignoredKeys', $);
 		same($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	test('Setting preference: acceptedKeys', function () {
@@ -1400,7 +1356,7 @@ $(document).ready(function () {
 		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (null)');
 		$('#test').jecPref('acceptedKeys', $);
 		same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
-		$('#test').jecKill();
+		reset($('#test'));
 	});
 	
 	$('#test').hide();
