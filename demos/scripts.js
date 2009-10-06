@@ -1,8 +1,9 @@
-/*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, 
-plusplus: true, regexp: true, undef: true, white: true, indent: 4*/
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global $, Number, document*/
-/*members "1", "2", "3", after, blinkingCursor, click, jec, jecOff, jecOn, jecPref, jecValue, 
-ready, useExistingOptions, val*/
+/*members "1", "2", "3", after, blinkingCursor, blinkingCursorInterval, click, jec, jecOff, jecOn, 
+jecPref, jecValue, ready, useExistingOptions, val*/
+"use strict";
 $(document).ready(function () {
 	$('#demo1').jec();
 	
