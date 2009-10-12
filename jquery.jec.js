@@ -22,7 +22,7 @@ jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange,
 msie, optionClasses, optionStyles, position, pref, random, remove, removeAttr, removeClass, 
 removeData, setEditableOption, styles, substring, text, unbind, uneditable, useExistingOptions, 
 val, value*/
-"use strict";
+'use strict';
 (function ($) {
 
 	$.jEC = (function () {

@@ -1,13 +1,13 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
-/*global $, QUnit, String, document, expect, fireunit, module, ok, same, test*/
+/*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
 css, data, display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, 
 ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
-length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, ready, remove, 
+length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, remove, 
 replace, styles, test, testDone, text, trigger, useExistingOptions, val*/
-"use strict";
-$(document).ready(function () {
+'use strict';
+$(function () {
 	
 	if (typeof fireunit === "object") {
         QUnit.log = fireunit.ok;
