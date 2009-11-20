@@ -2,7 +2,7 @@
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
-css, data, display, done, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, 
+css, data, display, done, each, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, 
 ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
 length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, remove, 
 replace, styles, test, testDone, text, trigger, useExistingOptions, val*/
@@ -27,12 +27,12 @@ $(function () {
     };
     
     key = function (elem, code) {
-        var event, i, list = ['keydown', 'keypress', 'keyup'];
-        for (i = 0; i < list.length; i += 1) {
-            event = $.Event(list[i]);
+        var list = ['keydown', 'keypress', 'keyup'];
+        $.each(list, function () {
+            var event = $.Event(this);
             event.keyCode = code;
             elem.trigger(event);
-        }
+        });
     };
     
     reset = function (elem) {
@@ -1074,8 +1074,7 @@ $(function () {
         ok($('#test').jecPref($) === undefined, 'Get preference (function)');
         ok($('#test').jecPref('dummy') === undefined, 'Get preference (not-existing string)');
         
-        var i, j, key, keys = [], value, defaults;
-        defaults = {
+        var i, keys = [], defaults = {
             position: 0,
             classes: [],
             styles: {},
@@ -1092,29 +1091,29 @@ $(function () {
             ]
         };
         
-        for (key in defaults) {
-            if (defaults[key] !== undefined) {
+        $.each(defaults, function (key, value) {
+            if (value !== undefined) {
                 if (key === 'acceptedKeys') {
                     value = defaults.acceptedKeys;
-                    for (i = 0; i < value.length; i += 1) {
+                    $.each(value, function () {
                         // min,max tuple
-                        if (value[i] !== null && typeof value[i] === 'object' && 
-                            typeof value[i].min === 'number' && 
-                            typeof value[i].max === 'number' && value[i].min <= value[i].max) {
-                            for (j = value[i].min; j <= value[i].max; j += 1) {
-                                keys[keys.length] = j;
+                        if (this !== null && typeof this === 'object' && 
+                            typeof this.min === 'number' && typeof this.max === 'number' &&
+                            this.min <= this.max) {
+                            for (i = this.min; i <= this.max; i += 1) {
+                                keys[keys.length] = i;
                             }
                         // number
-                        } else if (typeof value[i] === 'number') {
-                            keys[keys.length] = value[i];
+                        } else if (typeof this === 'number') {
+                            keys[keys.length] = this;
                         }
-                    }
+                    });
                     same($('#test').jecPref('acceptedKeys'), keys, 'Get ' + key + ' value');
                 } else {
-                    same($('#test').jecPref(key), defaults[key], 'Get ' + key + ' value');
+                    same($('#test').jecPref(key), value, 'Get ' + key + ' value');
                 } 
             }
-        }
+        });
         
         reset($('#test'));
     });
