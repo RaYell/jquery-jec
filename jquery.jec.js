@@ -85,7 +85,7 @@ val, value*/
             
             return {
                 // focus event handler
-                // enabled blinking cursor
+                // enables blinking cursor
                 focus: function (event) {
                     var opt = options[Combobox.getId($(this))];
                     if (opt.blinkingCursor && $.jECTimer === undefined && !$.browser.msie) {
@@ -162,6 +162,7 @@ val, value*/
                 },
                 
                 // change event handler
+                // handles editable option changing based on a pre-existing values
                 change: function () {
                     clearCursor($(this));
                     var opt = options[Combobox.getId($(this))];
@@ -473,7 +474,7 @@ val, value*/
                 };
             }());
             
-            // find unique identifier
+            // generates unique identifier
             generateId = function () {
                 while (true) {
                     var random = Math.floor(Math.random() * 100000);
@@ -728,7 +729,7 @@ val, value*/
         };
     }());
 
-     // register functions
+    // register functions
     $.fn.extend({
         jec      : $.jEC.init,
         jecOn    : $.jEC.enable,
