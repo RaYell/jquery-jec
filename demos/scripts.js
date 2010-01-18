@@ -39,7 +39,7 @@ $(function () {
     var options, cb;
     options =  [{1: 'Alfa Romeo', 2: 'Ferrari', 3: 'Porsche'}];
     cb = $.jec(options);
-    $('#tabs-6 code').after(cb);
+    $('#demo-6 code').after(cb);
     
     $('#demo7').jec({blinkingCursor: true, blinkingCursorInterval: 500});
 });
