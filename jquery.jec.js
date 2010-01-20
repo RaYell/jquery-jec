@@ -1,27 +1,29 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.2.3+
+ * jQuery jEC (jQuery Editable Combobox) 1.2.4
  * http://code.google.com/p/jquery-jec
  *
- * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://lukasz.rajchel.pl)
+ * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://rajchel.pl)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
- * Documentation    :    http://code.google.com/p/jquery-jec/wiki/Documentation
- * Changelog        :    http://code.google.com/p/jquery-jec/wiki/Changelog
+ * Documentation :  http://code.google.com/p/jquery-jec/wiki/Documentation
+ * Changelog     :  http://code.google.com/p/jquery-jec/wiki/Changelog
+ *
+ * Contributors  :  Lukasz Rajchel, Artem Orlov
  */
 
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before,
-bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children,
-classes, createElement, css, data, destroy, disable, each, editable, enable, eq, expr, extend,
-filter, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, handleCursor, hasClass,
-hasOwnProperty, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, jecKill,
-jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, msie,
-optionClasses, optionStyles, position, pref, push, random, remove, removeAttr, removeClass,
-removeData, setEditableOption, styles, substring, text, unbind, uneditable, useExistingOptions,
-val, value*/
+/*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
+bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
+classes, clearCursor, click, createElement, css, cursorState, data, destroy, disable, each, 
+editable, enable, eq, expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, get, 
+getId, handleCursor, ignoredKeys, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, jecKill, 
+jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, msie, 
+openedState, optionClasses, optionStyles, position, pref, push, random, remove, removeAttr, 
+removeClass, removeData, safari, setEditableOption, styles, substring, text, unbind, uneditable, 
+useExistingOptions, val, value, valueIsEditable*/
 'use strict';
 (function ($) {
 
@@ -80,23 +82,23 @@ val, value*/
                 // focus event handler
                 // enables blinking cursor
                 focus: function (event) {
-				  var opt = options[Combobox.getId($(this))];
-				  if (opt.blinkingCursor && $.jECTimer === undefined) {
-					  activeCombobox = $(this);
-					  $.jECTimer = setInterval($.jEC.handleCursor, opt.blinkingCursorInterval);
-				  }
+                    var opt = options[Combobox.getId($(this))];
+                    if (opt.blinkingCursor && $.jECTimer === undefined) {
+                        activeCombobox = $(this);
+                        $.jECTimer = setInterval($.jEC.handleCursor, opt.blinkingCursorInterval);
+                    }
                 },
 
                 // blur event handler
                 // disables blinking cursor
                 blur: function (event) {
-				  if ($.jECTimer !== undefined) {
-					  clearInterval($.jECTimer);
-					  $.jECTimer = undefined;
-					  activeCombobox = undefined;
-					  Combobox.clearCursor($(this));
-				  }
-				  Combobox.openedState($(this), false);
+                    if ($.jECTimer !== undefined) {
+                        clearInterval($.jECTimer);
+                        $.jECTimer = undefined;
+                        activeCombobox = undefined;
+                        Combobox.clearCursor($(this));
+                    }
+                    Combobox.openedState($(this), false);
                 },
 
                 // keydown event handler
@@ -164,11 +166,11 @@ val, value*/
                     }
                 },
 
-				click: function () {
-				  if (!$.browser.safari) {
-					Combobox.openedState($(this), !Combobox.openedState($(this)));
-				  }
-				}
+                click: function () {
+                    if (!$.browser.safari) {
+                        Combobox.openedState($(this), !Combobox.openedState($(this)));
+                    }
+                }
             };
         }());
 
@@ -373,15 +375,17 @@ val, value*/
                             var opt = options[Combobox.getId(elem)], option, uneditableOptions;
                             if (opt !== undefined) {
                                 option = elem.children('option.' + pluginClass);
-								if (elem.children().get(opt.position) != option.get(0)) { //ie needs this check
-								  uneditableOptions =
-									  elem.children('option:not(.' + pluginClass + ')');
-								  if (opt.position < uneditableOptions.length) {
-									  uneditableOptions.eq(opt.position).before(option);
-								  } else {
-									  elem.append(option);
-								  }
-								}
+                                
+                                //ie needs this check
+                                if (elem.children().get(opt.position) !== option.get(0)) { 
+                                    uneditableOptions =
+                                      elem.children('option:not(.' + pluginClass + ')');
+                                    if (opt.position < uneditableOptions.length) {
+                                        uneditableOptions.eq(opt.position).before(option);
+                                    } else {
+                                        elem.append(option);
+                                    }
+                                }
                             }
                         },
 
@@ -452,18 +456,18 @@ val, value*/
             EditableOption = (function () {
                 return {
                     init: function (elem) {
-						if (!elem.children('option.' + pluginClass).length) {
-						  var editableOption = $(document.createElement('option'));
-						  editableOption.addClass(pluginClass);
-						  elem.append(editableOption);
-						}
+                        if (!elem.children('option.' + pluginClass).length) {
+                            var editableOption = $(document.createElement('option'));
+                            editableOption.addClass(pluginClass);
+                            elem.append(editableOption);
+                        }
 
                         elem.bind('keydown', EventHandlers.keyDown);
                         elem.bind('keypress', EventHandlers.keyPress);
                         elem.bind('change', EventHandlers.change);
                         elem.bind('focus', EventHandlers.focus);
                         elem.bind('blur', EventHandlers.blur);
-						elem.bind('click', EventHandlers.click);
+                        elem.bind('click', EventHandlers.click);
                     },
 
                     destroy: function (elem) {
@@ -474,7 +478,7 @@ val, value*/
                         elem.unbind('change', EventHandlers.change);
                         elem.unbind('focus', EventHandlers.focus);
                         elem.unbind('blur', EventHandlers.blur);
-						elem.unbind('click', EventHandlers.click);
+                        elem.unbind('click', EventHandlers.click);
                     }
                 };
             }());
@@ -709,37 +713,41 @@ val, value*/
                     return $.data(elem.get(0), "jecId");
                 },
 
-				valueIsEditable: function (elem) {
-				  return elem.children('option.' + pluginClass).get(0) == elem.children('option:selected').get(0);
-				},
+                valueIsEditable: function (elem) {
+                    return elem.children('option.' + pluginClass).get(0) === 
+                        elem.children('option:selected').get(0);
+                },
 
-				clearCursor: function (elem) {
-					$(elem).children('option.' + cursorClass).each(function () {
-						var text = $(this).text();
-						$(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
-					});
-				},
+                clearCursor: function (elem) {
+                    $(elem).children('option.' + cursorClass).each(function () {
+                        var text = $(this).text();
+                        $(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
+                    });
+                },
 
-				cursorState: function (elem, state) {
-					return $.data(elem.get(0), "jecCursorState", state);
-				},
+                cursorState: function (elem, state) {
+                    return $.data(elem.get(0), "jecCursorState", state);
+                },
 
-				openedState: function (elem, state) {
-					return $.data(elem.get(0), "jecOpenedState", state);
-				},
+                openedState: function (elem, state) {
+                    return $.data(elem.get(0), "jecOpenedState", state);
+                },
 
                 //handles editable cursor
                 handleCursor: function () {
                     if (activeCombobox !== undefined && activeCombobox !== null) {
-						if ($.browser.msie && Combobox.openedState(activeCombobox)) return;
-                        var state = Combobox.cursorState(activeCombobox);
-						if (state) {
-						  Combobox.clearCursor(activeCombobox);
-						} else if (Combobox.valueIsEditable(activeCombobox)) {
-							var elem = activeCombobox.children('option:selected');
-							elem.addClass(cursorClass).text(elem.text() + '|');
-						}
-						Combobox.cursorState(activeCombobox, !state)
+                        if ($.browser.msie && Combobox.openedState(activeCombobox)) {
+                            return;
+                        }
+                        
+                        var state = Combobox.cursorState(activeCombobox), elem;
+                        if (state) {
+                            Combobox.clearCursor(activeCombobox);
+                        } else if (Combobox.valueIsEditable(activeCombobox)) {
+                            elem = activeCombobox.children('option:selected');
+                            elem.addClass(cursorClass).text(elem.text() + '|');
+                        }
+                        Combobox.cursorState(activeCombobox, !state);
                     }
                 }
             };
