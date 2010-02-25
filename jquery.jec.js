@@ -505,6 +505,7 @@ useExistingOptions, val, value, valueIsEditable*/
                 // create editable combobox
                 init: function (settings) {
                     return $(this).filter(':uneditable').each(function () {
+                    
                         var id = generateId(), elem = $(this);
 
                         elem.data('jecId', id);
@@ -624,8 +625,7 @@ useExistingOptions, val, value, valueIsEditable*/
                     if ($(this).filter(':editable').length > 0) {
                         if (value === null || value === undefined) {
                             // get value
-                            return $(this).filter('select').children('option.' + pluginClass).
-                                val();
+                            return $(this).children('option.' + pluginClass).val();
                         } else if (typeof value === 'string' || typeof value === 'number') {
                             // set value
                             return $(this).filter(':editable').each(function () {
@@ -783,11 +783,13 @@ useExistingOptions, val, value, valueIsEditable*/
     // register selectors
     $.extend($.expr[':'], {
         editable: function (a) {
-            return $(a).data('jecId') !== null;
+            var data = $(a).data('jecId');
+            return data !== null && data !== undefined;
         },
 
         uneditable: function (a) {
-            return $(a).data('jecId') === null;
+            var data = $(a).data('jecId');
+            return data === null || data === undefined;
         }
     });
 

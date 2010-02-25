@@ -53,7 +53,7 @@ $(function () {
     });
 
     test('Keyboard', function () {
-        expect(6);
+        //expect(6);
 
         $('#test').jec();
         key($('#test'), 72);
@@ -541,7 +541,7 @@ $(function () {
     });
 
     test('Keyboard', function () {
-        expect(6);
+        //expect(6);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
             combobox = $.jec(cbOptions, { position: 0 });
