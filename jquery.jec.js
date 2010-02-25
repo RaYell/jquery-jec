@@ -15,7 +15,7 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ":", Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
+/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
 bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, children, 
 classes, clearCursor, click, createElement, css, cursorState, data, destroy, disable, each, 
 editable, enable, eq, expr, extend, filter, floor, fn, focus, focusOnNewOption, fromCharCode, get, 
@@ -25,9 +25,9 @@ openedState, optionClasses, optionStyles, position, pref, push, random, remove, 
 removeClass, removeData, safari, setEditableOption, styles, substring, text, unbind, uneditable, 
 useExistingOptions, val, value, valueIsEditable*/
 'use strict';
-(function($) {
+(function ($) {
 
-    $.jEC = (function() {
+    $.jEC = (function () {
         var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {},
             values = {}, lastKeyCode, defaults, Validators, EventHandlers, Combobox,
             activeCombobox;
@@ -46,13 +46,13 @@ useExistingOptions, val, value, valueIsEditable*/
             acceptedKeys: [[32, 126], [191, 382]]
         };
 
-        Validators = (function() {
+        Validators = (function () {
             return {
-                int: function(value) {
+                int: function (value) {
                     return typeof value === 'number' && Math.ceil(value) === Math.floor(value);
                 },
 
-                keyRange: function(value) {
+                keyRange: function (value) {
                     var min, max;
                     if (typeof value === 'object' && !$.isArray(value)) {
                         min = value.min;
@@ -64,12 +64,12 @@ useExistingOptions, val, value, valueIsEditable*/
                     return Validators.int(min) && Validators.int(max) && min <= max;
                 }
             };
-        } ());
+        }());
 
-        EventHandlers = (function() {
+        EventHandlers = (function () {
             var getKeyCode;
 
-            getKeyCode = function(event) {
+            getKeyCode = function (event) {
                 var charCode = event.charCode;
                 if (charCode !== undefined && charCode !== 0) {
                     return charCode;
@@ -81,7 +81,7 @@ useExistingOptions, val, value, valueIsEditable*/
             return {
                 // focus event handler
                 // enables blinking cursor
-                focus: function(event) {
+                focus: function (event) {
                     var opt = options[Combobox.getId($(this))];
                     if (opt.blinkingCursor && $.jECTimer === undefined) {
                         activeCombobox = $(this);
@@ -91,7 +91,7 @@ useExistingOptions, val, value, valueIsEditable*/
 
                 // blur event handler
                 // disables blinking cursor
-                blur: function(event) {
+                blur: function (event) {
                     if ($.jECTimer !== undefined) {
                         clearInterval($.jECTimer);
                         $.jECTimer = undefined;
@@ -104,29 +104,29 @@ useExistingOptions, val, value, valueIsEditable*/
                 // keydown event handler
                 // handles keys pressed on select (backspace and delete must be handled
                 // in keydown event in order to work in IE)
-                keyDown: function(event) {
+                keyDown: function (event) {
                     var keyCode = getKeyCode(event), option, value;
 
                     lastKeyCode = keyCode;
 
                     switch (keyCode) {
-                        case 8:    // backspace
-                        case 46: // delete
-                            option = $(this).children('option.' + pluginClass);
-                            if (option.val().length >= 1) {
-                                value = option.text().substring(0, option.text().length - 1);
-                                option.val(value).text(value).attr('selected', 'selected');
-                            }
-                            return (keyCode !== 8);
-                        default:
-                            break;
+                    case 8:  // backspace
+                    case 46: // delete
+                        option = $(this).children('option.' + pluginClass);
+                        if (option.val().length >= 1) {
+                            value = option.text().substring(0, option.text().length - 1);
+                            option.val(value).text(value).attr('selected', 'selected');
+                        }
+                        return (keyCode !== 8);
+                    default:
+                        break;
                     }
                 },
 
                 // keypress event handler
                 // handles the rest of the keys (keypress event gives more informations
                 // about pressed keys)
-                keyPress: function(event) {
+                keyPress: function (event) {
                     var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
                         option, value, specialKeys, exit = false;
 
@@ -135,7 +135,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
-                        $.each(specialKeys, function(i, val) {
+                        $.each(specialKeys, function (i, val) {
                             if (keyCode === val && keyCode === lastKeyCode) {
                                 exit = true;
                             }
@@ -159,34 +159,34 @@ useExistingOptions, val, value, valueIsEditable*/
 
                 // change event handler
                 // handles editable option changing based on a pre-existing values
-                change: function() {
+                change: function () {
                     var opt = options[Combobox.getId($(this))];
                     if (opt.useExistingOptions) {
                         Combobox.setEditableOption($(this));
                     }
                 },
 
-                click: function() {
+                click: function () {
                     if (!$.browser.safari) {
                         Combobox.openedState($(this), !Combobox.openedState($(this)));
                     }
                 }
             };
-        } ());
+        }());
 
         // Combobox
-        Combobox = (function() {
+        Combobox = (function () {
             var Parameters, EditableOption, generateId, setup;
 
             // validates and set combobox parameters
-            Parameters = (function() {
+            Parameters = (function () {
                 var Set, Remove, Handle;
 
-                (Set = function() {
-                    var parseKeys = function(value) {
+                (Set = function () {
+                    var parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
-                            $.each(value, function(i, val) {
+                            $.each(value, function (i, val) {
                                 var j, min, max;
                                 if (Validators.keyRange(val)) {
                                     if ($.isArray(val)) {
@@ -208,7 +208,7 @@ useExistingOptions, val, value, valueIsEditable*/
                     };
 
                     return {
-                        position: function(elem, value) {
+                        position: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id], optionsCount;
                             if (opt !== undefined && Validators.int(value)) {
                                 optionsCount =
@@ -220,7 +220,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        classes: function(elem, value) {
+                        classes: function (elem, value) {
                             if (typeof value === 'string') {
                                 value = [value];
                             }
@@ -230,7 +230,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        optionClasses: function(elem, value) {
+                        optionClasses: function (elem, value) {
                             if (typeof value === 'string') {
                                 value = [value];
                             }
@@ -240,7 +240,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        styles: function(elem, value) {
+                        styles: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && value !== null && typeof value === 'object' &&
                                 !$.isArray(value)) {
@@ -248,7 +248,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        optionStyles: function(elem, value) {
+                        optionStyles: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && value !== null && typeof value === 'object' &&
                                 !$.isArray(value)) {
@@ -256,74 +256,74 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        focusOnNewOption: function(elem, value) {
+                        focusOnNewOption: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && typeof value === 'boolean') {
                                 opt.focusOnNewOption = value;
                             }
                         },
 
-                        useExistingOptions: function(elem, value) {
+                        useExistingOptions: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && typeof value === 'boolean') {
                                 opt.useExistingOptions = value;
                             }
                         },
 
-                        blinkingCursor: function(elem, value) {
+                        blinkingCursor: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && typeof value === 'boolean') {
                                 opt.blinkingCursor = value;
                             }
                         },
 
-                        blinkingCursorInterval: function(elem, value) {
+                        blinkingCursorInterval: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && Validators.int(value)) {
                                 opt.blinkingCursorInterval = value;
                             }
                         },
 
-                        ignoredKeys: function(elem, value) {
+                        ignoredKeys: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && $.isArray(value)) {
                                 opt.ignoredKeys = parseKeys(value);
                             }
                         },
 
-                        acceptedKeys: function(elem, value) {
+                        acceptedKeys: function (elem, value) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && $.isArray(value)) {
                                 opt.acceptedKeys = parseKeys(value);
                             }
                         }
                     };
-                } ());
+                }());
 
-                Remove = (function() {
+                Remove = (function () {
                     var removeClasses, removeStyles;
 
-                    removeClasses = function(elem, classes) {
-                        $.each(classes, function(i, val) {
+                    removeClasses = function (elem, classes) {
+                        $.each(classes, function (i, val) {
                             elem.removeClass(val);
                         });
                     };
 
-                    removeStyles = function(elem, styles) {
-                        $.each(styles, function(key, val) {
+                    removeStyles = function (elem, styles) {
+                        $.each(styles, function (key, val) {
                             elem.css(key, '');
                         });
                     };
 
                     return {
-                        classes: function(elem) {
+                        classes: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 removeClasses(elem, opt.classes);
                             }
                         },
 
-                        optionClasses: function(elem) {
+                        optionClasses: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 removeClasses(elem.children('option.' + pluginClass),
@@ -331,14 +331,14 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        styles: function(elem) {
+                        styles: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 removeStyles(elem, opt.styles);
                             }
                         },
 
-                        optionStyles: function(elem) {
+                        optionStyles: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 removeStyles(elem.children('option.' + pluginClass),
@@ -346,32 +346,32 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        all: function(elem) {
+                        all: function (elem) {
                             Remove.classes(elem);
                             Remove.optionClasses(elem);
                             Remove.styles(elem);
                             Remove.optionStyles(elem);
                         }
                     };
-                } ());
+                }());
 
-                Handle = (function() {
+                Handle = (function () {
                     var setClasses, setStyles;
 
-                    setClasses = function(elem, classes) {
-                        $.each(classes, function(i, val) {
+                    setClasses = function (elem, classes) {
+                        $.each(classes, function (i, val) {
                             elem.addClass(val);
                         });
                     };
 
-                    setStyles = function(elem, styles) {
-                        $.each(styles, function(key, val) {
+                    setStyles = function (elem, styles) {
+                        $.each(styles, function (key, val) {
                             elem.css(key, val);
                         });
                     };
 
                     return {
-                        position: function(elem) {
+                        position: function (elem) {
                             var opt = options[Combobox.getId(elem)], option, uneditableOptions;
                             if (opt !== undefined) {
                                 option = elem.children('option.' + pluginClass);
@@ -389,14 +389,14 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        classes: function(elem) {
+                        classes: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 setClasses(elem, opt.classes);
                             }
                         },
 
-                        optionClasses: function(elem) {
+                        optionClasses: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 setClasses(elem.children('option.' + pluginClass),
@@ -404,14 +404,14 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        styles: function(elem) {
+                        styles: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 setStyles(elem, opt.styles);
                             }
                         },
 
-                        optionStyles: function(elem) {
+                        optionStyles: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
                                 setStyles(elem.children('option.' + pluginClass),
@@ -419,7 +419,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        focusOnNewOption: function(elem) {
+                        focusOnNewOption: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && opt.focusOnNewOption) {
                                 elem.children('option.' + pluginClass).
@@ -427,14 +427,14 @@ useExistingOptions, val, value, valueIsEditable*/
                             }
                         },
 
-                        useExistingOptions: function(elem) {
+                        useExistingOptions: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && opt.useExistingOptions) {
                                 Combobox.setEditableOption(elem);
                             }
                         },
 
-                        all: function(elem) {
+                        all: function (elem) {
                             Handle.position(elem);
                             Handle.classes(elem);
                             Handle.optionClasses(elem);
@@ -444,18 +444,18 @@ useExistingOptions, val, value, valueIsEditable*/
                             Handle.useExistingOptions(elem);
                         }
                     };
-                } ());
+                }());
 
                 return {
                     Set: Set,
                     Remove: Remove,
                     Handle: Handle
                 };
-            } ());
+            }());
 
-            EditableOption = (function() {
+            EditableOption = (function () {
                 return {
-                    init: function(elem) {
+                    init: function (elem) {
                         if (!elem.children('option.' + pluginClass).length) {
                             var editableOption = $(document.createElement('option'));
                             editableOption.addClass(pluginClass);
@@ -470,7 +470,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         elem.bind('click', EventHandlers.click);
                     },
 
-                    destroy: function(elem) {
+                    destroy: function (elem) {
                         elem.children('option.' + pluginClass).remove();
                         elem.children('option:first').attr('selected', 'selected');
                         elem.unbind('keydown', EventHandlers.keyDown);
@@ -481,10 +481,10 @@ useExistingOptions, val, value, valueIsEditable*/
                         elem.unbind('click', EventHandlers.click);
                     }
                 };
-            } ());
+            }());
 
             // generates unique identifier
-            generateId = function() {
+            generateId = function () {
                 while (true) {
                     var random = Math.floor(Math.random() * 100000);
 
@@ -495,7 +495,7 @@ useExistingOptions, val, value, valueIsEditable*/
             };
 
             // sets combobox
-            setup = function(elem) {
+            setup = function (elem) {
                 EditableOption.init(elem);
                 Parameters.Handle.all(elem);
             };
@@ -503,8 +503,8 @@ useExistingOptions, val, value, valueIsEditable*/
             // Combobox public members
             return {
                 // create editable combobox
-                init: function(settings) {
-                    return $(this).filter(':uneditable').each(function() {
+                init: function (settings) {
+                    return $(this).filter(':uneditable').each(function () {
                         var id = generateId(), elem = $(this);
 
                         elem.data('jecId', id);
@@ -517,42 +517,42 @@ useExistingOptions, val, value, valueIsEditable*/
                         Parameters.Set.acceptedKeys(elem, options[id].acceptedKeys);
 
                         if (typeof settings === 'object' && !$.isArray(settings)) {
-                            $.each(settings, function(key, val) {
+                            $.each(settings, function (key, val) {
                                 if (val !== undefined) {
                                     switch (key) {
-                                        case 'position':
-                                            Parameters.Set.position(elem, val);
-                                            break;
-                                        case 'classes':
-                                            Parameters.Set.classes(elem, val);
-                                            break;
-                                        case 'optionClasses':
-                                            Parameters.Set.optionClasses(elem, val);
-                                            break;
-                                        case 'styles':
-                                            Parameters.Set.styles(elem, val);
-                                            break;
-                                        case 'optionStyles':
-                                            Parameters.Set.optionStyles(elem, val);
-                                            break;
-                                        case 'focusOnNewOption':
-                                            Parameters.Set.focusOnNewOption(elem, val);
-                                            break;
-                                        case 'useExistingOptions':
-                                            Parameters.Set.useExistingOptions(elem, val);
-                                            break;
-                                        case 'blinkingCursor':
-                                            Parameters.Set.blinkingCursor(elem, val);
-                                            break;
-                                        case 'blinkingCursorInterval':
-                                            Parameters.Set.blinkingCursorInterval(elem, val);
-                                            break;
-                                        case 'ignoredKeys':
-                                            Parameters.Set.ignoredKeys(elem, val);
-                                            break;
-                                        case 'acceptedKeys':
-                                            Parameters.Set.acceptedKeys(elem, val);
-                                            break;
+                                    case 'position':
+                                        Parameters.Set.position(elem, val);
+                                        break;
+                                    case 'classes':
+                                        Parameters.Set.classes(elem, val);
+                                        break;
+                                    case 'optionClasses':
+                                        Parameters.Set.optionClasses(elem, val);
+                                        break;
+                                    case 'styles':
+                                        Parameters.Set.styles(elem, val);
+                                        break;
+                                    case 'optionStyles':
+                                        Parameters.Set.optionStyles(elem, val);
+                                        break;
+                                    case 'focusOnNewOption':
+                                        Parameters.Set.focusOnNewOption(elem, val);
+                                        break;
+                                    case 'useExistingOptions':
+                                        Parameters.Set.useExistingOptions(elem, val);
+                                        break;
+                                    case 'blinkingCursor':
+                                        Parameters.Set.blinkingCursor(elem, val);
+                                        break;
+                                    case 'blinkingCursorInterval':
+                                        Parameters.Set.blinkingCursorInterval(elem, val);
+                                        break;
+                                    case 'ignoredKeys':
+                                        Parameters.Set.ignoredKeys(elem, val);
+                                        break;
+                                    case 'acceptedKeys':
+                                        Parameters.Set.acceptedKeys(elem, val);
+                                        break;
                                     }
                                 }
                             });
@@ -563,15 +563,15 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // creates editable combobox without using existing select elements
-                initJS: function(options, settings) {
+                initJS: function (options, settings) {
                     var select;
 
                     select = $('<select>');
 
                     if ($.isArray(options)) {
-                        $.each(options, function(i, val) {
+                        $.each(options, function (i, val) {
                             if (val !== null && typeof val === 'object' && !$.isArray(val)) {
-                                $.each(val, function(key, value) {
+                                $.each(val, function (key, value) {
                                     if (typeof value === 'number' || typeof value === 'string') {
                                         $('<option>').text(value).attr('value', key).
                                             appendTo(select);
@@ -587,8 +587,8 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // destroys editable combobox
-                destroy: function() {
-                    return $(this).filter(':editable').each(function() {
+                destroy: function () {
+                    return $(this).filter(':editable').each(function () {
                         $(this).jecOff();
                         $.removeData($(this).get(0), 'jecId');
                         $.removeData($(this).get(0), 'jecCursorState');
@@ -597,8 +597,8 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // enable editablecombobox
-                enable: function() {
-                    return $(this).filter(':editable').each(function() {
+                enable: function () {
+                    return $(this).filter(':editable').each(function () {
                         var id = Combobox.getId($(this)), value = values[id];
 
                         setup($(this));
@@ -610,8 +610,8 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // disable editable combobox
-                disable: function() {
-                    return $(this).filter(':editable').each(function() {
+                disable: function () {
+                    return $(this).filter(':editable').each(function () {
                         values[Combobox.getId($(this))] = $(this).
                             children('option.' + pluginClass).val();
                         Parameters.Remove.all($(this));
@@ -620,7 +620,7 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // gets or sets editable option's value
-                value: function(value, setFocus) {
+                value: function (value, setFocus) {
                     if ($(this).filter(':editable').length > 0) {
                         if (value === null || value === undefined) {
                             // get value
@@ -628,7 +628,7 @@ useExistingOptions, val, value, valueIsEditable*/
                                 val();
                         } else if (typeof value === 'string' || typeof value === 'number') {
                             // set value
-                            return $(this).filter(':editable').each(function() {
+                            return $(this).filter(':editable').each(function () {
                                 var option = $(this).children('option.' + pluginClass);
                                 option.val(value).text(value);
                                 if (typeof setFocus !== 'boolean' || setFocus) {
@@ -640,7 +640,7 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // gets or sets editable option's preference
-                pref: function(name, value) {
+                pref: function (name, value) {
                     if ($(this).filter(':editable').length > 0) {
                         if (typeof name === 'string') {
                             if (value === null || value === undefined) {
@@ -648,52 +648,52 @@ useExistingOptions, val, value, valueIsEditable*/
                                 return options[Combobox.getId($(this))][name];
                             } else {
                                 // set preference
-                                return $(this).filter(':editable').each(function() {
+                                return $(this).filter(':editable').each(function () {
                                     switch (name) {
-                                        case 'position':
-                                            Parameters.Set.position($(this), value);
-                                            Parameters.Handle.position($(this));
-                                            break;
-                                        case 'classes':
-                                            Parameters.Remove.classes($(this));
-                                            Parameters.Set.classes($(this), value);
-                                            Parameters.Handle.position($(this));
-                                            break;
-                                        case 'optionClasses':
-                                            Parameters.Remove.optionClasses($(this));
-                                            Parameters.Set.optionClasses($(this), value);
-                                            Parameters.Set.optionClasses($(this));
-                                            break;
-                                        case 'styles':
-                                            Parameters.Remove.styles($(this));
-                                            Parameters.Set.styles($(this), value);
-                                            Parameters.Set.styles($(this));
-                                            break;
-                                        case 'optionStyles':
-                                            Parameters.Remove.optionStyles($(this));
-                                            Parameters.Set.optionStyles($(this), value);
-                                            Parameters.Handle.optionStyles($(this));
-                                            break;
-                                        case 'focusOnNewOption':
-                                            Parameters.Set.focusOnNewOption($(this), value);
-                                            Parameters.Handle.focusOnNewOption($(this));
-                                            break;
-                                        case 'useExistingOptions':
-                                            Parameters.Set.useExistingOptions($(this), value);
-                                            Parameters.Handle.useExistingOptions($(this));
-                                            break;
-                                        case 'blinkingCursor':
-                                            Parameters.Set.blinkingCursor($(this), value);
-                                            break;
-                                        case 'blinkingCursorInterval':
-                                            Parameters.Set.blinkingCursorInterval($(this), value);
-                                            break;
-                                        case 'ignoredKeys':
-                                            Parameters.Set.ignoredKeys($(this), value);
-                                            break;
-                                        case 'acceptedKeys':
-                                            Parameters.Set.acceptedKeys($(this), value);
-                                            break;
+                                    case 'position':
+                                        Parameters.Set.position($(this), value);
+                                        Parameters.Handle.position($(this));
+                                        break;
+                                    case 'classes':
+                                        Parameters.Remove.classes($(this));
+                                        Parameters.Set.classes($(this), value);
+                                        Parameters.Handle.position($(this));
+                                        break;
+                                    case 'optionClasses':
+                                        Parameters.Remove.optionClasses($(this));
+                                        Parameters.Set.optionClasses($(this), value);
+                                        Parameters.Set.optionClasses($(this));
+                                        break;
+                                    case 'styles':
+                                        Parameters.Remove.styles($(this));
+                                        Parameters.Set.styles($(this), value);
+                                        Parameters.Set.styles($(this));
+                                        break;
+                                    case 'optionStyles':
+                                        Parameters.Remove.optionStyles($(this));
+                                        Parameters.Set.optionStyles($(this), value);
+                                        Parameters.Handle.optionStyles($(this));
+                                        break;
+                                    case 'focusOnNewOption':
+                                        Parameters.Set.focusOnNewOption($(this), value);
+                                        Parameters.Handle.focusOnNewOption($(this));
+                                        break;
+                                    case 'useExistingOptions':
+                                        Parameters.Set.useExistingOptions($(this), value);
+                                        Parameters.Handle.useExistingOptions($(this));
+                                        break;
+                                    case 'blinkingCursor':
+                                        Parameters.Set.blinkingCursor($(this), value);
+                                        break;
+                                    case 'blinkingCursorInterval':
+                                        Parameters.Set.blinkingCursorInterval($(this), value);
+                                        break;
+                                    case 'ignoredKeys':
+                                        Parameters.Set.ignoredKeys($(this), value);
+                                        break;
+                                    case 'acceptedKeys':
+                                        Parameters.Set.acceptedKeys($(this), value);
+                                        break;
                                     }
                                 });
                             }
@@ -702,39 +702,39 @@ useExistingOptions, val, value, valueIsEditable*/
                 },
 
                 // sets editable option to the value of currently selected option
-                setEditableOption: function(elem) {
+                setEditableOption: function (elem) {
                     var value = elem.children('option:selected').text();
                     elem.children('option.' + pluginClass).attr('value', elem.val()).
                         text(value).attr('selected', 'selected');
                 },
 
                 // get combobox id
-                getId: function(elem) {
+                getId: function (elem) {
                     return elem.data('jecId');
                 },
 
-                valueIsEditable: function(elem) {
+                valueIsEditable: function (elem) {
                     return elem.children('option.' + pluginClass).get(0) ===
                         elem.children('option:selected').get(0);
                 },
 
-                clearCursor: function(elem) {
-                    $(elem).children('option.' + cursorClass).each(function() {
+                clearCursor: function (elem) {
+                    $(elem).children('option.' + cursorClass).each(function () {
                         var text = $(this).text();
                         $(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
                     });
                 },
 
-                cursorState: function(elem, state) {
+                cursorState: function (elem, state) {
                     return elem.data('jecCursorState', state);
                 },
 
-                openedState: function(elem, state) {
+                openedState: function (elem, state) {
                     return elem.data('jecOpenedState', state);
                 },
 
                 //handles editable cursor
-                handleCursor: function() {
+                handleCursor: function () {
                     if (activeCombobox !== undefined && activeCombobox !== null) {
                         if ($.browser.msie && Combobox.openedState(activeCombobox)) {
                             return;
@@ -751,7 +751,7 @@ useExistingOptions, val, value, valueIsEditable*/
                     }
                 }
             };
-        } ());
+        }());
 
         // jEC public members
         return {
@@ -764,7 +764,7 @@ useExistingOptions, val, value, valueIsEditable*/
             initJS: Combobox.initJS,
             handleCursor: Combobox.handleCursor
         };
-    } ());
+    }());
 
     // register functions
     $.fn.extend({
@@ -782,13 +782,13 @@ useExistingOptions, val, value, valueIsEditable*/
 
     // register selectors
     $.extend($.expr[':'], {
-        editable: function(a) {
+        editable: function (a) {
             return $(a).data('jecId') !== null;
         },
 
-        uneditable: function(a) {
+        uneditable: function (a) {
             return $(a).data('jecId') === null;
         }
     });
 
-} (jQuery));
+}(jQuery));

@@ -2,14 +2,14 @@
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
-css, data, display, done, each, eq, filter, focus, focusOnNewOption, "font-size", hasClass, hide, 
+css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', hasClass, hide, 
 ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
 length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, remove, 
 replace, styles, test, testDone, text, trigger, useExistingOptions, val*/
 'use strict';
-$(function() {
+$(function () {
 
-    if (typeof fireunit === "object") {
+    if (typeof fireunit === 'object') {
         QUnit.log = fireunit.ok;
         QUnit.done = fireunit.testDone;
     }
@@ -22,20 +22,20 @@ $(function() {
 
     var trim, key, reset;
 
-    trim = function(str) {
-        return str.replace(/(^\s+)|(\s+$)/, "");
+    trim = function (str) {
+        return str.replace(/(^\s+)|(\s+$)/, '');
     };
 
-    key = function(elem, code) {
+    key = function (elem, code) {
         var list = ['keydown', 'keypress', 'keyup'];
-        $.each(list, function() {
+        $.each(list, function () {
             var event = $.Event(this);
             event.keyCode = code;
             elem.trigger(event);
         });
     };
 
-    reset = function(elem) {
+    reset = function (elem) {
         elem.jecKill();
         elem.attr('class', '');
         elem.attr('style', '');
@@ -44,7 +44,7 @@ $(function() {
     };
 
     module('init');
-    test('Editable combobox initialization', function() {
+    test('Editable combobox initialization', function () {
         expect(1);
 
         $('#test').jec();
@@ -52,7 +52,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Keyboard', function() {
+    test('Keyboard', function () {
         expect(6);
 
         $('#test').jec();
@@ -71,7 +71,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: position', function() {
+    test('Setting: position', function () {
         expect(13);
 
         $('#test').jec({ position: 0 });
@@ -140,7 +140,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: classes', function() {
+    test('Setting: classes', function () {
         expect(13);
 
         var c1 = 'class1', c2 = 'class2';
@@ -198,7 +198,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: optionClasses', function() {
+    test('Setting: optionClasses', function () {
         expect(13);
 
         var c1 = 'c1', c2 = 'c2';
@@ -271,7 +271,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: styles', function() {
+    test('Setting: styles', function () {
         expect(12);
 
         var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
@@ -324,7 +324,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: optionStyles', function() {
+    test('Setting: optionStyles', function () {
         expect(12);
 
         var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
@@ -379,7 +379,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: focusOnNewOption', function() {
+    test('Setting: focusOnNewOption', function () {
         expect(9);
 
         $('#test').jec({ focusOnNewOption: false });
@@ -421,17 +421,17 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: blinkingCursor', function() {
+    test('Setting: blinkingCursor', function () {
         // nothing to test here at the moment
         expect(0);
     });
 
-    test('Setting: blinkingCursorInterval', function() {
+    test('Setting: blinkingCursorInterval', function () {
         // nothing to test here at the moment
         expect(0);
     });
 
-    test('Setting: useExistingOptions', function() {
+    test('Setting: useExistingOptions', function () {
         expect(3);
 
         $('#test').jec({ useExistingOptions: true });
@@ -447,7 +447,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: ignoredKeys', function() {
+    test('Setting: ignoredKeys', function () {
         expect(3);
 
         $('#test').jec({ ignoredKeys: [72, { min: 73, max: 75}] });
@@ -460,7 +460,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting: acceptedKeys', function() {
+    test('Setting: acceptedKeys', function () {
         expect(3);
 
         $('#test').jec({ acceptedKeys: [72, { min: 73, max: 75}] });
@@ -474,7 +474,7 @@ $(function() {
     });
 
     module('initJS');
-    test('Editable combobox initialization', function() {
+    test('Editable combobox initialization', function () {
         expect(1);
 
         var combobox = $.jec();
@@ -483,7 +483,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Options', function() {
+    test('Options', function () {
         expect(23);
 
         var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null, true],
@@ -540,7 +540,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Keyboard', function() {
+    test('Keyboard', function () {
         expect(6);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -562,7 +562,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: position', function() {
+    test('Setting: position', function () {
         expect(13);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -633,7 +633,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: classes', function() {
+    test('Setting: classes', function () {
         expect(13);
 
         var c1 = 'class1', c2 = 'class2',
@@ -692,7 +692,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: optionClasses', function() {
+    test('Setting: optionClasses', function () {
         expect(13);
 
         var c1 = 'c1', c2 = 'c2', cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -765,7 +765,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: styles', function() {
+    test('Setting: styles', function () {
         expect(12);
 
         var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'block', obj = {},
@@ -819,7 +819,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: optionStyles', function() {
+    test('Setting: optionStyles', function () {
         expect(12);
 
         var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'block', obj = {},
@@ -875,7 +875,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: focusOnNewOption', function() {
+    test('Setting: focusOnNewOption', function () {
         expect(9);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -926,17 +926,17 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: blinkingCursor', function() {
+    test('Setting: blinkingCursor', function () {
         // nothing to test here at the moment
         expect(0);
     });
 
-    test('Setting: blinkingCursorInterval', function() {
+    test('Setting: blinkingCursorInterval', function () {
         // nothing to test here at the moment
         expect(0);
     });
 
-    test('Setting: useExistingOptions', function() {
+    test('Setting: useExistingOptions', function () {
         expect(3);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -954,7 +954,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: ignoredKeys', function() {
+    test('Setting: ignoredKeys', function () {
         expect(3);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -969,7 +969,7 @@ $(function() {
         reset(combobox);
     });
 
-    test('Setting: acceptedKeys', function() {
+    test('Setting: acceptedKeys', function () {
         expect(3);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -985,7 +985,7 @@ $(function() {
     });
 
     module('disable');
-    test('Editable combobox deactivation', function() {
+    test('Editable combobox deactivation', function () {
         expect(2);
 
         $('#test').jec();
@@ -996,7 +996,7 @@ $(function() {
     });
 
     module('enable');
-    test('Editable combobox activation', function() {
+    test('Editable combobox activation', function () {
         expect(1);
 
         $('#test').jec();
@@ -1007,7 +1007,7 @@ $(function() {
     });
 
     module('kill');
-    test('Editable combobox destruction', function() {
+    test('Editable combobox destruction', function () {
         expect(2);
 
         $('#test').jec();
@@ -1017,7 +1017,7 @@ $(function() {
     });
 
     module('value');
-    test('Getting value', function() {
+    test('Getting value', function () {
         expect(3);
 
         var v1 = 'v1', v2 = 1, v3 = 1.2;
@@ -1032,7 +1032,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting value', function() {
+    test('Setting value', function () {
         expect(9);
 
         var v1 = 'v1', v2 = 1, v3 = 1.2;
@@ -1060,7 +1060,7 @@ $(function() {
     });
 
     module('pref');
-    test('Getting preference', function() {
+    test('Getting preference', function () {
         expect(19);
 
         $('#test').jec();
@@ -1090,11 +1090,11 @@ $(function() {
             ]
         };
 
-        $.each(defaults, function(key, value) {
+        $.each(defaults, function (key, value) {
             if (value !== undefined) {
                 if (key === 'acceptedKeys') {
                     value = defaults.acceptedKeys;
-                    $.each(value, function() {
+                    $.each(value, function () {
                         // min,max tuple
                         if (this !== null && typeof this === 'object' &&
                             typeof this.min === 'number' && typeof this.max === 'number' &&
@@ -1117,7 +1117,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: position', function() {
+    test('Setting preference: position', function () {
         expect(9);
 
         $('#test').jec();
@@ -1142,7 +1142,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: classes', function() {
+    test('Setting preference: classes', function () {
         expect(9);
 
         var c1 = 'c1';
@@ -1168,7 +1168,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: styles', function() {
+    test('Setting preference: styles', function () {
         expect(9);
 
         var styles = { display: 'none', 'font-size': '30px' };
@@ -1195,7 +1195,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: focusOnNewOption', function() {
+    test('Setting preference: focusOnNewOption', function () {
         expect(9);
 
         $('#test').jec();
@@ -1220,7 +1220,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: useExistingOptions', function() {
+    test('Setting preference: useExistingOptions', function () {
         expect(9);
 
         $('#test').jec();
@@ -1245,7 +1245,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: blinkingCursor', function() {
+    test('Setting preference: blinkingCursor', function () {
         expect(9);
 
         $('#test').jec();
@@ -1270,7 +1270,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: blinkingCursorInterval', function() {
+    test('Setting preference: blinkingCursorInterval', function () {
         expect(9);
 
         $('#test').jec();
@@ -1295,7 +1295,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: ignoredKeys', function() {
+    test('Setting preference: ignoredKeys', function () {
         expect(9);
 
         var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
@@ -1326,7 +1326,7 @@ $(function() {
         reset($('#test'));
     });
 
-    test('Setting preference: acceptedKeys', function() {
+    test('Setting preference: acceptedKeys', function () {
         expect(9);
 
         var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
