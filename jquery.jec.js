@@ -16,7 +16,7 @@
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
-bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charCode, classes, 
+bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, 
 clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, expr, 
 extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, handleCursor, 
 ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, jecKill, 
@@ -192,7 +192,9 @@ triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsE
                 var Set, Remove, Handle;
 
                 (Set = function () {
-                    var parseKeys = function (value) {
+                    var parseKeys, Handles;
+                    
+                    parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
                             $.each(value, function (i, val) {
@@ -215,110 +217,110 @@ triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsE
                         }
                         return keys;
                     };
+                    
+                    (Handles = function () {
+                        return {
+                            int: function (elem, name, value) {
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (opt !== undefined && Validators.int(value)) {
+                                    opt[name] = value;
+                                    return true;
+                                }
+                                return false;
+                            },
+                            bool: function (elem, name, value) {
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (opt !== undefined && typeof value === 'boolean') {
+                                    opt[name] = value;
+                                    return true;
+                                }
+                                return false;
+                            },
+                            array: function (elem, name, value) {
+                                if (typeof value === 'string') {
+                                    value = [value];
+                                }
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (opt !== undefined && $.isArray(value)) {
+                                    opt[name] = value;
+                                    return true;
+                                }
+                                return false;
+                            },
+                            object: function (elem, name, value) {
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (opt !== undefined && value !== null && typeof value === 'object' &&
+                                    !$.isArray(value)) {
+                                    opt[name] = value;
+                                }
+                            },
+                            keys: function (elem, name, value) {
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (opt !== undefined && $.isArray(value)) {
+                                    opt[name] = parseKeys(value);
+                                }
+                            }
+                        };
+                    }());
 
                     return {
                         position: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id], optionsCount;
-                            if (opt !== undefined && Validators.int(value)) {
+                            if (Handles.int(elem, 'position', value)) {
+                                var id = Combobox.getId(elem), opt = options[id], optionsCount;
                                 optionsCount =
                                     elem.find('option:not(.' + pluginClass + ')').length;
                                 if (value > optionsCount) {
-                                    value = optionsCount;
+                                    opt.position = optionsCount;
                                 }
-                                opt.position = value;
                             }
                         },
                         
                         ignoreOptGroups: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && typeof value === 'boolean') {
-                                opt.ignoreOptGroups = value;
-                            }
+                            Handles.bool(elem, 'ignoreOptGroups', value);
                         },
 
                         classes: function (elem, value) {
-                            if (typeof value === 'string') {
-                                value = [value];
-                            }
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && $.isArray(value)) {
-                                opt.classes = value;
-                            }
+                            Handles.array(elem, 'classes', value);
                         },
 
                         optionClasses: function (elem, value) {
-                            if (typeof value === 'string') {
-                                value = [value];
-                            }
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && $.isArray(value)) {
-                                opt.optionClasses = value;
-                            }
+                            Handles.array(elem, 'optionClasses', value);
                         },
 
                         styles: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && value !== null && typeof value === 'object' &&
-                                !$.isArray(value)) {
-                                opt.styles = value;
-                            }
+                            Handles.object(elem, 'styles', value);
                         },
 
                         optionStyles: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && value !== null && typeof value === 'object' &&
-                                !$.isArray(value)) {
-                                opt.optionStyles = value;
-                            }
+                            Handles.object(elem, 'optionStyles', value);
                         },
                         
                         triggerChangeEvent: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && typeof value === 'boolean') {
-                                opt.triggerChangeEvent = value;
-                            }
+                            Handles.bool(elem, 'triggerChangeEvent', value);
                         },
 
                         focusOnNewOption: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && typeof value === 'boolean') {
-                                opt.focusOnNewOption = value;
-                            }
+                            Handles.bool(elem, 'focusOnNewOption', value);
                         },
 
                         useExistingOptions: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && typeof value === 'boolean') {
-                                opt.useExistingOptions = value;
-                            }
+                            Handles.bool(elem, 'useExistingOptions', value);
                         },
 
                         blinkingCursor: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && typeof value === 'boolean') {
-                                opt.blinkingCursor = value;
-                            }
+                            Handles.bool(elem, 'blinkingCursor', value);
                         },
 
                         blinkingCursorInterval: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && Validators.int(value)) {
-                                opt.blinkingCursorInterval = value;
-                            }
+                            Handles.int(elem, 'blinkingCursorInterval', value);
                         },
 
                         ignoredKeys: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && $.isArray(value)) {
-                                opt.ignoredKeys = parseKeys(value);
-                            }
+                            Handles.keys(elem, 'ignoredKeys', value);
                         },
 
                         acceptedKeys: function (elem, value) {
-                            var id = Combobox.getId(elem), opt = options[id];
-                            if (opt !== undefined && $.isArray(value)) {
-                                opt.acceptedKeys = parseKeys(value);
-                            }
+                            Handles.keys(elem, 'acceptedKeys', value);
                         }
                     };
                 }());
