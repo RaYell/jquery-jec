@@ -15,15 +15,16 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, attr, before, 
-bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, 
-clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, expr, 
-extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, handleCursor, 
-ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, jecKill, 
-jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, length, max, min, 
-msie, openedState, optionClasses, optionStyles, parent, position, pref, push, random, remove, 
-removeAttr, removeClass, removeData, safari, setEditableOption, styles, substring, text, trigger 
-triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable*/
+/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, 
+before, bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, 
+classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, 
+expr, extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, 
+handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, 
+jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, 
+length, max, min, msie, object, openedState, optionClasses, optionStyles, parent, position, pref, 
+push, random, remove, removeAttr, removeClass, removeData, safari, setEditableOption, styles, 
+substring, text, trigger triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, 
+valueIsEditable*/
 'use strict';
 (function ($) {
 
