@@ -13,7 +13,8 @@
  */
 
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
-bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, 
+maxlen: 100*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, 
 before, bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, 
@@ -250,8 +251,8 @@ valueIsEditable*/
                             },
                             object: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
-                                if (opt !== undefined && value !== null && typeof value === 'object' &&
-                                    !$.isArray(value)) {
+                                if (opt !== undefined && value !== null && 
+                                    typeof value === 'object' && !$.isArray(value)) {
                                     opt[name] = value;
                                 }
                             },

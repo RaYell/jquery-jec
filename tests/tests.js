@@ -1,5 +1,6 @@
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
-bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
+bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, 
+maxlen: 100*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, bind, blinkingCursor, blinkingCursorInterval, children, 
 classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', 
@@ -561,8 +562,8 @@ $(function () {
     test('Options', function () {
         expect(23);
 
-        var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null, true],
-            combobox = $.jec(op);
+        var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null, 
+            true], combobox = $.jec(op);
 
         ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created');
         same(combobox.children('option:eq(1)').val(), '1', 'Checking option #1 key');
@@ -918,7 +919,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { styles: 'width: 100px' });
-        same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
+        same(combobox.children('option.jecEditableOption').css(s1), '1', 
+            'No extra styles (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: 0 });
@@ -930,7 +932,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: true });
-        same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
+        same(combobox.children('option.jecEditableOption').css(s1), '1', 
+            'No extra styles (boolean)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: null });
@@ -938,7 +941,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: undefined });
-        same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
+        same(combobox.children('option.jecEditableOption').css(s1), '1', 
+            'No extra styles (undefined)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: [] });
@@ -946,7 +950,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionStyles: $ });
-        same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
+        same(combobox.children('option.jecEditableOption').css(s1), '1', 
+            'No extra styles (function)');
         reset(combobox);
     });
     
