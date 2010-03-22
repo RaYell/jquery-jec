@@ -1,11 +1,12 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, 
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
-/*members Event, acceptedKeys, attr, blinkingCursor, blinkingCursorInterval, children, classes, 
-css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', hasClass, hide, 
-ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
-length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, remove, 
-replace, styles, test, testDone, text, trigger, useExistingOptions, val*/
+/*members Event, acceptedKeys, attr, bind, blinkingCursor, blinkingCursorInterval, children, 
+classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', 
+hasClass, hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, 
+k4, keyCode, length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, 
+remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
+useExistingOptions, val*/
 'use strict';
 $(function () {
 
@@ -377,6 +378,80 @@ $(function () {
         $('#test').jec({ optionStyles: $ });
         same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
         reset($('#test'));
+    });
+    
+    test('Setting: triggerChangeEvent', function () {
+        expect(10);
+        
+        var test = null;
+        
+        function testHandler() {
+            test = 1;
+        }
+        
+        $('#test').bind('change', testHandler);
+        
+        $('#test').jec({ triggerChangeEvent: true });
+        key($('#test'), 72);
+        same(test, 1, 'Run change event handler');
+        reset($('#test'));
+        test = null;
+
+        $('#test').jec({ triggerChangeEvent: false });
+        key($('#test'), 72);
+        same(test, null, 'Ignore change event handler');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: '' });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (string)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: 1 });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (int)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: 1.2 });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (float)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: undefined });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (undefined)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: null });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (null)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: {} });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (object)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: [] });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (array)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').jec({ triggerChangeEvent: $ });
+        key($('#test'), 72);
+        same(test, null, 'Ignore malformed parameter (function)');
+        reset($('#test'));
+        test = null;
+        
+        $('#test').unbind('change', testHandler);
     });
 
     test('Setting: focusOnNewOption', function () {
@@ -873,6 +948,86 @@ $(function () {
         combobox = $.jec(cbOptions, { optionStyles: $ });
         same(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
         reset(combobox);
+    });
+    
+    test('Setting: triggerChangeEvent', function () {
+        expect(10);
+        
+        var test = null, cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}], combobox;
+        
+        function testHandler() {
+            test = 1;
+        }
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: true });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, 1, 'Run change event handler');
+        reset(combobox);
+        test = null;
+
+        combobox = $.jec(cbOptions, { triggerChangeEvent: false });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore change event handler');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: '' });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (string)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: 1 });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (int)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: 1.2 });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (float)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: undefined });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (undefined)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: null });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (null)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: {} });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (object)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: [] });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (array)');
+        reset(combobox);
+        test = null;
+        
+        combobox = $.jec(cbOptions, { triggerChangeEvent: $ });
+        combobox.bind('change', testHandler);
+        key(combobox, 72);
+        same(test, null, 'Ignore malformed parameter (function)');
+        reset(combobox);
+        test = null;
     });
 
     test('Setting: focusOnNewOption', function () {
