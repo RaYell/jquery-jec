@@ -20,10 +20,10 @@ bind, blinkingCursor, blinkingCursorInterval, blur, browser, ceil, change, charC
 clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, expr, 
 extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, handleCursor, 
 ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, jec, jecKill, 
-jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, length, max, min, msie, 
-openedState, optionClasses, optionStyles, parent, position, pref, push, random, remove, removeAttr, 
-removeClass, removeData, safari, setEditableOption, styles, substring, text, unbind, uneditable, 
-useExistingOptions, val, value, valueIsEditable*/
+jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, length, max, min, 
+msie, openedState, optionClasses, optionStyles, parent, position, pref, push, random, remove, 
+removeAttr, removeClass, removeData, safari, setEditableOption, styles, substring, text, trigger 
+triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable*/
 'use strict';
 (function ($) {
 
@@ -39,6 +39,7 @@ useExistingOptions, val, value, valueIsEditable*/
             styles: {},
             optionClasses: [],
             optionStyles: {},
+            triggerChangeEvent: false,
             focusOnNewOption: false,
             useExistingOptions: false,
             blinkingCursor: false,
@@ -157,6 +158,13 @@ useExistingOptions, val, value, valueIsEditable*/
                         return false;
                     }
                 },
+                
+                keyUp: function (event) {
+                    var opt = options[Combobox.getId($(this))];
+                    if (opt.triggerChangeEvent) {
+                        $(this).trigger('change');
+                    }
+                },
 
                 // change event handler
                 // handles editable option changing based on a pre-existing values
@@ -220,6 +228,13 @@ useExistingOptions, val, value, valueIsEditable*/
                                 opt.position = value;
                             }
                         },
+                        
+                        ignoreOptGroups: function (elem, value) {
+                            var id = Combobox.getId(elem), opt = options[id];
+                            if (opt !== undefined && typeof value === 'boolean') {
+                                opt.ignoreOptGroups = value;
+                            }
+                        },
 
                         classes: function (elem, value) {
                             if (typeof value === 'string') {
@@ -254,6 +269,13 @@ useExistingOptions, val, value, valueIsEditable*/
                             if (opt !== undefined && value !== null && typeof value === 'object' &&
                                 !$.isArray(value)) {
                                 opt.optionStyles = value;
+                            }
+                        },
+                        
+                        triggerChangeEvent: function (elem, value) {
+                            var id = Combobox.getId(elem), opt = options[id];
+                            if (opt !== undefined && typeof value === 'boolean') {
+                                opt.triggerChangeEvent = value;
                             }
                         },
 
@@ -467,6 +489,7 @@ useExistingOptions, val, value, valueIsEditable*/
 
                         elem.bind('keydown', EventHandlers.keyDown);
                         elem.bind('keypress', EventHandlers.keyPress);
+                        elem.bind('keyup', EventHandlers.keyUp);
                         elem.bind('change', EventHandlers.change);
                         elem.bind('focus', EventHandlers.focus);
                         elem.bind('blur', EventHandlers.blur);
@@ -478,6 +501,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         elem.find('option:first').attr('selected', 'selected');
                         elem.unbind('keydown', EventHandlers.keyDown);
                         elem.unbind('keypress', EventHandlers.keyPress);
+                        elem.unbind('keyup', EventHandlers.keyUp);
                         elem.unbind('change', EventHandlers.change);
                         elem.unbind('focus', EventHandlers.focus);
                         elem.unbind('blur', EventHandlers.blur);
@@ -527,6 +551,9 @@ useExistingOptions, val, value, valueIsEditable*/
                                     case 'position':
                                         Parameters.Set.position(elem, val);
                                         break;
+                                    case 'ignoreOptGroups':
+                                        Parameters.Set.ignoreOptGroups(elem, val);
+                                        break;
                                     case 'classes':
                                         Parameters.Set.classes(elem, val);
                                         break;
@@ -538,6 +565,9 @@ useExistingOptions, val, value, valueIsEditable*/
                                         break;
                                     case 'optionStyles':
                                         Parameters.Set.optionStyles(elem, val);
+                                        break;
+                                    case 'triggerChangeEvent':
+                                        Parameters.Set.triggerChangeEvent(elem, val);
                                         break;
                                     case 'focusOnNewOption':
                                         Parameters.Set.focusOnNewOption(elem, val);
