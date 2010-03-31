@@ -22,10 +22,10 @@ classes, clearCursor, click, css, cursorState, data, destroy, disable, each, edi
 expr, extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, 
 handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, 
 jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, 
-length, max, min, msie, object, openedState, optionClasses, optionStyles, parent, position, pref, 
-push, random, remove, removeAttr, removeClass, removeData, safari, setEditableOption, styles, 
-substring, text, trigger triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, 
-valueIsEditable*/
+length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
+position, pref, push, random, remove, removeAttr, removeClass, removeData, safari, 
+setEditableOption, styles, substring, text, trigger triggerChangeEvent, unbind, uneditable, 
+useExistingOptions, val, value, valueIsEditable*/
 'use strict';
 (function ($) {
 
@@ -37,6 +37,7 @@ valueIsEditable*/
         defaults = {
             position: 0,
             ignoreOptGroups: false,
+            maxLength: 255,
             classes: [],
             styles: {},
             optionClasses: [],
@@ -132,7 +133,7 @@ valueIsEditable*/
                 // about pressed keys)
                 keyPress: function (event) {
                     var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
-                        option, value, specialKeys, exit = false;
+                        option, value, specialKeys, exit = false, text;
 
                     Combobox.clearCursor($(this));
                     if (keyCode !== 9 && keyCode !== 13 && keyCode !== 27) {
@@ -152,8 +153,14 @@ valueIsEditable*/
 
                             if ($.inArray(keyCode, opt.acceptedKeys) !== -1) {
                                 option = $(this).find('option.' + pluginClass);
-                                value = option.text() + String.fromCharCode(keyCode);
-                                option.val(value).text(value).attr('selected', 'selected');
+                                text = option.text();
+                                
+                                if (text.length < opt.maxLength) {
+                                    value = text + String.fromCharCode(keyCode);
+                                    option.val(value).text(value);
+                                }
+                                
+                                option.attr('selected', 'selected');
                             }
                         }
 
@@ -279,6 +286,15 @@ valueIsEditable*/
                         
                         ignoreOptGroups: function (elem, value) {
                             Handles.bool(elem, 'ignoreOptGroups', value);
+                        },
+                        
+                        maxLength: function (elem, value) {
+                            if (Handles.int(elem, 'maxLength', value)) {
+                                var id = Combobox.getId(elem), opt = options[id];
+                                if (value < 0 || value > 255) {
+                                    opt.maxLength = 255;
+                                }
+                            }
                         },
 
                         classes: function (elem, value) {
@@ -557,6 +573,9 @@ valueIsEditable*/
                                         break;
                                     case 'ignoreOptGroups':
                                         Parameters.Set.ignoreOptGroups(elem, val);
+                                        break;
+                                    case 'maxLength':
+                                        Parameters.Set.maxLength(elem, val);
                                         break;
                                     case 'classes':
                                         Parameters.Set.classes(elem, val);

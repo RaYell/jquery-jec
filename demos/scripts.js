@@ -3,7 +3,7 @@ bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50
 maxlen: 100*/
 /*global $*/
 /*members '1', '2', '3', after, blinkingCursor, blinkingCursorInterval, click, jec, jecOff, jecOn, 
-jecPref, jecValue, useExistingOptions, val*/
+jecPref, jecValue, maxLength, useExistingOptions, val*/
 'use strict';
 $(function () {
     $('#demo1').jec();
@@ -43,4 +43,6 @@ $(function () {
     $('#demo-6 code').after(cb);
     
     $('#demo7').jec({blinkingCursor: true, blinkingCursorInterval: 500});
+    
+    $('#demo8').jec({maxLength: 3});
 });
