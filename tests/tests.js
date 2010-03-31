@@ -5,8 +5,8 @@ maxlen: 100*/
 /*members Event, acceptedKeys, attr, bind, blinkingCursor, blinkingCursorInterval, children, 
 classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', 
 hasClass, hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, 
-k4, keyCode, length, log, max, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, position, 
-remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
+k4, keyCode, length, log, max, maxLength, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, 
+position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
 useExistingOptions, val*/
 'use strict';
 $(function () {
@@ -55,7 +55,7 @@ $(function () {
     });
 
     test('Keyboard', function () {
-        //expect(6);
+        expect(6);
 
         $('#test').jec();
         key($('#test'), 72);
@@ -139,6 +139,62 @@ $(function () {
         $('#test').jec({ position: $ });
         ok($('#test').children('option:first.jecEditableOption').length === 1,
             'Editable option on first position (function)');
+        reset($('#test'));
+    });
+    
+    test('Setting: maxLength', function () {
+        expect(10);
+
+        $('#test').jec({ maxLength: 2 });
+        key($('#test'), 72);
+        key($('#test'), 72);
+        key($('#test'), 72);
+        ok($('#test').jecValue().length === 2, 'Limiting max length');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: -1 });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Negative max length');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: 0.1 });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (float)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: '0' });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (string)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: true });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (bool)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: null });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (null)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: undefined });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (undefined)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: {} });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (object)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: [] });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (array)');
+        reset($('#test'));
+
+        $('#test').jec({ maxLength: $ });
+        key($('#test'), 72);
+        ok($('#test').jecValue().length > 0, 'Malformed max length (function)');
         reset($('#test'));
     });
 
@@ -706,6 +762,64 @@ $(function () {
         combobox = $.jec(cbOptions, { position: $ });
         ok(combobox.children('option:first.jecEditableOption').length === 1,
             'Editable option on first position (function)');
+        reset(combobox);
+    });
+    
+    test('Setting: maxLength', function () {
+        expect(10);
+        
+        var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
+            combobox = $.jec(cbOptions, { maxLength: 2 });
+
+        key(combobox, 72);
+        key(combobox, 72);
+        key(combobox, 72);
+        ok(combobox.jecValue().length === 2, 'Limiting max length');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: -1 });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Negative max length');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: 0.1 });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (float)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: '0' });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (string)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: true });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (bool)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: null });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (null)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: undefined });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (undefined)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: {} });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (object)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: [] });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (array)');
+        reset(combobox);
+
+        combobox = $.jec(cbOptions, { maxLength: $ });
+        key(combobox, 72);
+        ok(combobox.jecValue().length > 0, 'Malformed max length (function)');
         reset(combobox);
     });
 
