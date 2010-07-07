@@ -20,7 +20,7 @@ maxlen: 100*/
 before, bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, 
 classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, 
 expr, extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, 
-handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, int, isArray, jEC, jECTimer, 
+handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, isArray, jEC, jECTimer, 
 jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, 
 length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
 position, pref, push, random, remove, removeAttr, removeClass, removeData, safari, 
@@ -53,7 +53,7 @@ useExistingOptions, val, value, valueIsEditable*/
 
         Validators = (function () {
             return {
-                int: function (value) {
+                integer: function (value) {
                     return typeof value === 'number' && Math.ceil(value) === Math.floor(value);
                 },
 
@@ -66,7 +66,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         min = value[0];
                         max = value[1];
                     }
-                    return Validators.int(min) && Validators.int(max) && min <= max;
+                    return Validators.integer(min) && Validators.integer(max) && min <= max;
                 }
             };
         }());
@@ -219,7 +219,7 @@ useExistingOptions, val, value, valueIsEditable*/
                                     for (j = min; j <= max; j += 1) {
                                         keys.push(j);
                                     }
-                                } else if (typeof val === 'number' && Validators.int(val)) {
+                                } else if (typeof val === 'number' && Validators.integer(val)) {
                                     keys.push(val);
                                 }
                             });
@@ -229,9 +229,9 @@ useExistingOptions, val, value, valueIsEditable*/
                     
                     (Handles = function () {
                         return {
-                            int: function (elem, name, value) {
+                            integer: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
-                                if (opt !== undefined && Validators.int(value)) {
+                                if (opt !== undefined && Validators.integer(value)) {
                                     opt[name] = value;
                                     return true;
                                 }
@@ -274,7 +274,7 @@ useExistingOptions, val, value, valueIsEditable*/
 
                     return {
                         position: function (elem, value) {
-                            if (Handles.int(elem, 'position', value)) {
+                            if (Handles.integer(elem, 'position', value)) {
                                 var id = Combobox.getId(elem), opt = options[id], optionsCount;
                                 optionsCount =
                                     elem.find('option:not(.' + pluginClass + ')').length;
@@ -289,7 +289,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         },
                         
                         maxLength: function (elem, value) {
-                            if (Handles.int(elem, 'maxLength', value)) {
+                            if (Handles.integer(elem, 'maxLength', value)) {
                                 var id = Combobox.getId(elem), opt = options[id];
                                 if (value < 0 || value > 255) {
                                     opt.maxLength = 255;
@@ -330,7 +330,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         },
 
                         blinkingCursorInterval: function (elem, value) {
-                            Handles.int(elem, 'blinkingCursorInterval', value);
+                            Handles.integer(elem, 'blinkingCursorInterval', value);
                         },
 
                         ignoredKeys: function (elem, value) {
