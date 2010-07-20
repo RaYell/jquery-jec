@@ -517,9 +517,8 @@ useExistingOptions, val, value, valueIsEditable*/
                     },
 
                     destroy: function (elem) {
-                        elem.find('option.' + pluginClass).remove();
-                        elem.find('option:first').attr('selected', 'selected');
-                        elem.unbind('keydown', EventHandlers.keyDown);
+						elem.find('option.' + pluginClass).remove();
+						elem.unbind('keydown', EventHandlers.keyDown);
                         elem.unbind('keypress', EventHandlers.keyPress);
                         elem.unbind('keyup', EventHandlers.keyUp);
                         elem.unbind('change', EventHandlers.change);

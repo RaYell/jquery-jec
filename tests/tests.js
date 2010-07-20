@@ -39,6 +39,7 @@ $(function () {
 
     reset = function (elem) {
         elem.jecKill();
+		elem.val('opt2');
         elem.attr('class', '');
         elem.attr('style', '');
         elem.children().attr('class', '');
@@ -87,7 +88,7 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ position: 3 });
-        ok($('#test').children('option').eq(3).filter('.jecEditableOption').length === 1,
+        ok($('#test').children('option:last').filter('.jecEditableOption').length === 1,
             'Editable option on last position');
         reset($('#test'));
 
@@ -149,57 +150,57 @@ $(function () {
         key($('#test'), 72);
         key($('#test'), 72);
         key($('#test'), 72);
-        ok($('#test').jecValue().length === 2, 'Limiting max length');
+        same($('#test').jecValue().length, 2, 'Limiting max length');
         reset($('#test'));
 
         $('#test').jec({ maxLength: -1 });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Negative max length');
+        same($('#test').jecValue().length, 1, 'Negative max length');
         reset($('#test'));
 
         $('#test').jec({ maxLength: 0.1 });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (float)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (float)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: '0' });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (string)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (string)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: true });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (bool)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (bool)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: null });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (null)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (null)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: undefined });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (undefined)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (undefined)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: {} });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (object)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (object)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: [] });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (array)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (array)');
         reset($('#test'));
 
         $('#test').jec({ maxLength: $ });
         key($('#test'), 72);
-        ok($('#test').jecValue().length > 0, 'Malformed max length (function)');
+        same($('#test').jecValue().length, 1, 'Malformed max length (function)');
         reset($('#test'));
     });
 
     test('Setting: classes', function () {
-        expect(13);
+        expect(15);
 
         var c1 = 'class1', c2 = 'class2';
 
@@ -212,7 +213,8 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ classes: c1 + ' ' + c2 });
-        ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (string)');
+        ok($('#test').hasClass(c1), 'Several extra classes  - checking c1 class (string)');
+		ok($('#test').hasClass(c2), 'Several extra classes  - checking c2 class (string)');
         reset($('#test'));
 
         $('#test').jec({ classes: [] });
@@ -224,7 +226,8 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ classes: [c1, c2] });
-        ok($('#test').hasClass(c1) && $('#test').hasClass(c2), 'Several extra classes (array)');
+        ok($('#test').hasClass(c1), 'Several extra classes - checking c1 class (array)');
+		ok($('#test').hasClass(c2), 'Several extra classes - checking c1 class (array)');
         reset($('#test'));
 
         $('#test').jec({ classes: 1 });
@@ -257,7 +260,7 @@ $(function () {
     });
 
     test('Setting: optionClasses', function () {
-        expect(13);
+        expect(15);
 
         var c1 = 'c1', c2 = 'c2';
 
@@ -272,9 +275,10 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ optionClasses: c1 + ' ' + c2 });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1) &&
-            $('#test').children('option.jecEditableOption').hasClass(c2),
-            'Several extra classes (string)');
+        ok($('#test').children('option.jecEditableOption').hasClass(c1),
+            'Several extra classes - checking c1 class(string)');
+		ok($('#test').children('option.jecEditableOption').hasClass(c2),
+            'Several extra classes - checking c2 class(string)');
         reset($('#test'));
 
         $('#test').jec({ optionClasses: [] });
@@ -288,9 +292,10 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ optionClasses: [c1, c2] });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1) &&
-            $('#test').children('option.jecEditableOption').hasClass(c2),
-             'Several extra classes (array)');
+        ok($('#test').children('option.jecEditableOption').hasClass(c1),
+             'Several extra classes - checking c1 class (array)');
+		ok($('#test').children('option.jecEditableOption').hasClass(c2),
+             'Several extra classes - checking c1 class (array)');
         reset($('#test'));
 
         $('#test').jec({ optionClasses: 1 });
@@ -440,116 +445,118 @@ $(function () {
     test('Setting: triggerChangeEvent', function () {
         expect(10);
         
-        var test = null;
+        var val = null;
         
         function testHandler() {
-            test = 1;
+            val = 1;
         }
         
         $('#test').bind('change', testHandler);
         
         $('#test').jec({ triggerChangeEvent: true });
         key($('#test'), 72);
-        same(test, 1, 'Run change event handler');
+        same(val, 1, 'Run change event handler');
         reset($('#test'));
-        test = null;
+        val = null;
 
         $('#test').jec({ triggerChangeEvent: false });
         key($('#test'), 72);
-        same(test, null, 'Ignore change event handler');
+        same(val, null, 'Ignore change event handler');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: '' });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (string)');
+        same(val, null, 'Ignore malformed parameter (string)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: 1 });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (int)');
+        same(val, null, 'Ignore malformed parameter (int)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: 1.2 });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (float)');
+        same(val, null, 'Ignore malformed parameter (float)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: undefined });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (undefined)');
+        same(val, null, 'Ignore malformed parameter (undefined)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: null });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (null)');
+        same(val, null, 'Ignore malformed parameter (null)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: {} });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (object)');
+        same(val, null, 'Ignore malformed parameter (object)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: [] });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (array)');
+        same(val, null, 'Ignore malformed parameter (array)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').jec({ triggerChangeEvent: $ });
         key($('#test'), 72);
-        same(test, null, 'Ignore malformed parameter (function)');
+        same(val, null, 'Ignore malformed parameter (function)');
         reset($('#test'));
-        test = null;
+        val = null;
         
         $('#test').unbind('change', testHandler);
     });
 
-    test('Setting: focusOnNewOption', function () {
-        expect(9);
+	test('Setting: focusOnNewOption', function () {
+        expect(10);
 
-        $('#test').jec({ focusOnNewOption: false });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option');
+		$('#test').jec({ focusOnNewOption: false });
+        same($('#test').val(), 'opt2', 'Focus on second option (bool false)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: true });
-        ok($('#test option:first:selected').length === 1,
-            'We expect focus to be moved to editable option');
+		same($('#test').val(), '', 'Focus on editable option (bool true)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: '1' });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (string)');
+        same($('#test').val(), 'opt2', 'Focus on second option (string)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: 1 });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (int)');
+        same($('#test').val(), 'opt2', 'Focus on second option (int)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: 1.2 });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (float)');
+        same($('#test').val(), 'opt2', 'Focus on second option (float)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: null });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (null)');
+        same($('#test').val(), 'opt2', 'Focus on second option (null)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: undefined });
-        ok($('#test option:first:not(:selected)').length === 1,
-            'Focus on first option (undefined)');
+        same($('#test').val(), 'opt2', 'Focus on second option (undefined)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: { focus: true} });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (object)');
+        same($('#test').val(), 'opt2', 'Focus on second option (obj)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: [true] });
-        ok($('#test option:first:not(:selected)').length === 1, 'Focus on first option (array)');
+        same($('#test').val(), 'opt2', 'Focus on second option (array)');
+        reset($('#test'));
+		
+		$('#test').jec({ focusOnNewOption: $ });
+        same($('#test').val(), 'opt2', 'Focus on second option (function)');
         reset($('#test'));
     });
 
@@ -584,11 +591,11 @@ $(function () {
 
         $('#test').jec({ ignoredKeys: [72, { min: 73, max: 75}] });
         key($('#test'), 72);
-        ok($('#test').jecValue() === '', 'Ignored key pressed (number)');
+        same($('#test').jecValue(), '', 'Ignored key pressed (number)');
         key($('#test'), 74);
-        ok($('#test').jecValue() === '', 'Ignored key pressed (range)');
+        same($('#test').jecValue(), '', 'Ignored key pressed (range)');
         key($('#test'), 76);
-        ok($('#test').jecValue() !== '', 'Key outside of ignores pressed');
+        same($('#test').jecValue(), 'L', 'Key outside of ignores pressed');
         reset($('#test'));
     });
 
@@ -597,11 +604,11 @@ $(function () {
 
         $('#test').jec({ acceptedKeys: [72, { min: 73, max: 75}] });
         key($('#test'), 72);
-        ok($('#test').jecValue() === 'H', 'Accepted key pressed (number)');
+        same($('#test').jecValue(), 'H', 'Accepted key pressed (number)');
         key($('#test'), 74);
-        ok($('#test').jecValue() === 'HJ', 'Accepted key pressed (range)');
+        same($('#test').jecValue(), 'HJ', 'Accepted key pressed (range)');
         key($('#test'), 76);
-        ok($('#test').jecValue() === 'HJ', 'Key outside of accepted pressed');
+        same($('#test').jecValue(), 'HJ', 'Key outside of accepted pressed');
         reset($('#test'));
     });
 
@@ -673,7 +680,7 @@ $(function () {
     });
 
     test('Keyboard', function () {
-        //expect(6);
+        expect(6);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
             combobox = $.jec(cbOptions, { position: 0 });
@@ -774,57 +781,57 @@ $(function () {
         key(combobox, 72);
         key(combobox, 72);
         key(combobox, 72);
-        ok(combobox.jecValue().length === 2, 'Limiting max length');
+        same(combobox.jecValue().length, 2, 'Limiting max length');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: -1 });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Negative max length');
+        same(combobox.jecValue().length, 1, 'Negative max length');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: 0.1 });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (float)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (float)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: '0' });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (string)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: true });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (bool)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (bool)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: null });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (null)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (null)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: undefined });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (undefined)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (undefined)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: {} });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (object)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (object)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: [] });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (array)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (array)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { maxLength: $ });
         key(combobox, 72);
-        ok(combobox.jecValue().length > 0, 'Malformed max length (function)');
+        same(combobox.jecValue().length, 1, 'Malformed max length (function)');
         reset(combobox);
     });
 
     test('Setting: classes', function () {
-        expect(13);
+        expect(15);
 
         var c1 = 'class1', c2 = 'class2',
             cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
@@ -838,7 +845,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: c1 + ' ' + c2 });
-        ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (string)');
+        ok(combobox.hasClass(c1), 'Several extra classes - checking c1 class (string)');
+		ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: [] });
@@ -850,7 +858,8 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: [c1, c2] });
-        ok(combobox.hasClass(c1) && combobox.hasClass(c2), 'Several extra classes (array)');
+        ok(combobox.hasClass(c1), 'Several extra classes - checking c1 class(array)');
+		ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class(array)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: 1 });
@@ -883,7 +892,7 @@ $(function () {
     });
 
     test('Setting: optionClasses', function () {
-        expect(13);
+        expect(15);
 
         var c1 = 'c1', c2 = 'c2', cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
             combobox = $.jec(cbOptions, { optionClasses: '' });
@@ -898,9 +907,10 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionClasses: c1 + ' ' + c2 });
-        ok(combobox.children('option.jecEditableOption').hasClass(c1) &&
-            combobox.children('option.jecEditableOption').hasClass(c2),
-            'Several extra classes (string)');
+        ok(combobox.children('option.jecEditableOption').hasClass(c1),
+            'Several extra classes - checking c1 class (string)');
+		ok(combobox.children('option.jecEditableOption').hasClass(c2),
+            'Several extra classes - checking c2 class (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionClasses: [] });
@@ -914,9 +924,10 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionClasses: [c1, c2] });
-        ok(combobox.children('option.jecEditableOption').hasClass(c1) &&
-            combobox.children('option.jecEditableOption').hasClass(c2),
-             'Several extra classes (array)');
+        ok(combobox.children('option.jecEditableOption').hasClass(c1),
+             'Several extra classes - checking c1 class(array)');
+		ok(combobox.children('option.jecEditableOption').hasClass(c2),
+             'Several extra classes - checking c2 class(array)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { optionClasses: 1 });
@@ -1150,53 +1161,48 @@ $(function () {
     });
 
     test('Setting: focusOnNewOption', function () {
-        expect(9);
+        expect(10);
 
         var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
             combobox = $.jec(cbOptions, { focusOnNewOption: false, position: 1 });
 
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option');
+        same(combobox.val(), 'opt1', 'Focus on first option');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: true, position: 1 });
-        ok(combobox.children('option.jecEditableOption:selected').length === 1,
-            'We expect focus to be moved to editable option');
+		same(combobox.val(), '', 'Focus moved to editable option');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: '1', position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (string)');
+        same(combobox.val(), 'opt1', 'Focus on first option (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: 1, position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (int)');
+        same(combobox.val(), 'opt1', 'Focus on first option (int)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: 1.2, position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (float)');
+        same(combobox.val(), 'opt1', 'Focus on first option (float)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: null, position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (null)');
+        same(combobox.val(), 'opt1', 'Focus on first option (null)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: undefined, position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (undefined)');
+        same(combobox.val(), 'opt1', 'Focus on first option (undefined)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: { focus: true }, position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (object)');
+        same(combobox.val(), 'opt1', 'Focus on first option (object)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: [true], position: 1 });
-        ok(combobox.children('option.jecEditableOption:not(:selected)').length === 1,
-            'Focus on first option (array)');
+        same(combobox.val(), 'opt1', 'Focus on first option (array)');
+        reset(combobox);
+		
+		combobox = $.jec(cbOptions, { focusOnNewOption: $, position: 1 });
+        same(combobox.val(), 'opt1', 'Focus on first option (function)');
         reset(combobox);
     });
 
