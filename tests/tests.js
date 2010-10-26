@@ -3,9 +3,9 @@ bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50
 maxlen: 100*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, attr, bind, blinkingCursor, blinkingCursorInterval, children, 
-classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, 'font-size', 
-hasClass, hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, 
-k4, keyCode, length, log, max, maxLength, min, ok, opt1, opt2, opt3, optionClasses, optionStyles, 
+classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, hasClass, hide, 
+ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
+length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, optionClasses, optionStyles, 
 position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
 useExistingOptions, val*/
 'use strict';
@@ -1451,7 +1451,7 @@ $(function () {
     test('Setting preference: styles', function () {
         expect(9);
 
-        var styles = { display: 'none', 'display': 'none' };
+        var styles = { opacity: 0.5, 'display': 'none' };
 
         $('#test').jec();
         $('#test').jecPref('styles', styles);
