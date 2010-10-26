@@ -337,7 +337,7 @@ $(function () {
     test('Setting: styles', function () {
         expect(12);
 
-        var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
+        var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'none', obj = {};
 
         $('#test').jec({ styles: obj });
         same($('#test').css(s1), '1', 'No extra styles');
@@ -350,8 +350,8 @@ $(function () {
 
         obj[s2] = v2;
         $('#test').jec({ styles: obj });
-        same($('#test').css(s1), v1, 'Opacity and font-size changed, checking opacity');
-        same($('#test').css(s2), v2, 'Opacity and font-size changed, checking font-size');
+        same($('#test').css(s1), v1, 'Opacity and display changed, checking opacity');
+        same($('#test').css(s2), v2, 'Opacity and display changed, checking display');
         reset($('#test'));
 
         $('#test').jec({ styles: 'width: 100px' });
@@ -390,7 +390,7 @@ $(function () {
     test('Setting: optionStyles', function () {
         expect(12);
 
-        var s1 = 'opacity', v1 = '0.5', s2 = 'font-size', v2 = '30px', obj = {};
+        var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'none', obj = {};
 
         $('#test').jec({ optionStyles: obj });
         same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles');
@@ -404,9 +404,9 @@ $(function () {
         obj[s2] = v2;
         $('#test').jec({ optionStyles: obj });
         same($('#test option.jecEditableOption').css(s1), v1,
-            'Opacity and font-size changed, checking opacity');
+            'Opacity and display changed, checking opacity');
         same($('#test option.jecEditableOption').css(s2), v2,
-            'Opacity and font-size changed, checking font-size');
+            'Opacity and display changed, checking display');
         reset($('#test'));
 
         $('#test').jec({ styles: 'width: 100px' });
@@ -441,7 +441,7 @@ $(function () {
         same($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
         reset($('#test'));
     });
-    
+   
     test('Setting: triggerChangeEvent', function () {
         expect(10);
         
@@ -983,8 +983,8 @@ $(function () {
 
         obj[s2] = v2;
         combobox = $.jec(cbOptions, { styles: obj });
-        same(combobox.css(s1), v1, 'Opacity and font-size changed, checking opacity');
-        same(combobox.css(s2), v2, 'Opacity and font-size changed, checking font-size');
+        same(combobox.css(s1), v1, 'Opacity and display changed, checking opacity');
+        same(combobox.css(s2), v2, 'Opacity and display changed, checking display');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { styles: 'width: 100px' });
@@ -1038,9 +1038,9 @@ $(function () {
         obj[s2] = v2;
         combobox = $.jec(cbOptions, { optionStyles: obj });
         same(combobox.children('option.jecEditableOption').css(s1), v1,
-            'Opacity and font-size changed, checking opacity');
+            'Opacity and display changed, checking opacity');
         same(combobox.children('option.jecEditableOption').css(s2), v2,
-            'Opacity and font-size changed, checking font-size');
+            'Opacity and display changed, checking display');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { styles: 'width: 100px' });
@@ -1293,7 +1293,7 @@ $(function () {
         $('#test').jec();
         reset($('#test'));
         ok($('#test option').length === 3, 'Check if editable option was removed');
-        ok($('#test').data('jecId') === null, 'Check if id was removed');
+        ok($('#test').data('jecId') === undefined, 'Check if id was removed');
     });
 
     module('value');
@@ -1451,7 +1451,7 @@ $(function () {
     test('Setting preference: styles', function () {
         expect(9);
 
-        var styles = { display: 'none', 'font-size': '30px' };
+        var styles = { display: 'none', 'display': 'none' };
 
         $('#test').jec();
         $('#test').jecPref('styles', styles);
@@ -1636,6 +1636,6 @@ $(function () {
         same($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
         reset($('#test'));
     });
-
+    
     $('#test').hide();
 });
