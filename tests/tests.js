@@ -4,10 +4,10 @@ maxlen: 100*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, 
 children, classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, hasClass, 
-hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, 
-keyCode, length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, optionClasses, 
-optionStyles, position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, 
-unbind, useExistingOptions, val*/
+hide, ignoredKeys, ignoreOptGroups, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, 
+k2, k3, k4, keyCode, length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, 
+optionClasses, optionStyles, position, remove, replace, styles, test, testDone, text, trigger, 
+triggerChangeEvent, unbind, useExistingOptions, val*/
 'use strict';
 $(function () {
 

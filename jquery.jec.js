@@ -200,7 +200,7 @@ useExistingOptions, val, value, valueIsEditable*/
             Parameters = (function () {
                 var Set, Remove, Handle;
 
-                (Set = function () {
+                Set = (function () {
                     var parseKeys, Handles;
                     
                     parseKeys = function (value) {
@@ -227,7 +227,7 @@ useExistingOptions, val, value, valueIsEditable*/
                         return keys;
                     };
                     
-                    (Handles = function () {
+                    Handles = (function () {
                         return {
                             integer: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
@@ -467,8 +467,8 @@ useExistingOptions, val, value, valueIsEditable*/
                         focusOnNewOption: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && opt.focusOnNewOption) {
-                                elem.find('option.' + pluginClass).
-                                    attr('selected', 'selected');
+                                elem.find('option.' + pluginClass)
+                                    .attr('selected', 'selected');
                             }
                         },
 
@@ -517,8 +517,8 @@ useExistingOptions, val, value, valueIsEditable*/
                     },
 
                     destroy: function (elem) {
-						elem.find('option.' + pluginClass).remove();
-						elem.unbind('keydown', EventHandlers.keyDown);
+                        elem.find('option.' + pluginClass).remove();
+                        elem.unbind('keydown', EventHandlers.keyDown);
                         elem.unbind('keypress', EventHandlers.keyPress);
                         elem.unbind('keyup', EventHandlers.keyUp);
                         elem.unbind('change', EventHandlers.change);
@@ -629,8 +629,8 @@ useExistingOptions, val, value, valueIsEditable*/
                             if (val !== null && typeof val === 'object' && !$.isArray(val)) {
                                 $.each(val, function (key, value) {
                                     if (typeof value === 'number' || typeof value === 'string') {
-                                        $('<option>').text(value).attr('value', key).
-                                            appendTo(select);
+                                        $('<option>').text(value).attr('value', key)
+                                            .appendTo(select);
                                     }
                                 });
                             } else if (typeof val === 'string' || typeof val === 'number') {
@@ -668,8 +668,8 @@ useExistingOptions, val, value, valueIsEditable*/
                 // disable editable combobox
                 disable: function () {
                     return $(this).filter(':editable').each(function () {
-                        values[Combobox.getId($(this))] = $(this).find('option.' + pluginClass).
-                            val();
+                        var val = $(this).find('option.' + pluginClass).val();
+                        values[Combobox.getId($(this))] = val;
                         Parameters.Remove.all($(this));
                         EditableOption.destroy($(this));
                     });
@@ -759,8 +759,8 @@ useExistingOptions, val, value, valueIsEditable*/
                 // sets editable option to the value of currently selected option
                 setEditableOption: function (elem) {
                     var value = elem.find('option:selected').text();
-                    elem.find('option.' + pluginClass).attr('value', elem.val()).
-                        text(value).attr('selected', 'selected');
+                    elem.find('option.' + pluginClass).attr('value', elem.val())
+                        .text(value).attr('selected', 'selected');
                 },
 
                 // get combobox id
