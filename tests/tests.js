@@ -3,11 +3,11 @@ bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50
 maxlen: 100*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
 /*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, 
-children, classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, hasClass, 
-hide, ignoredKeys, ignoreOptGroups, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, 
-k2, k3, k4, keyCode, length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, 
-optionClasses, optionStyles, position, remove, replace, styles, test, testDone, text, trigger, 
-triggerChangeEvent, unbind, useExistingOptions, val*/
+children, classes, css, data, display, done, each, eq, filter, find, focus, focusOnNewOption, g1, 
+hasClass, hide, ignoredKeys, ignoreOptGroups, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, 
+jecValue, k1, k2, k3, k4, k5,k6, keyCode, length, log, max, maxLength, min, ok, opacity, opt1, 
+opt2, opt3, optionClasses, optionStyles, position, remove, replace, styles, test, testDone, text, 
+trigger, triggerChangeEvent, unbind, useExistingOptions, val*/
 'use strict';
 $(function () {
 
@@ -666,10 +666,10 @@ $(function () {
     });
 
     test('Options', function () {
-        expect(23);
+        expect(34);
 
         var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null, 
-            true], combobox = $.jec(op);
+            true, { g1: [2.3, 2, {k5: 'v5', k6: 3}]}], combobox = $.jec(op);
 
         ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created');
         same(combobox.children('option:eq(1)').val(), '1', 'Checking option #1 key');
@@ -686,7 +686,27 @@ $(function () {
         same(combobox.children('option:eq(6)').text(), '1.2', 'Checking option #6 value');
         same(combobox.children('option:eq(7)').val(), 'k4', 'Checking option #7 key');
         same(combobox.children('option:eq(7)').text(), 'v4', 'Checking option #7 value');
-        same(combobox.children('option').length, 8, 'Checking option array length');
+        same(combobox.children('option').length, 8, 'Checking options number');
+        
+        same(combobox.children('optgroup').length, 1, 'Checking optgroup number');
+        same(combobox.children('optgroup').attr('label'), 'g1', 'Checking optgroup number');
+        same(combobox.find('optgroup option').length, 4, 'Checking optgroup options number');
+        same(combobox.find('optgroup option:eq(0)').val(), '2.3', 
+            'Checking optgroup option #1 key');
+        same(combobox.find('optgroup option:eq(0)').text(), '2.3', 
+            'Checking optgroup option #1 value');
+        same(combobox.find('optgroup option:eq(1)').val(), '2', 
+            'Checking optgroup option #2 key');
+        same(combobox.find('optgroup option:eq(1)').text(), '2', 
+            'Checking optgroup option #2 value');
+        same(combobox.find('optgroup option:eq(2)').val(), 'k5', 
+            'Checking optgroup option #3 key');
+        same(combobox.find('optgroup option:eq(2)').text(), 'v5', 
+            'Checking optgroup option #3 value');
+        same(combobox.find('optgroup option:eq(3)').val(), 'k6', 
+            'Checking optgroup option #4 key');
+        same(combobox.find('optgroup option:eq(3)').text(), '3', 
+            'Checking optgroup option #4 value');
         reset(combobox);
 
         combobox = $.jec(undefined);

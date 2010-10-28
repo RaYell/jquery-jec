@@ -20,11 +20,11 @@ maxlen: 100*/
 before, bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, 
 classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, 
 expr, extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, 
-handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, isArray, jEC, jECTimer, 
-jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, 
-length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
-position, pref, push, random, remove, removeAttr, removeClass, removeData, safari, 
-setEditableOption, styles, substring, text, trigger triggerChangeEvent, unbind, uneditable, 
+handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, isArray, isPlainObject, 
+jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
+keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, 
+optionStyles, parent, position, pref, push, random, remove, removeAttr, removeClass, removeData, 
+safari, setEditableOption, styles, substring, text, trigger triggerChangeEvent, unbind, uneditable, 
 useExistingOptions, val, value, valueIsEditable*/
 'use strict';
 (function ($) {
@@ -620,24 +620,33 @@ useExistingOptions, val, value, valueIsEditable*/
 
                 // creates editable combobox without using existing select elements
                 initJS: function (options, settings) {
-                    var select;
+                    var select, addOptions;
 
                     select = $('<select>');
-
-                    if ($.isArray(options)) {
-                        $.each(options, function (i, val) {
-                            if (val !== null && typeof val === 'object' && !$.isArray(val)) {
-                                $.each(val, function (key, value) {
-                                    if (typeof value === 'number' || typeof value === 'string') {
-                                        $('<option>').text(value).attr('value', key)
-                                            .appendTo(select);
-                                    }
-                                });
-                            } else if (typeof val === 'string' || typeof val === 'number') {
-                                $('<option>').text(val).attr('value', val).appendTo(select);
-                            }
-                        });
-                    }
+                    
+                    addOptions = function (elem, options) {
+                        if ($.isArray(options)) {
+                            $.each(options, function (i, val) {
+                                if ($.isPlainObject(val)) {
+                                    $.each(val, function (key, value) {
+                                        if ($.isArray(value)) {
+                                            var og = $('<optgroup>').attr('label', key);
+                                            addOptions(og, value);
+                                            og.appendTo(select);
+                                        } else if (typeof value === 'number' || 
+                                            typeof value === 'string') {
+                                            $('<option>').text(value).attr('value', key)
+                                                .appendTo(elem);
+                                        }
+                                    });
+                                } else if (typeof val === 'string' || typeof val === 'number') {
+                                    $('<option>').text(val).attr('value', val).appendTo(elem);
+                                }
+                            });
+                        }
+                    };
+                    
+                    addOptions(select, options);
 
                     return select.jec(settings);
                 },
