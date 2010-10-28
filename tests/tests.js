@@ -40,10 +40,8 @@ $(function () {
     reset = function (elem) {
         elem.jecKill();
 		elem.val('opt2');
-        elem.attr('class', '');
-        elem.attr('style', '');
-        elem.children().attr('class', '');
-        elem.children().attr('style', '');
+        elem.children().andSelf().attr('class', '');
+        elem.children().andSelf().attr('style', '');
     };
 
     module('init');
@@ -548,7 +546,7 @@ $(function () {
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: { focus: true} });
-        same($('#test').val(), 'opt2', 'Focus on second option (obj)');
+        same($('#test').val(), 'opt2', 'Focus on second option (object)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: [true] });
@@ -610,6 +608,51 @@ $(function () {
         key($('#test'), 76);
         same($('#test').jecValue(), 'HJ', 'Key outside of accepted pressed');
         reset($('#test'));
+    });
+    
+    test('Setting: ignoreOptGroups', function () {
+    	expect(10);
+
+		$('#gtest').jec({ ignoreOptGroups: false, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Correct editable option placement');
+        reset($('#gtest'));
+        
+        $('#gtest').jec({ ignoreOptGroups: true, position: 1 });
+        same($('#gtest optgroup:first option:first').val(), '', 
+        	'Correct editable option placement inside optgroup');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: '1', position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (string)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: 1, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (int)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: 1.2, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (float)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: null, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (null)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: undefined, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (undefined)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: { focus: true}, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (object)');
+        reset($('#gtest'));
+
+        $('#gtest').jec({ ignoreOptGroups: [true], position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (array)');
+        reset($('#gtest'));
+		
+		$('#gtest').jec({ ignoreOptGroups: $, position: 1 });
+        same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (function)');
+        reset($('#gtest'));
     });
 
     module('initJS');
@@ -1638,4 +1681,5 @@ $(function () {
     });
     
     $('#test').hide();
+    $('#gtest').hide();
 });
