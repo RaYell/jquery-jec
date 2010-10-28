@@ -2,12 +2,12 @@
 bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, 
 maxlen: 100*/
 /*global $, QUnit, String, expect, fireunit, module, ok, same, test*/
-/*members Event, acceptedKeys, attr, bind, blinkingCursor, blinkingCursorInterval, children, 
-classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, hasClass, hide, 
-ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, keyCode, 
-length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, optionClasses, optionStyles, 
-position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
-useExistingOptions, val*/
+/*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, 
+children, classes, css, data, display, done, each, eq, filter, focus, focusOnNewOption, hasClass, 
+hide, ignoredKeys, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, 
+keyCode, length, log, max, maxLength, min, ok, opacity, opt1, opt2, opt3, optionClasses, 
+optionStyles, position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, 
+unbind, useExistingOptions, val*/
 'use strict';
 $(function () {
 
@@ -39,7 +39,7 @@ $(function () {
 
     reset = function (elem) {
         elem.jecKill();
-		elem.val('opt2');
+        elem.val('opt2');
         elem.children().andSelf().attr('class', '');
         elem.children().andSelf().attr('style', '');
     };
@@ -212,7 +212,7 @@ $(function () {
 
         $('#test').jec({ classes: c1 + ' ' + c2 });
         ok($('#test').hasClass(c1), 'Several extra classes  - checking c1 class (string)');
-		ok($('#test').hasClass(c2), 'Several extra classes  - checking c2 class (string)');
+        ok($('#test').hasClass(c2), 'Several extra classes  - checking c2 class (string)');
         reset($('#test'));
 
         $('#test').jec({ classes: [] });
@@ -225,7 +225,7 @@ $(function () {
 
         $('#test').jec({ classes: [c1, c2] });
         ok($('#test').hasClass(c1), 'Several extra classes - checking c1 class (array)');
-		ok($('#test').hasClass(c2), 'Several extra classes - checking c1 class (array)');
+        ok($('#test').hasClass(c2), 'Several extra classes - checking c1 class (array)');
         reset($('#test'));
 
         $('#test').jec({ classes: 1 });
@@ -275,7 +275,7 @@ $(function () {
         $('#test').jec({ optionClasses: c1 + ' ' + c2 });
         ok($('#test').children('option.jecEditableOption').hasClass(c1),
             'Several extra classes - checking c1 class(string)');
-		ok($('#test').children('option.jecEditableOption').hasClass(c2),
+        ok($('#test').children('option.jecEditableOption').hasClass(c2),
             'Several extra classes - checking c2 class(string)');
         reset($('#test'));
 
@@ -292,7 +292,7 @@ $(function () {
         $('#test').jec({ optionClasses: [c1, c2] });
         ok($('#test').children('option.jecEditableOption').hasClass(c1),
              'Several extra classes - checking c1 class (array)');
-		ok($('#test').children('option.jecEditableOption').hasClass(c2),
+        ok($('#test').children('option.jecEditableOption').hasClass(c2),
              'Several extra classes - checking c1 class (array)');
         reset($('#test'));
 
@@ -514,15 +514,15 @@ $(function () {
         $('#test').unbind('change', testHandler);
     });
 
-	test('Setting: focusOnNewOption', function () {
+    test('Setting: focusOnNewOption', function () {
         expect(10);
 
-		$('#test').jec({ focusOnNewOption: false });
+        $('#test').jec({ focusOnNewOption: false });
         same($('#test').val(), 'opt2', 'Focus on second option (bool false)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: true });
-		same($('#test').val(), '', 'Focus on editable option (bool true)');
+        same($('#test').val(), '', 'Focus on editable option (bool true)');
         reset($('#test'));
 
         $('#test').jec({ focusOnNewOption: '1' });
@@ -552,8 +552,8 @@ $(function () {
         $('#test').jec({ focusOnNewOption: [true] });
         same($('#test').val(), 'opt2', 'Focus on second option (array)');
         reset($('#test'));
-		
-		$('#test').jec({ focusOnNewOption: $ });
+        
+        $('#test').jec({ focusOnNewOption: $ });
         same($('#test').val(), 'opt2', 'Focus on second option (function)');
         reset($('#test'));
     });
@@ -611,15 +611,15 @@ $(function () {
     });
     
     test('Setting: ignoreOptGroups', function () {
-    	expect(10);
+        expect(10);
 
-		$('#gtest').jec({ ignoreOptGroups: false, position: 1 });
+        $('#gtest').jec({ ignoreOptGroups: false, position: 1 });
         same($('#gtest > option:eq(1)').val(), '', 'Correct editable option placement');
         reset($('#gtest'));
         
         $('#gtest').jec({ ignoreOptGroups: true, position: 1 });
         same($('#gtest optgroup:first option:first').val(), '', 
-        	'Correct editable option placement inside optgroup');
+            'Correct editable option placement inside optgroup');
         reset($('#gtest'));
 
         $('#gtest').jec({ ignoreOptGroups: '1', position: 1 });
@@ -649,8 +649,8 @@ $(function () {
         $('#gtest').jec({ ignoreOptGroups: [true], position: 1 });
         same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (array)');
         reset($('#gtest'));
-		
-		$('#gtest').jec({ ignoreOptGroups: $, position: 1 });
+        
+        $('#gtest').jec({ ignoreOptGroups: $, position: 1 });
         same($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (function)');
         reset($('#gtest'));
     });
@@ -889,7 +889,7 @@ $(function () {
 
         combobox = $.jec(cbOptions, { classes: c1 + ' ' + c2 });
         ok(combobox.hasClass(c1), 'Several extra classes - checking c1 class (string)');
-		ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class (string)');
+        ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class (string)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: [] });
@@ -902,7 +902,7 @@ $(function () {
 
         combobox = $.jec(cbOptions, { classes: [c1, c2] });
         ok(combobox.hasClass(c1), 'Several extra classes - checking c1 class(array)');
-		ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class(array)');
+        ok(combobox.hasClass(c2), 'Several extra classes - checking c2 class(array)');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { classes: 1 });
@@ -952,7 +952,7 @@ $(function () {
         combobox = $.jec(cbOptions, { optionClasses: c1 + ' ' + c2 });
         ok(combobox.children('option.jecEditableOption').hasClass(c1),
             'Several extra classes - checking c1 class (string)');
-		ok(combobox.children('option.jecEditableOption').hasClass(c2),
+        ok(combobox.children('option.jecEditableOption').hasClass(c2),
             'Several extra classes - checking c2 class (string)');
         reset(combobox);
 
@@ -969,7 +969,7 @@ $(function () {
         combobox = $.jec(cbOptions, { optionClasses: [c1, c2] });
         ok(combobox.children('option.jecEditableOption').hasClass(c1),
              'Several extra classes - checking c1 class(array)');
-		ok(combobox.children('option.jecEditableOption').hasClass(c2),
+        ok(combobox.children('option.jecEditableOption').hasClass(c2),
              'Several extra classes - checking c2 class(array)');
         reset(combobox);
 
@@ -1213,7 +1213,7 @@ $(function () {
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: true, position: 1 });
-		same(combobox.val(), '', 'Focus moved to editable option');
+        same(combobox.val(), '', 'Focus moved to editable option');
         reset(combobox);
 
         combobox = $.jec(cbOptions, { focusOnNewOption: '1', position: 1 });
@@ -1243,8 +1243,8 @@ $(function () {
         combobox = $.jec(cbOptions, { focusOnNewOption: [true], position: 1 });
         same(combobox.val(), 'opt1', 'Focus on first option (array)');
         reset(combobox);
-		
-		combobox = $.jec(cbOptions, { focusOnNewOption: $, position: 1 });
+        
+        combobox = $.jec(cbOptions, { focusOnNewOption: $, position: 1 });
         same(combobox.val(), 'opt1', 'Focus on first option (function)');
         reset(combobox);
     });
