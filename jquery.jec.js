@@ -25,9 +25,9 @@ jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
 keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, 
 optionStyles, parent, position, pref, push, random, remove, removeAttr, removeClass, removeData, 
 safari, setEditableOption, styles, substring, text, trigger triggerChangeEvent, unbind, uneditable, 
-useExistingOptions, val, value, valueIsEditable*/
-'use strict';
+useExistingOptions, val, value, valueIsEditable, which*/
 (function ($) {
+    'use strict';
 
     $.jEC = (function () {
         var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {},
@@ -132,7 +132,7 @@ useExistingOptions, val, value, valueIsEditable*/
                 // handles the rest of the keys (keypress event gives more informations
                 // about pressed keys)
                 keyPress: function (event) {
-                    var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
+                    var keyCode = event.which, opt = options[Combobox.getId($(this))],
                         option, value, specialKeys, exit = false, text;
 
                     Combobox.clearCursor($(this));
@@ -156,7 +156,7 @@ useExistingOptions, val, value, valueIsEditable*/
                                 text = option.text();
                                 
                                 if (text.length < opt.maxLength) {
-                                    value = text + String.fromCharCode(keyCode);
+                                    value = text + String.fromCharCode(getKeyCode(event));
                                     option.val(value).text(value);
                                 }
                                 
@@ -259,7 +259,7 @@ useExistingOptions, val, value, valueIsEditable*/
                             object: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
                                 if (opt !== undefined && value !== null && 
-                                    typeof value === 'object' && !$.isArray(value)) {
+                                        typeof value === 'object' && !$.isArray(value)) {
                                     opt[name] = value;
                                 }
                             },
@@ -424,7 +424,7 @@ useExistingOptions, val, value, valueIsEditable*/
                                 container = uneditableOptions.eq(opt.position);
                                 
                                 if (!opt.ignoreOptGroups && 
-                                    container.parent('optgroup').length > 0) {
+                                        container.parent('optgroup').length > 0) {
                                     uneditableOptions.eq(opt.position).parent().before(option);
                                 } else {
                                     uneditableOptions.eq(opt.position).before(option);
@@ -634,7 +634,7 @@ useExistingOptions, val, value, valueIsEditable*/
                                             addOptions(og, value);
                                             og.appendTo(select);
                                         } else if (typeof value === 'number' || 
-                                            typeof value === 'string') {
+                                                typeof value === 'string') {
                                             $('<option>').text(value).attr('value', key)
                                                 .appendTo(elem);
                                         }
