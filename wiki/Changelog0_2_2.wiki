@@ -1,0 +1,3 @@
+#summary jQuery Editable Combobox changelog v0.2.2.
+= 0.2.2 (2008.04.14) =
+ * keycode filtering options added

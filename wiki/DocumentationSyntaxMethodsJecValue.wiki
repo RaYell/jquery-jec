@@ -1,0 +1,25 @@
+#summary jQuery Editable Combobox documentation syntax method jecValue().
+= `jecValue()` =
+{{{
+$(selector).jecValue();
+}}}
+
+Gets the value of editable option.
+
+== Returned Value ==
+This method _string_ representation of the value hold in editable option.
+
+= `jecValue(value[, setFocus])` =
+{{{
+$(selector).jecValue(value[, setFocus]);
+}}}
+
+Sets the value and text of editable option.
+
+== Parameters ==
+|| *Type* || *Name* || *Description* || *Default value* ||
+|| _string_ | _number_ || {{{value}}} || value to be set || _N/A_ ||
+|| _bool_ || {{{setFocus}}} || moves focus to editable option if set to {{{true}}} || {{{true}}} ||
+
+== Returned Value ==
+This method returns jQuery object collection with objects which values has been changed.

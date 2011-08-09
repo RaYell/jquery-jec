@@ -1,0 +1,10 @@
+#summary jQuery Editable Combobox changelog v1.1.0.
+= 1.1.0 (2009.06.22) =
+ * added possibility to change preferences on runtime ([http://code.google.com/p/jquery-jec/issues/detail?id=21&can=1 #22])
+ * added validation for passed options ([http://code.google.com/p/jquery-jec/issues/detail?id=21&can=1 #23])
+ * {{{acceptedRanges}}} parameter renamed to {{{acceptedKeys}}}
+ * {{{pluginClass}}} parameter removed
+ * {{{optionClasses}}} and {{{optionStyles}}} parameters added
+ * key codes collection setting unified for both {{{acceptedKeys}}} and {{{ignoredKeys}}} ([http://code.google.com/p/jquery-jec/issues/detail?id=26&can=1 #26])
+ * new selectors added ({{{:editable}}}, {{{:uneditable}}})
+ * new demo site

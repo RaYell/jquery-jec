@@ -1,0 +1,3 @@
+#summary jQuery Editable Combobox documentation demo.
+= Demo =
+You can test plugin on this [http://stuff.rajchel.pl/jec/demos demo site].

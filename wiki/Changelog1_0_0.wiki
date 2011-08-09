@@ -1,0 +1,4 @@
+#summary jQuery Editable Combobox changelog v1.0.0.
+= 1.0.0 (2009.06.01) =
+ * plugin structure improved
+ * more unit tests added

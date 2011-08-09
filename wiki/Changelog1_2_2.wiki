@@ -1,0 +1,3 @@
+#summary jQuery Editable Combobox changelog v1.2.2.
+= 1.2.2 (2009.08.18) =
+ * fixed changing the selected option on init ([http://code.google.com/p/jquery-jec/issues/detail?id=31&can=1 #31])

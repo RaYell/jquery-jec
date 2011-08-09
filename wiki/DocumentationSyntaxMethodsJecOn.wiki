@@ -1,0 +1,10 @@
+#summary jQuery Editable Combobox documentation syntax method jecOn().
+= `jecOn()` =
+{{{
+$(selector).jecOn();
+}}}
+
+Enables previously  disabled editable combobox. Will ignore all non-{{{<select>}}} elements and elements that were not initialized. This will not remove the {{{<select>}}} element but it will start behaving like an ordinary {{{<select>}}}.
+
+== Returned Value ==
+This method returns jQuery object collection with objects which are enabled editable comboboxes.

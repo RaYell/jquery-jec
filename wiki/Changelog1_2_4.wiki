@@ -1,0 +1,3 @@
+#summary jQuery Editable Combobox changelog v1.2.4.
+= 1.2.4 (2010.02.25) =
+ * jQuery 1.4.2 compatibility fixed ([http://code.google.com/p/jquery-jec/issues/detail?id=36&can=1 #36])

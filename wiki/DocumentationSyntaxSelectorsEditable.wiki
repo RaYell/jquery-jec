@@ -1,0 +1,10 @@
+#summary jQuery Editable Combobox documentation syntax selector :editable.
+
+|| Added in 1.1.0 ||
+
+= `:editable` =
+{{{
+$(':editable');
+}}}
+
+Returns editable {{{<select>}}} elements.

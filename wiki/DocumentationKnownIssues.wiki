@@ -1,0 +1,13 @@
+#summary jQuery Editable Combobox documentation known issues.
+= Known Issues =
+== Some combobox operations may not work ==
+This plugin doesn't implement new control for editable comboboxes. It uses existing select controls and keyboard events to emulate the behavior of a typical combobox. Therefore some operations you can usually perform on regular comboboxes may not work here. For example you cannot cut, copy or paste text to and from jEC's combobox. You also cannot use undo and redo operations.
+
+== List expanding on !WebKit browsers ==
+Expanding the list of combobox options in a browser that uses !WebKit as a rendering engine (like Safari or Chrome) and typing anything to change editable option's value will not work. Instead the browser will try to match your keystrokes with existing items. If you want to type to populate a custom value you must make sure that the list is folded.
+
+== Plugin not working on mobile devices ==
+On some mobile devices (like an iPhone) plugin will not work since they implement comboboxes in a different way then normal browsers so there might not be a possibility to type with the {{{<select>}}} box selected.
+
+== Blinking cursor on Internet Explorer ==
+Blinking combobox cursor was causing a lot of problems on Internet Explorer and therefore it has been disabled for that browser. It should work well in other browsers.

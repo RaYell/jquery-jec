@@ -1,0 +1,11 @@
+#summary jQuery Editable Combobox documentation examples.
+= Examples =
+== #1 Change every {{{select}}} element to editable combobox. ==
+{{{
+$('select').jec();
+}}}
+
+== #2 Change every {{{select}}} element to editable combobox using existing {{{option}}} values. ==
+ {{{
+$('select').jec({'useExistingOptions': true});
+}}}

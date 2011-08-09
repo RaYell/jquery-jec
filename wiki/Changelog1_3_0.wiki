@@ -1,0 +1,5 @@
+#summary jQuery Editable Combobox changelog v1.3.0.
+= 1.3.0 (2010.07.07) =
+ * max input length parameter added ([http://code.google.com/p/jquery-jec/issues/detail?id=41&can=1 #41])
+ * fixed problems with YUI compression ([http://code.google.com/p/jquery-jec/issues/detail?id=44&can=1 #44])
+ * fixed problems with optgroups

@@ -1,0 +1,3 @@
+#summary Unit tests.
+
+Automated unit tests can be run on [http://stuff.rajchel.pl/jec/tests/ this site].

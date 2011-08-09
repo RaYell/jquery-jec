@@ -1,0 +1,35 @@
+#summary jQuery Editable Combobox documentation syntax method jec().
+= `jec([settings])` =
+{{{
+$(selector).jec([settings])
+}}}
+
+Initializes editable combobox. Will ignore all non-{{{<select>}}} elements and elements already initialized.
+
+== Parameters ==
+|| *Type* || *Name* || *Description* || *Default value* || *Added in* ||
+|| _object_ || {{{settings}}} || plugin settings || {{{ {} }}} || 1.0 ||
+
+=== Options ===
+|| *Type* || *Name* || *Description* || *Default value* || *Added in* ||
+|| _int_ || {{{position}}} || index of editable option to be inserted in select || {{{0}}} || 1.0 ||
+|| _bool_ || {{{ignoreOptGroups}}} || ignores option groups when placing editable option if set to {{{true}}} || {{{false}}} || 1.3 ||
+|| _int_ || {{{maxLength}}} || max input length || {{{255}}} || 1.3 ||
+|| _string_ | _array_ || {{{classes}}} || additional classes to be added || {{{[]}}} || 1.0 ||
+|| _object_ || {{{styles}}} || additional CSS properties to be set || {{{ {} }}} || 1.0 ||
+|| _string_ | _array_ || {{{optionClasses}}} || additional classes to be added to editable option element || {{{[]}}} || 1.1 ||
+|| _object_ || {{{optionStyles}}} || additional CSS properties to be set for editable option element || {{{ {} }}} || 1.1 ||
+|| _bool_ || {{{triggerChangeEvent}}} || triggers change event on {{{select}}} everytime user types if set to {{{true}}} || {{{false}}} || 1.3 ||
+|| _bool_ || {{{focusOnNewOption}}} || moves focus to newly created option element if set to {{{true}}} || {{{false}}} || 1.0 ||
+|| _bool_ || {{{useExistingOptions}}} || uses selected {{{<option>}}} text as a base for editable option if set to {{{true}}}, otherwise editable option base is empty string || {{{false}}} || 1.0 ||
+|| _bool_ || {{{blinkingCursor}}} || shows blinking cursor on active combobox if set to {{{true}}}, doesn't work on IE || {{{false}}} || 1.2 ||
+|| _int_ || {{{blinkingCursorInterval}}} || handles the interval (in miliseconds) in which the blinking cursor should be displayed || {{{1000}}} || 1.2 ||
+|| _array_ || {{{ignoredKeys}}} || ignored key codes, values in array can the either a {{{ {min: MIN_VALUE, max: MAX_VALUE} }}}, {{{ {exact: VALUE} }}} value or integers || {{{ [] }}} || 1.0 ||
+|| _array_ || {{{acceptedKeys}}} || accepted key codes, values in array can the either a {{{ {min: MIN_VALUE, max: MAX_VALUE} }}}, {{{ {exact: VALUE} }}} value or integers || {{{ [{min:32, max:126}, {min:191, max:382}] }}} || 1.1 ||
+
+==== Notes ====
+  * while all other preferences can be changed on runtime using [DocumentationSyntaxMethodsJecPref jecPref()] method, changing {{{focusOnNewOption}}} has no effect on plugin behaviour because this preference is used only when the combobox is initialized
+  * {{{ignoredKeys}}} have higher priority then {{{acceptedKeys}}} which means if there is the same key code in both arrays then it will be ignored
+
+== Returned Value ==
+This method returns jQuery object collection with objects which are initialized editable comboboxes.

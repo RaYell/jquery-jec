@@ -1,0 +1,32 @@
+#summary jQuery Editable Combobox documentation syntax method jecPref().
+
+|| Added in 1.1.0 ||
+
+= `jecPref(name)` =
+{{{
+$(selector).jecPref(name);
+}}}
+
+Gets the specified preference value.
+
+== Parameters ==
+|| *Type* || *Name* || *Description* || *Default value* ||
+|| _string_ || {{{name}}} || preference name || _N/A_ ||
+
+== Returned Value ==
+This method returns preference value of type specific to given preference. More details on preference types can be found on [DocumentationSyntaxMethodsJec jec()] page.
+
+= `jecPref(name, value)` =
+{{{
+$(selector).jecValue(name, value);
+}}}
+
+Sets the value of the specified preference. Value type must match allowed value type for specific preference. 
+
+== Parameters ==
+|| *Type* || *Name* || *Description* || *Default value* ||
+|| _string_ || {{{name}}} || preference name || _N/A_ ||
+|| _any_ || {{{value}}} || value to be set || {{{null}}} ||
+
+== Returned Value ==
+This method returns jQuery object collection with objects which preferences has been changed.

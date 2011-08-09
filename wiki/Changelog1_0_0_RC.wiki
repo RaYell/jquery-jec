@@ -1,0 +1,7 @@
+#summary jQuery Editable Combobox changelog v1.0.0RC.
+= 1.0.0RC1 (2009.05.01) =
+ * documentation updated and navigation improved
+ * plugin function renamed to {{{jec}}} (previous name {{{editableCombobox}}} can be still used but this name is considered deprecated) ([http://code.google.com/p/jquery-jec/issues/detail?id=12&can=1 #12])
+ * added method for disabling editable comboboxes ({{{jecOff}}}) ([http://code.google.com/p/jquery-jec/issues/detail?id=16&can=1 #16])
+ * added method for getting and setting editable option's values ({{{jecValue}}}) ([http://code.google.com/p/jquery-jec/issues/detail?id=11&can=1 #11])
+ * unit tests added
