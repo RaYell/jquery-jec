@@ -110,7 +110,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
                 // handles keys pressed on select (backspace and delete must be handled
                 // in keydown event in order to work in IE)
                 keyDown: function (event) {
-                    var keyCode = getKeyCode(event), option, value;
+					var keyCode = getKeyCode(event), option, value;
 
                     lastKeyCode = keyCode;
 
@@ -132,7 +132,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
                 // handles the rest of the keys (keypress event gives more informations
                 // about pressed keys)
                 keyPress: function (event) {
-                    var keyCode = event.which, opt = options[Combobox.getId($(this))],
+                    var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
                         option, value, specialKeys, exit = false, text;
 
                     Combobox.clearCursor($(this));
@@ -169,7 +169,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
                 },
                 
                 keyUp: function (event) {
-                    var opt = options[Combobox.getId($(this))];
+					var opt = options[Combobox.getId($(this))];
                     if (opt.triggerChangeEvent) {
                         $(this).trigger('change');
                     }
