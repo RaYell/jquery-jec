@@ -24,8 +24,8 @@ handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, isAr
 jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
 keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, 
 optionStyles, parent, position, pref, push, random, remove, removeAttr, removeClass, removeData, 
-safari, setEditableOption, styles, substring, text, trigger triggerChangeEvent, unbind, uneditable, 
-useExistingOptions, val, value, valueIsEditable, which*/
+safari, setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, 
+uneditable, useExistingOptions, val, value, valueIsEditable, which*/
 (function ($) {
     'use strict';
 
@@ -86,7 +86,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
             return {
                 // focus event handler
                 // enables blinking cursor
-                focus: function (event) {
+                focus: function () {
                     var opt = options[Combobox.getId($(this))];
                     if (opt.blinkingCursor && $.jECTimer === undefined) {
                         activeCombobox = $(this);
@@ -96,7 +96,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
 
                 // blur event handler
                 // disables blinking cursor
-                blur: function (event) {
+                blur: function () {
                     if ($.jECTimer !== undefined) {
                         clearInterval($.jECTimer);
                         $.jECTimer = undefined;
@@ -140,7 +140,8 @@ useExistingOptions, val, value, valueIsEditable, which*/
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
-                        $.each(specialKeys, function (i, val) {
+                        $.each(specialKeys, function () {
+							var val = this;
                             if (keyCode === val && keyCode === lastKeyCode) {
                                 exit = true;
                             }
@@ -168,7 +169,7 @@ useExistingOptions, val, value, valueIsEditable, which*/
                     }
                 },
                 
-                keyUp: function (event) {
+                keyUp: function () {
 					var opt = options[Combobox.getId($(this))];
                     if (opt.triggerChangeEvent) {
                         $(this).trigger('change');
@@ -206,8 +207,8 @@ useExistingOptions, val, value, valueIsEditable, which*/
                     parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
-                            $.each(value, function (i, val) {
-                                var j, min, max;
+                            $.each(value, function () {
+                                var val = this, j, min, max;
                                 if (Validators.keyRange(val)) {
                                     if ($.isArray(val)) {
                                         min = val[0];
@@ -347,13 +348,14 @@ useExistingOptions, val, value, valueIsEditable, which*/
                     var removeClasses, removeStyles;
 
                     removeClasses = function (elem, classes) {
-                        $.each(classes, function (i, val) {
+                        $.each(classes, function () {
+							var val = this;
                             elem.removeClass(val);
                         });
                     };
 
                     removeStyles = function (elem, styles) {
-                        $.each(styles, function (key, val) {
+                        $.each(styles, function (key) {
                             elem.css(key, '');
                         });
                     };
@@ -402,7 +404,8 @@ useExistingOptions, val, value, valueIsEditable, which*/
                     var setClasses, setStyles;
 
                     setClasses = function (elem, classes) {
-                        $.each(classes, function (i, val) {
+                        $.each(classes, function () {
+							var val = this;
                             elem.addClass(val);
                         });
                     };
@@ -626,7 +629,8 @@ useExistingOptions, val, value, valueIsEditable, which*/
                     
                     addOptions = function (elem, options) {
                         if ($.isArray(options)) {
-                            $.each(options, function (i, val) {
+                            $.each(options, function () {
+								var val = this;
                                 if ($.isPlainObject(val)) {
                                     $.each(val, function (key, value) {
                                         if ($.isArray(value)) {
