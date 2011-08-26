@@ -1,14 +1,11 @@
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
-bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, 
-maxlen: 120*/
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, 
+regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
 /*global $, jqUnit, String*/
-/*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, 
-children, classes, css, data, display, done, each, eq, equals, expect, filter, find, focus, 
-focusOnNewOption, g1, hasClass, hide, ignoredKeys, ignoreOptGroups, isArray, isObj, isPlainObject, isSet, jECTimer, 
-jec, 
-jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, k5,k6, keyCode, length, log, max, 
-maxLength, min, module, ok, opacity, opt1, opt2, opt3, optionClasses, optionStyles, position, 
-remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
+/*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, children, classes, css, 
+data, display, done, each, eq, equals, expect, filter, find, focus, focusOnNewOption, g1, hasClass, hide, ignoredKeys, 
+ignoreOptGroups, isArray, isObj, isPlainObject, isSet, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, 
+k2, k3, k4, k5,k6, keyCode, length, log, max, maxLength, min, module, ok, opacity, opt1, opt2, opt3, optionClasses, 
+optionStyles, position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
 useExistingOptions, val*/
 
 $(function () {
@@ -28,8 +25,8 @@ $(function () {
 
     key = function (elem, code) {
         var list = ['keydown', 'keypress', 'keyup'];
-        $.each(list, function (i, val) {
-			var e = $.Event(val, { keyCode: code });
+        $.each(list, function () {
+			var val = this, e = $.Event(val, { keyCode: code });
             elem.trigger(e);
         });
     };
