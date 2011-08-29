@@ -21,9 +21,9 @@ cursorState, data, destroy, disable, each, editable, enable, eq, expr, extend, f
 focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, 
 isArray, isPlainObject, jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
 keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
-position, pref, push, random, remove, removeAttr, removeClass, removeData, safari, setEditableOption, styles, 
-substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable, 
-which*/
+position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, safari, setEditableOption, 
+styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, 
+valueIsEditable, which*/
 (function ($) {
     'use strict';
 
@@ -137,8 +137,8 @@ which*/
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
-                        $.each(specialKeys, function () {
-							if (keyCode === this && keyCode === lastKeyCode) {
+                        $.each(specialKeys, function (i, val) {
+							if (keyCode === val && keyCode === lastKeyCode) {
                                 exit = true;
                             }
                         });
@@ -203,8 +203,8 @@ which*/
                     parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
-                            $.each(value, function () {
-                                var val = this, j, min, max;
+                            $.each(value, function (i, val) {
+                                var j, min, max;
                                 if (Validators.keyRange(val)) {
                                     if ($.isArray(val)) {
                                         min = val[0];
@@ -344,8 +344,8 @@ which*/
                     var removeClasses, removeStyles;
 
                     removeClasses = function (elem, classes) {
-                        $.each(classes, function () {
-							elem.removeClass(this);
+                        $.each(classes, function (i, val) {
+							elem.removeClass(val);
                         });
                     };
 
@@ -399,8 +399,8 @@ which*/
                     var setClasses, setStyles;
 
                     setClasses = function (elem, classes) {
-                        $.each(classes, function () {
-                            elem.addClass(String(this));
+                        $.each(classes, function (i, val) {
+                            elem.addClass(String(val));
                         });
                     };
 
@@ -620,8 +620,7 @@ which*/
                     
                     addOptions = function (elem, options) {
                         if ($.isArray(options)) {
-                            $.each(options, function () {
-								var val = this;
+                            $.each(options, function (i, val) {
                                 if ($.isPlainObject(val)) {
                                     $.each(val, function (key, value) {
                                         if ($.isArray(value)) {
