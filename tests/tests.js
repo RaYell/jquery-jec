@@ -26,7 +26,7 @@ $(function () {
     key = function (elem, code) {
         var list = ['keydown', 'keypress', 'keyup'];
         $.each(list, function () {
-			var val = this, e = $.Event(val, { keyCode: code });
+			var e = $.Event(this, { keyCode: code });
             elem.trigger(e);
         });
     };

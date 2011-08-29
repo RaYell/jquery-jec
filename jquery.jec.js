@@ -12,20 +12,18 @@
  * Contributors  :  Lukasz Rajchel, Artem Orlov
  */
 
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true,
-bitwise: true, regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, 
-maxlen: 100*/
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, 
+regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, 
-before, bind, blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, 
-classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable, enable, eq, 
-expr, extend, filter, find, floor, fn, focus, focusOnNewOption, fromCharCode, get, getId, 
-handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, isArray, isPlainObject, 
-jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
-keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, 
-optionStyles, parent, position, pref, push, random, remove, removeAttr, removeClass, removeData, 
-safari, setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, 
-uneditable, useExistingOptions, val, value, valueIsEditable, which*/
+/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, 
+blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, clearCursor, click, css, 
+cursorState, data, destroy, disable, each, editable, enable, eq, expr, extend, filter, find, floor, fn, focus, 
+focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, 
+isArray, isPlainObject, jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
+keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
+position, pref, push, random, remove, removeAttr, removeClass, removeData, safari, setEditableOption, styles, 
+substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable, 
+which*/
 (function ($) {
     'use strict';
 
@@ -141,8 +139,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
                         $.each(specialKeys, function () {
-							var val = this;
-                            if (keyCode === val && keyCode === lastKeyCode) {
+							if (keyCode === this && keyCode === lastKeyCode) {
                                 exit = true;
                             }
                         });
@@ -349,8 +346,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
 
                     removeClasses = function (elem, classes) {
                         $.each(classes, function () {
-							var val = this;
-                            elem.removeClass(val);
+							elem.removeClass(this);
                         });
                     };
 
@@ -405,8 +401,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
 
                     setClasses = function (elem, classes) {
                         $.each(classes, function () {
-							var val = this;
-                            elem.addClass(val);
+							elem.addClass(this);
                         });
                     };
 
@@ -418,8 +413,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
 
                     return {
                         position: function (elem) {
-                            var opt = options[Combobox.getId(elem)], option, uneditableOptions,
-                                container;
+                            var opt = options[Combobox.getId(elem)], option, uneditableOptions, container;
                             option = elem.find('option.' + pluginClass);
 
                             uneditableOptions = elem.find('option:not(.' + pluginClass + ')');
@@ -637,8 +631,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
                                             var og = $('<optgroup>').attr('label', key);
                                             addOptions(og, value);
                                             og.appendTo(select);
-                                        } else if (typeof value === 'number' || 
-                                                typeof value === 'string') {
+                                        } else if (typeof value === 'number' || typeof value === 'string') {
                                             $('<option>').text(value).attr('value', key)
                                                 .appendTo(elem);
                                         }
@@ -772,8 +765,8 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
                 // sets editable option to the value of currently selected option
                 setEditableOption: function (elem) {
                     var value = elem.find('option:selected').text();
-                    elem.find('option.' + pluginClass).attr('value', elem.val())
-                        .text(value).attr('selected', 'selected');
+                    elem.find('option.' + pluginClass).attr('value', elem.val()).text(value).
+                        attr('selected', 'selected');
                 },
 
                 // get combobox id
@@ -782,8 +775,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable, which*/
                 },
 
                 valueIsEditable: function (elem) {
-                    return elem.find('option.' + pluginClass).get(0) ===
-                        elem.find('option:selected').get(0);
+                    return elem.find('option.' + pluginClass).get(0) === elem.find('option:selected').get(0);
                 },
 
                 clearCursor: function (elem) {
