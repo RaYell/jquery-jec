@@ -1,12 +1,12 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, 
 regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
 /*global $, jqUnit, String*/
-/*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, children, classes, css, 
-data, display, done, each, eq, equals, expect, filter, find, focus, focusOnNewOption, g1, hasClass, hide, ignoredKeys, 
-ignoreOptGroups, isArray, isObj, isPlainObject, isSet, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, 
-k2, k3, k4, k5,k6, keyCode, length, log, max, maxLength, min, module, ok, opacity, opt1, opt2, opt3, optionClasses, 
-optionStyles, position, remove, replace, styles, test, testDone, text, trigger, triggerChangeEvent, unbind, 
-useExistingOptions, val*/
+/*members Event, acceptedKeys, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, browser, children, classes, 
+css, data, display, done, each, eq, equals, expect, filter, find, focus, focusOnNewOption, g1, hasClass, hide, 
+ignoredKeys, ignoreOptGroups, isArray, isObj, isPlainObject, isSet, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, 
+jecValue, k1, k2, k3, k4, k5,k6, keyCode, length, log, max, maxLength, min, module, msie, ok, opacity, opt1, opt2, 
+opt3, optionClasses, optionStyles, position, remove, replace, styles, test, testDone, text, trigger, 
+triggerChangeEvent, unbind, useExistingOptions, val*/
 
 $(function () {
 	'use strict';
@@ -25,6 +25,13 @@ $(function () {
 
     key = function (elem, code) {
         var list = ['keydown', 'keypress', 'keyup'];
+        
+        // IE doesn't trigger keypress event for 'Delete' key
+        // http://www.quirksmode.org/js/keys.html
+        if ($.browser.msie && code === 46) {
+            list = ['keydown', 'keyup'];
+        }
+        
         $.each(list, function () {
 			var e = $.Event(this, { keyCode: code });
             elem.trigger(e);
@@ -33,9 +40,10 @@ $(function () {
 
     reset = function (elem) {
         elem.jecKill();
+        elem.children('option[value=opt2]').prop('selected', true);
         elem.val('opt2');
-        elem.children().andSelf().attr('class', '');
-        elem.children().andSelf().attr('style', '');
+        elem.children().andSelf().removeAttr('class');
+        elem.children().andSelf().removeAttr('style');
     };
 	
 	isEmptyOrUndefined = function (value) {
@@ -205,7 +213,7 @@ $(function () {
 		reset($('#test'));
 
 		$('#test').jec({ classes: c1 });
-		jqUnit.ok($('#test').hasClass(c1), 'One extra class (string)');
+        jqUnit.ok($('#test').hasClass(c1), 'One extra class (string)');
 		reset($('#test'));
 
 		$('#test').jec({ classes: c1 + ' ' + c2 });
@@ -519,10 +527,6 @@ $(function () {
 		jqUnit.equals($('#test').val(), 'opt2', 'Focus on second option (bool false)');
 		reset($('#test'));
 
-		$('#test').jec({ focusOnNewOption: true });
-		jqUnit.equals($('#test').val(), '', 'Focus on editable option (bool true)');
-		reset($('#test'));
-
 		$('#test').jec({ focusOnNewOption: '1' });
 		jqUnit.equals($('#test').val(), 'opt2', 'Focus on second option (string)');
 		reset($('#test'));
@@ -553,6 +557,10 @@ $(function () {
 		
 		$('#test').jec({ focusOnNewOption: $ });
 		jqUnit.equals($('#test').val(), 'opt2', 'Focus on second option (function)');
+		reset($('#test'));
+        
+        $('#test').jec({ focusOnNewOption: true });
+        jqUnit.equals($('#test').val(), '', 'Focus on editable option (bool true)');
 		reset($('#test'));
 	});
 

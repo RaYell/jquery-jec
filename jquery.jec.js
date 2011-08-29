@@ -28,9 +28,8 @@ which*/
     'use strict';
 
     $.jEC = (function () {
-        var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {},
-            values = {}, lastKeyCode, defaults, Validators, EventHandlers, Combobox,
-            activeCombobox;
+        var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode, 
+        defaults, Validators, EventHandlers, Combobox, activeCombobox;
 
         defaults = {
             position: 0,
@@ -118,7 +117,7 @@ which*/
                         option = $(this).find('option.' + pluginClass);
                         if (option.val().length >= 1) {
                             value = option.text().substring(0, option.text().length - 1);
-                            option.val(value).text(value).attr('selected', 'selected');
+                            option.val(value).text(value).prop('selected', true);
                         }
                         return (keyCode !== 8);
                     default:
@@ -147,7 +146,7 @@ which*/
                         // don't handle ignored keys
                         if (!exit && $.inArray(keyCode, opt.ignoredKeys) === -1) {
                             // remove selection from all options
-                            $(this).find('option:selected').removeAttr('selected');
+                            $(this).find('option:selected').removeProp('selected');
 
                             if ($.inArray(keyCode, opt.acceptedKeys) !== -1) {
                                 option = $(this).find('option.' + pluginClass);
@@ -158,7 +157,7 @@ which*/
                                     option.val(value).text(value);
                                 }
                                 
-                                option.attr('selected', 'selected');
+                                option.prop('selected', true);
                             }
                         }
 
@@ -401,7 +400,7 @@ which*/
 
                     setClasses = function (elem, classes) {
                         $.each(classes, function () {
-							elem.addClass(this);
+                            elem.addClass(String(this));
                         });
                     };
 
@@ -420,8 +419,7 @@ which*/
                             if (opt.position < uneditableOptions.length) {
                                 container = uneditableOptions.eq(opt.position);
                                 
-                                if (!opt.ignoreOptGroups && 
-                                        container.parent('optgroup').length > 0) {
+                                if (!opt.ignoreOptGroups && container.parent('optgroup').length > 0) {
                                     uneditableOptions.eq(opt.position).parent().before(option);
                                 } else {
                                     uneditableOptions.eq(opt.position).before(option);
@@ -441,8 +439,7 @@ which*/
                         optionClasses: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
-                                setClasses(elem.find('option.' + pluginClass),
-                                    opt.optionClasses);
+                                setClasses(elem.find('option.' + pluginClass), opt.optionClasses);
                             }
                         },
 
@@ -456,16 +453,15 @@ which*/
                         optionStyles: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined) {
-                                setStyles(elem.find('option.' + pluginClass),
-                                    opt.optionStyles);
+                                setStyles(elem.find('option.' + pluginClass), opt.optionStyles);
                             }
                         },
 
                         focusOnNewOption: function (elem) {
                             var id = Combobox.getId(elem), opt = options[id];
                             if (opt !== undefined && opt.focusOnNewOption) {
-                                elem.find('option.' + pluginClass)
-                                    .attr('selected', 'selected');
+                                elem.find(':not(option.' + pluginClass + ')').removeProp('selected');
+                                elem.find('option.' + pluginClass).prop('selected', true);
                             }
                         },
 
@@ -515,6 +511,7 @@ which*/
 
                     destroy: function (elem) {
                         elem.find('option.' + pluginClass).remove();
+                        
                         elem.unbind('keydown', EventHandlers.keyDown);
                         elem.unbind('keypress', EventHandlers.keyPress);
                         elem.unbind('keyup', EventHandlers.keyUp);
@@ -550,9 +547,9 @@ which*/
                     return $(this).filter(':uneditable').each(function () {
                     
                         var id = generateId(), elem = $(this);
-
+                        
                         elem.data('jecId', id);
-
+                        
                         // override passed default options
                         options[id] = $.extend(true, {}, defaults);
 
@@ -693,7 +690,7 @@ which*/
                                 var option = $(this).find('option.' + pluginClass);
                                 option.val(value).text(value);
                                 if (typeof setFocus !== 'boolean' || setFocus) {
-                                    option.attr('selected', 'selected');
+                                    option.prop('selected', true);
                                 }
                             });
                         }
@@ -765,8 +762,7 @@ which*/
                 // sets editable option to the value of currently selected option
                 setEditableOption: function (elem) {
                     var value = elem.find('option:selected').text();
-                    elem.find('option.' + pluginClass).attr('value', elem.val()).text(value).
-                        attr('selected', 'selected');
+                    elem.find('option.' + pluginClass).attr('value', elem.val()).text(value).prop('selected', true);
                 },
 
                 // get combobox id
