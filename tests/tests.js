@@ -2,7 +2,7 @@
 regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
 /*global $, String, equals, expect, deepEqual, module, ok, test*/
 /*members Event, acceptedKeys, after, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, browser, children, 
-classes, css, data, display, done, each, eq, filter, find, focus, focusOnNewOption, g1, hasClass, hide, ignoredKeys, 
+classes, css, data, display, done, each, eq, filter, find, focus, focusOnNewOption, g1, hasClass, ignoredKeys, 
 ignoreOptGroups, isArray, isPlainObject, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, k5,
 k6, keyCode, length, log, max, maxLength, min, msie, opacity, opt1, opt2, opt3, optionClasses, optionStyles, position, 
 prop, remove, removeAttr, replace, styles, testDone, text, trigger, triggerChangeEvent, unbind, useExistingOptions, 
@@ -1698,7 +1698,4 @@ $(function () {
 		deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
 		reset($('#test'));
 	});
-    
-    $('#test').hide();
-    $('#gtest').hide();
 });
