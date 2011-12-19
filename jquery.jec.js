@@ -12,31 +12,30 @@
  * Contributors  :  Lukasz Rajchel, Artem Orlov
  */
 
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, 
-regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
+/*jslint maxerr: 50, indent: 4, maxlen: 120*/
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, 
-blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, clearCursor, click, css, 
-cursorState, data, destroy, disable, each, editable, enable, eq, expr, extend, filter, find, floor, fn, focus, 
-focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer, 
-isArray, isPlainObject, jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress, 
-keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent, 
-position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, safari, setEditableOption, 
-styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, 
+/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind,
+blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, clearCursor, click, css,
+cursorState, data, destroy, disable, each, editable, enable, eq, expr, extend, filter, find, floor, fn, focus,
+focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer,
+isArray, isPlainObject, jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress,
+keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent,
+position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, safari, setEditableOption,
+styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value,
 valueIsEditable, which*/
 (function ($) {
     'use strict';
 
     $.jEC = (function () {
-        var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode, 
-        defaults, Validators, EventHandlers, Combobox, activeCombobox;
-        
+        var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode,
+            defaults, Validators, EventHandlers, Combobox, activeCombobox;
+
         if ($.fn.prop === undefined) {
             $.fn.extend({
                 'prop': function (key, valueSet) {
                     if (valueSet) {
                         $(this).attr(key, key);
-                    } else { 
+                    } else {
                         $(this).removeAttr(key);
                     }
                 },
@@ -71,7 +70,7 @@ valueIsEditable, which*/
 
                 keyRange: function (value) {
                     var min, max;
-                    if (typeof value === 'object' && !$.isArray(value)) {
+                    if ($.isPlainObject(value)) {
                         min = value.min;
                         max = value.max;
                     } else if ($.isArray(value) && value.length === 2) {
@@ -166,12 +165,12 @@ valueIsEditable, which*/
                             if ($.inArray(keyCode, opt.acceptedKeys) !== -1) {
                                 option = $(this).find('option.' + pluginClass);
                                 text = option.text();
-                                
+
                                 if (text.length < opt.maxLength) {
                                     value = text + String.fromCharCode(getKeyCode(event));
                                     option.val(value).text(value);
                                 }
-                                
+
                                 option.prop('selected', true);
                             }
                         }
@@ -179,7 +178,7 @@ valueIsEditable, which*/
                         return false;
                     }
                 },
-                
+
                 keyUp: function () {
 					var opt = options[Combobox.getId($(this))];
                     if (opt.triggerChangeEvent) {
@@ -214,7 +213,7 @@ valueIsEditable, which*/
 
                 Set = (function () {
                     var parseKeys, Handles;
-                    
+
                     parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
@@ -238,7 +237,7 @@ valueIsEditable, which*/
                         }
                         return keys;
                     };
-                    
+
                     Handles = (function () {
                         return {
                             integer: function (elem, name, value) {
@@ -270,8 +269,7 @@ valueIsEditable, which*/
                             },
                             object: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
-                                if (opt !== undefined && value !== null && 
-                                        typeof value === 'object' && !$.isArray(value)) {
+                                if (opt !== undefined && value !== null && $.isPlainObject(value)) {
                                     opt[name] = value;
                                 }
                             },
@@ -295,11 +293,11 @@ valueIsEditable, which*/
                                 }
                             }
                         },
-                        
+
                         ignoreOptGroups: function (elem, value) {
                             Handles.bool(elem, 'ignoreOptGroups', value);
                         },
-                        
+
                         maxLength: function (elem, value) {
                             if (Handles.integer(elem, 'maxLength', value)) {
                                 var id = Combobox.getId(elem), opt = options[id];
@@ -324,7 +322,7 @@ valueIsEditable, which*/
                         optionStyles: function (elem, value) {
                             Handles.object(elem, 'optionStyles', value);
                         },
-                        
+
                         triggerChangeEvent: function (elem, value) {
                             Handles.bool(elem, 'triggerChangeEvent', value);
                         },
@@ -433,7 +431,7 @@ valueIsEditable, which*/
                             uneditableOptions = elem.find('option:not(.' + pluginClass + ')');
                             if (opt.position < uneditableOptions.length) {
                                 container = uneditableOptions.eq(opt.position);
-                                
+
                                 if (!opt.ignoreOptGroups && container.parent('optgroup').length > 0) {
                                     uneditableOptions.eq(opt.position).parent().before(option);
                                 } else {
@@ -526,7 +524,7 @@ valueIsEditable, which*/
 
                     destroy: function (elem) {
                         elem.find('option.' + pluginClass).remove();
-                        
+
                         elem.unbind('keydown', EventHandlers.keyDown);
                         elem.unbind('keypress', EventHandlers.keyPress);
                         elem.unbind('keyup', EventHandlers.keyUp);
@@ -560,11 +558,10 @@ valueIsEditable, which*/
                 // create editable combobox
                 init: function (settings) {
                     return $(this).filter(':uneditable').each(function () {
-                    
                         var id = generateId(), elem = $(this);
-                        
+
                         elem.data('jecId', id);
-                        
+
                         // override passed default options
                         options[id] = $.extend(true, {}, defaults);
 
@@ -572,7 +569,7 @@ valueIsEditable, which*/
                         Parameters.Set.ignoredKeys(elem, options[id].ignoredKeys);
                         Parameters.Set.acceptedKeys(elem, options[id].acceptedKeys);
 
-                        if (typeof settings === 'object' && !$.isArray(settings)) {
+                        if ($.isPlainObject(settings)) {
                             $.each(settings, function (key, val) {
                                 if (val !== undefined) {
                                     switch (key) {
@@ -632,7 +629,7 @@ valueIsEditable, which*/
                     var select, addOptions;
 
                     select = $('<select>');
-                    
+
                     addOptions = function (elem, options) {
                         if ($.isArray(options)) {
                             $.each(options, function (i, val) {
@@ -653,7 +650,7 @@ valueIsEditable, which*/
                             });
                         }
                     };
-                    
+
                     addOptions(select, options);
 
                     return select.jec(settings);
