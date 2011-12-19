@@ -30,6 +30,21 @@ valueIsEditable, which*/
     $.jEC = (function () {
         var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode, 
         defaults, Validators, EventHandlers, Combobox, activeCombobox;
+        
+        if ($.fn.prop === undefined) {
+            $.fn.extend({
+                'prop': function (key, valueSet) {
+                    if (valueSet) {
+                        $(this).attr(key, key);
+                    } else { 
+                        $(this).removeAttr(key);
+                    }
+                },
+                'removeProp': function (key) {
+                    $(this).removeAttr(key);
+                }
+            });
+        }
 
         defaults = {
             position: 0,
