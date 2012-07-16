@@ -42,7 +42,5 @@ $(function () {
     cb = $.jec(options);
     $('#demo-6 code').after(cb);
     
-    $('#demo7').jec({blinkingCursor: true, blinkingCursorInterval: 500});
-    
-    $('#demo8').jec({maxLength: 3});
+    $('#demo7').jec({maxLength: 3});
 });

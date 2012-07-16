@@ -1,8 +1,8 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.3.3
+ * jQuery jEC (jQuery Editable Combobox) 1.3.4
  * http://code.google.com/p/jquery-jec
  *
- * Copyright (c) 2008-2009 Lukasz Rajchel (lukasz@rajchel.pl | http://rajchel.pl)
+ * Copyright (c) 2008-2012 Lukasz Rajchel (lukasz@rajchel.pl | http://rajchel.pl)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
@@ -12,17 +12,16 @@
  * Contributors  :  Lukasz Rajchel, Artem Orlov
  */
 
-/*jslint maxerr: 50, indent: 4, maxlen: 120*/
+/*jslint indent: 4, maxlen: 120 */
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
-/*members ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind,
-blinkingCursor, blinkingCursorInterval, blur, bool, browser, ceil, change, charCode, classes, clearCursor, click, css,
-cursorState, data, destroy, disable, each, editable, enable, eq, expr, extend, filter, find, floor, fn, focus,
-focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoredKeys, ignoreOptGroups, inArray, init, initJS, integer,
-isArray, isPlainObject, jEC, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown, keyPress,
-keyRange, keyUp, keys, length, max, maxLength, min, msie, object, openedState, optionClasses, optionStyles, parent,
-position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, safari, setEditableOption,
-styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value,
-valueIsEditable, which*/
+/*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, bool,
+browser, ceil, change, charCode, classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable,
+enable, eq, expr, extend, filter, find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor,
+ignoreOptGroups, ignoredKeys, inArray, init, initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn,
+jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, length, max, maxLength, min, msie, object,
+openedState, optionClasses, optionStyles, parent, position, pref, prop, push, random, remove, removeAttr, removeClass,
+removeData, removeProp, safari, setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind,
+uneditable, useExistingOptions, val, value, valueIsEditable*/
 (function ($) {
     'use strict';
 
@@ -30,6 +29,7 @@ valueIsEditable, which*/
         var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode,
             defaults, Validators, EventHandlers, Combobox, activeCombobox;
 
+		// for jQuery < 1.6
         if ($.fn.prop === undefined) {
             $.fn.extend({
                 'prop': function (key, valueSet) {
@@ -56,8 +56,6 @@ valueIsEditable, which*/
             triggerChangeEvent: false,
             focusOnNewOption: false,
             useExistingOptions: false,
-            blinkingCursor: false,
-            blinkingCursorInterval: 1000,
             ignoredKeys: [],
             acceptedKeys: [[32, 126], [191, 382]]
         };
@@ -89,34 +87,12 @@ valueIsEditable, which*/
                 var charCode = event.charCode;
                 if (charCode !== undefined && charCode !== 0) {
                     return charCode;
-                } else {
-                    return event.keyCode;
                 }
+
+				return event.keyCode;
             };
 
             return {
-                // focus event handler
-                // enables blinking cursor
-                focus: function () {
-                    var opt = options[Combobox.getId($(this))];
-                    if (opt.blinkingCursor && $.jECTimer === undefined) {
-                        activeCombobox = $(this);
-                        $.jECTimer = setInterval($.jEC.handleCursor, opt.blinkingCursorInterval);
-                    }
-                },
-
-                // blur event handler
-                // disables blinking cursor
-                blur: function () {
-                    if ($.jECTimer !== undefined) {
-                        clearInterval($.jECTimer);
-                        $.jECTimer = undefined;
-                        activeCombobox = undefined;
-                        Combobox.clearCursor($(this));
-                    }
-                    Combobox.openedState($(this), false);
-                },
-
                 // keydown event handler
                 // handles keys pressed on select (backspace and delete must be handled
                 // in keydown event in order to work in IE)
@@ -151,11 +127,13 @@ valueIsEditable, which*/
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
+						/*jslint unparam: true*/
                         $.each(specialKeys, function (i, val) {
 							if (keyCode === val && keyCode === lastKeyCode) {
                                 exit = true;
                             }
                         });
+						/*jslint unparam: false*/
 
                         // don't handle ignored keys
                         if (!exit && $.inArray(keyCode, opt.ignoredKeys) === -1) {
@@ -217,6 +195,7 @@ valueIsEditable, which*/
                     parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
+							/*jslint unparam: true*/
                             $.each(value, function (i, val) {
                                 var j, min, max;
                                 if (Validators.keyRange(val)) {
@@ -234,6 +213,7 @@ valueIsEditable, which*/
                                     keys.push(val);
                                 }
                             });
+							/*jslint unparam: false*/
                         }
                         return keys;
                     };
@@ -335,14 +315,6 @@ valueIsEditable, which*/
                             Handles.bool(elem, 'useExistingOptions', value);
                         },
 
-                        blinkingCursor: function (elem, value) {
-                            Handles.bool(elem, 'blinkingCursor', value);
-                        },
-
-                        blinkingCursorInterval: function (elem, value) {
-                            Handles.integer(elem, 'blinkingCursorInterval', value);
-                        },
-
                         ignoredKeys: function (elem, value) {
                             Handles.keys(elem, 'ignoredKeys', value);
                         },
@@ -357,9 +329,11 @@ valueIsEditable, which*/
                     var removeClasses, removeStyles;
 
                     removeClasses = function (elem, classes) {
+						/*jslint unparam: true*/
                         $.each(classes, function (i, val) {
 							elem.removeClass(val);
                         });
+						/*jslint unparam: false*/
                     };
 
                     removeStyles = function (elem, styles) {
@@ -412,9 +386,11 @@ valueIsEditable, which*/
                     var setClasses, setStyles;
 
                     setClasses = function (elem, classes) {
+						/*jslint unparam: true*/
                         $.each(classes, function (i, val) {
                             elem.addClass(String(val));
                         });
+						/*jslint unparam: false*/
                     };
 
                     setStyles = function (elem, styles) {
@@ -517,8 +493,6 @@ valueIsEditable, which*/
                         elem.bind('keypress', EventHandlers.keyPress);
                         elem.bind('keyup', EventHandlers.keyUp);
                         elem.bind('change', EventHandlers.change);
-                        elem.bind('focus', EventHandlers.focus);
-                        elem.bind('blur', EventHandlers.blur);
                         elem.bind('click', EventHandlers.click);
                     },
 
@@ -529,8 +503,6 @@ valueIsEditable, which*/
                         elem.unbind('keypress', EventHandlers.keyPress);
                         elem.unbind('keyup', EventHandlers.keyUp);
                         elem.unbind('change', EventHandlers.change);
-                        elem.unbind('focus', EventHandlers.focus);
-                        elem.unbind('blur', EventHandlers.blur);
                         elem.unbind('click', EventHandlers.click);
                     }
                 };
@@ -603,12 +575,6 @@ valueIsEditable, which*/
                                     case 'useExistingOptions':
                                         Parameters.Set.useExistingOptions(elem, val);
                                         break;
-                                    case 'blinkingCursor':
-                                        Parameters.Set.blinkingCursor(elem, val);
-                                        break;
-                                    case 'blinkingCursorInterval':
-                                        Parameters.Set.blinkingCursorInterval(elem, val);
-                                        break;
                                     case 'ignoredKeys':
                                         Parameters.Set.ignoredKeys(elem, val);
                                         break;
@@ -632,6 +598,7 @@ valueIsEditable, which*/
 
                     addOptions = function (elem, options) {
                         if ($.isArray(options)) {
+							/*jslint unparam: true*/
                             $.each(options, function (i, val) {
                                 if ($.isPlainObject(val)) {
                                     $.each(val, function (key, value) {
@@ -648,6 +615,7 @@ valueIsEditable, which*/
                                     $('<option>').text(val).attr('value', val).appendTo(elem);
                                 }
                             });
+							/*jslint unparam: false*/
                         }
                     };
 
@@ -695,7 +663,8 @@ valueIsEditable, which*/
                         if (value === null || value === undefined) {
                             // get value
                             return $(this).find('option.' + pluginClass).val();
-                        } else if (typeof value === 'string' || typeof value === 'number') {
+                        }
+						if (typeof value === 'string' || typeof value === 'number') {
                             // set value
                             return $(this).filter(':editable').each(function () {
                                 var option = $(this).find('option.' + pluginClass);
@@ -715,57 +684,51 @@ valueIsEditable, which*/
                             if (value === null || value === undefined) {
                                 // get preference
                                 return options[Combobox.getId($(this))][name];
-                            } else {
-                                // set preference
-                                return $(this).filter(':editable').each(function () {
-                                    switch (name) {
-                                    case 'position':
-                                        Parameters.Set.position($(this), value);
-                                        Parameters.Handle.position($(this));
-                                        break;
-                                    case 'classes':
-                                        Parameters.Remove.classes($(this));
-                                        Parameters.Set.classes($(this), value);
-                                        Parameters.Handle.position($(this));
-                                        break;
-                                    case 'optionClasses':
-                                        Parameters.Remove.optionClasses($(this));
-                                        Parameters.Set.optionClasses($(this), value);
-                                        Parameters.Set.optionClasses($(this));
-                                        break;
-                                    case 'styles':
-                                        Parameters.Remove.styles($(this));
-                                        Parameters.Set.styles($(this), value);
-                                        Parameters.Set.styles($(this));
-                                        break;
-                                    case 'optionStyles':
-                                        Parameters.Remove.optionStyles($(this));
-                                        Parameters.Set.optionStyles($(this), value);
-                                        Parameters.Handle.optionStyles($(this));
-                                        break;
-                                    case 'focusOnNewOption':
-                                        Parameters.Set.focusOnNewOption($(this), value);
-                                        Parameters.Handle.focusOnNewOption($(this));
-                                        break;
-                                    case 'useExistingOptions':
-                                        Parameters.Set.useExistingOptions($(this), value);
-                                        Parameters.Handle.useExistingOptions($(this));
-                                        break;
-                                    case 'blinkingCursor':
-                                        Parameters.Set.blinkingCursor($(this), value);
-                                        break;
-                                    case 'blinkingCursorInterval':
-                                        Parameters.Set.blinkingCursorInterval($(this), value);
-                                        break;
-                                    case 'ignoredKeys':
-                                        Parameters.Set.ignoredKeys($(this), value);
-                                        break;
-                                    case 'acceptedKeys':
-                                        Parameters.Set.acceptedKeys($(this), value);
-                                        break;
-                                    }
-                                });
                             }
+
+							// set preference
+							return $(this).filter(':editable').each(function () {
+								switch (name) {
+								case 'position':
+									Parameters.Set.position($(this), value);
+									Parameters.Handle.position($(this));
+									break;
+								case 'classes':
+									Parameters.Remove.classes($(this));
+									Parameters.Set.classes($(this), value);
+									Parameters.Handle.position($(this));
+									break;
+								case 'optionClasses':
+									Parameters.Remove.optionClasses($(this));
+									Parameters.Set.optionClasses($(this), value);
+									Parameters.Set.optionClasses($(this));
+									break;
+								case 'styles':
+									Parameters.Remove.styles($(this));
+									Parameters.Set.styles($(this), value);
+									Parameters.Set.styles($(this));
+									break;
+								case 'optionStyles':
+									Parameters.Remove.optionStyles($(this));
+									Parameters.Set.optionStyles($(this), value);
+									Parameters.Handle.optionStyles($(this));
+									break;
+								case 'focusOnNewOption':
+									Parameters.Set.focusOnNewOption($(this), value);
+									Parameters.Handle.focusOnNewOption($(this));
+									break;
+								case 'useExistingOptions':
+									Parameters.Set.useExistingOptions($(this), value);
+									Parameters.Handle.useExistingOptions($(this));
+									break;
+								case 'ignoredKeys':
+									Parameters.Set.ignoredKeys($(this), value);
+									break;
+								case 'acceptedKeys':
+									Parameters.Set.acceptedKeys($(this), value);
+									break;
+								}
+							});
                         }
                     }
                 },

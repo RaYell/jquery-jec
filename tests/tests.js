@@ -1,13 +1,10 @@
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, 
-regexp: true, strict: true, newcap: true, immed: true, maxerr: 50, indent: 4, maxlen: 120*/
+/*jslint indent: 4, maxlen: 120 */
 /*global $, String, equals, expect, deepEqual, module, ok, test*/
-/*members Event, acceptedKeys, after, andSelf, attr, bind, blinkingCursor, blinkingCursorInterval, browser, children, 
-classes, css, data, display, done, each, eq, filter, find, focus, focusOnNewOption, g1, hasClass, ignoredKeys, 
-ignoreOptGroups, isArray, isPlainObject, jECTimer, jec, jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, k5,
-k6, keyCode, length, log, max, maxLength, min, msie, opacity, opt1, opt2, opt3, optionClasses, optionStyles, position, 
-prop, remove, removeAttr, replace, styles, testDone, text, trigger, triggerChangeEvent, unbind, useExistingOptions, 
-val*/
-
+/*properties Event, acceptedKeys, andSelf, attr, bind, browser, children, classes, css, data, display, each, eq,
+filter, find, focus, focusOnNewOption, g1, hasClass, ignoreOptGroups, ignoredKeys, isObject, jECTimer, jec, jecKill,
+jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, k5, k6, keyCode, length, max, maxLength, min, msie, opacity, opt1,
+opt2, opt3, optionClasses, optionStyles, position, prop, remove, removeAttr, replace, styles, text, trigger,
+triggerChangeEvent, unbind, useExistingOptions, val*/
 $(function () {
 	'use strict';
 
@@ -25,13 +22,13 @@ $(function () {
 
     key = function (elem, code) {
         var list = ['keydown', 'keypress', 'keyup'];
-        
+
         // IE doesn't trigger keypress event for 'Delete' key
         // http://www.quirksmode.org/js/keys.html
         if ($.browser.msie && code === 46) {
             list = ['keydown', 'keyup'];
         }
-        
+
         $.each(list, function () {
 			var e = $.Event(this, { keyCode: code });
             elem.trigger(e);
@@ -45,7 +42,7 @@ $(function () {
         elem.children().andSelf().removeAttr('class');
         elem.children().andSelf().removeAttr('style');
     };
-	
+
 	isEmptyOrUndefined = function (value) {
 		return value === '' || value === undefined;
 	};
@@ -146,7 +143,7 @@ $(function () {
 			'Editable option on first position (function)');
 		reset($('#test'));
 	});
-	
+
 	test('Setting: maxLength', function () {
 		expect(10);
 
@@ -445,18 +442,18 @@ $(function () {
 		equals($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
 		reset($('#test'));
 	});
-   
+
 	test('Setting: triggerChangeEvent', function () {
 		expect(10);
-		
+
 		var val = null;
-		
+
 		function testHandler() {
 			val = 1;
 		}
-		
+
 		$('#test').bind('change', testHandler);
-		
+
 		$('#test').jec({ triggerChangeEvent: true });
 		key($('#test'), 72);
 		equals(val, 1, 'Run change event handler');
@@ -468,55 +465,55 @@ $(function () {
 		equals(val, null, 'Ignore change event handler');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: '' });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (string)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: 1 });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (int)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: 1.2 });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (float)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: undefined });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (undefined)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: null });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (null)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: {} });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (object)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: [] });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (array)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').jec({ triggerChangeEvent: $ });
 		key($('#test'), 72);
 		equals(val, null, 'Ignore malformed parameter (function)');
 		reset($('#test'));
 		val = null;
-		
+
 		$('#test').unbind('change', testHandler);
 	});
 
@@ -554,24 +551,14 @@ $(function () {
 		$('#test').jec({ focusOnNewOption: [true] });
 		equals($('#test').val(), 'opt2', 'Focus on second option (array)');
 		reset($('#test'));
-		
+
 		$('#test').jec({ focusOnNewOption: $ });
 		equals($('#test').val(), 'opt2', 'Focus on second option (function)');
 		reset($('#test'));
-        
+
         $('#test').jec({ focusOnNewOption: true });
         equals($('#test').val(), '', 'Focus on editable option (bool true)');
 		reset($('#test'));
-	});
-
-	test('Setting: blinkingCursor', function () {
-		// nothing to test here at the moment
-		expect(0);
-	});
-
-	test('Setting: blinkingCursorInterval', function () {
-		// nothing to test here at the moment
-		expect(0);
 	});
 
 	test('Setting: useExistingOptions', function () {
@@ -615,16 +602,16 @@ $(function () {
 		equals($('#test').jecValue(), 'HJ', 'Key outside of accepted pressed');
 		reset($('#test'));
 	});
-	
+
 	test('Setting: ignoreOptGroups', function () {
 		expect(10);
 
 		$('#gtest').jec({ ignoreOptGroups: false, position: 1 });
 		equals($('#gtest > option:eq(1)').val(), '', 'Correct editable option placement');
 		reset($('#gtest'));
-		
+
 		$('#gtest').jec({ ignoreOptGroups: true, position: 1 });
-		equals($('#gtest optgroup:first option:first').val(), '', 
+		equals($('#gtest optgroup:first option:first').val(), '',
 			'Correct editable option placement inside optgroup');
 		reset($('#gtest'));
 
@@ -655,7 +642,7 @@ $(function () {
 		$('#gtest').jec({ ignoreOptGroups: [true], position: 1 });
 		equals($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (array)');
 		reset($('#gtest'));
-		
+
 		$('#gtest').jec({ ignoreOptGroups: $, position: 1 });
 		equals($('#gtest > option:eq(1)').val(), '', 'Ignoring invalid parameter (function)');
 		reset($('#gtest'));
@@ -672,12 +659,12 @@ $(function () {
 	});
 
 	test('Options', function () {
-		//expect(34);
+		expect(34);
 
-		var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null, 
+		var op = [1, 1.2, 'v1', { k1: 'v1' }, { k2: 1, k3: 1.2, k4: 'v4' }, [], undefined, null,
 			true, { g1: [2.3, 2, {k5: 'v5', k6: 3}]}], combobox = $.jec(op);
 
-        //ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created');
+        ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created');
 		equals(combobox.children('option:eq(1)').val(), '1', 'Checking option #1 key');
 		equals(combobox.children('option:eq(1)').text(), '1', 'Checking option #1 value');
 		equals(combobox.children('option:eq(2)').val(), '1.2', 'Checking option #2 key');
@@ -693,7 +680,7 @@ $(function () {
 		equals(combobox.children('option:eq(7)').val(), 'k4', 'Checking option #7 key');
 		equals(combobox.children('option:eq(7)').text(), 'v4', 'Checking option #7 value');
 		equals(combobox.children('option').length, 8, 'Checking options number');
-		
+
 		equals(combobox.children('optgroup').length, 1, 'Checking optgroup number');
 		equals(combobox.children('optgroup').attr('label'), 'g1', 'Checking optgroup number');
 		equals(combobox.find('optgroup option').length, 4, 'Checking optgroup options number');
@@ -705,12 +692,10 @@ $(function () {
 		equals(combobox.find('optgroup option:eq(2)').text(), 'v5', 'Checking optgroup option #3 value');
 		equals(combobox.find('optgroup option:eq(3)').val(), 'k6', 'Checking optgroup option #4 key');
 		equals(combobox.find('optgroup option:eq(3)').text(), '3', 'Checking optgroup option #4 value');
-        $('#test').after(combobox);
-		/*reset(combobox);
+		reset(combobox);
 
 		combobox = $.jec(undefined);
-		ok(combobox.children('option.jecEditableOption').length === 1,
-			'Combobox created (undefined)');
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (undefined)');
 		reset(combobox);
 
 		combobox = $.jec(null);
@@ -718,8 +703,7 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec('1');
-		ok(combobox.children('option.jecEditableOption').length === 1,
-			'Combobox created (string)');
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (string)');
 		reset(combobox);
 
 		combobox = $.jec(1);
@@ -731,14 +715,13 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec(true);
-		ok(combobox.children('option.jecEditableOption').length === 1,
-			'Combobox created (boolean)');
+		ok(combobox.children('option.jecEditableOption').length === 1, 'Combobox created (boolean)');
 		reset(combobox);
 
 		combobox = $.jec({});
 		ok(combobox.children('option.jecEditableOption').length === 1,
 			'Combobox created (boolean)');
-		reset(combobox);*/
+		reset(combobox);
 	});
 
 	test('Keyboard', function () {
@@ -833,10 +816,10 @@ $(function () {
 			'Editable option on first position (function)');
 		reset(combobox);
 	});
-	
+
 	test('Setting: maxLength', function () {
 		expect(10);
-		
+
 		var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
 			combobox = $.jec(cbOptions, { maxLength: 2 });
 
@@ -1106,8 +1089,7 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { styles: 'width: 100px' });
-		equals(combobox.children('option.jecEditableOption').css(s1), '1', 
-			'No extra styles (string)');
+		equals(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: 0 });
@@ -1119,8 +1101,7 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: true });
-		equals(combobox.children('option.jecEditableOption').css(s1), '1', 
-			'No extra styles (boolean)');
+		equals(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: null });
@@ -1128,8 +1109,7 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: undefined });
-		equals(combobox.children('option.jecEditableOption').css(s1), '1', 
-			'No extra styles (undefined)');
+		equals(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: [] });
@@ -1137,20 +1117,19 @@ $(function () {
 		reset(combobox);
 
 		combobox = $.jec(cbOptions, { optionStyles: $ });
-		equals(combobox.children('option.jecEditableOption').css(s1), '1', 
-			'No extra styles (function)');
+		equals(combobox.children('option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
 		reset(combobox);
 	});
-	
+
 	test('Setting: triggerChangeEvent', function () {
 		expect(10);
-		
+
 		var test = null, cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}], combobox;
-		
+
 		function testHandler() {
 			test = 1;
 		}
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: true });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
@@ -1164,56 +1143,56 @@ $(function () {
 		equals(test, null, 'Ignore change event handler');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: '' });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (string)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: 1 });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (int)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: 1.2 });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (float)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: undefined });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (undefined)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: null });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (null)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: {} });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (object)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: [] });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
 		equals(test, null, 'Ignore malformed parameter (array)');
 		reset(combobox);
 		test = null;
-		
+
 		combobox = $.jec(cbOptions, { triggerChangeEvent: $ });
 		combobox.bind('change', testHandler);
 		key(combobox, 72);
@@ -1262,20 +1241,10 @@ $(function () {
 		combobox = $.jec(cbOptions, { focusOnNewOption: [true], position: 1 });
 		equals(combobox.val(), 'opt1', 'Focus on first option (array)');
 		reset(combobox);
-		
+
 		combobox = $.jec(cbOptions, { focusOnNewOption: $, position: 1 });
 		equals(combobox.val(), 'opt1', 'Focus on first option (function)');
 		reset(combobox);
-	});
-
-	test('Setting: blinkingCursor', function () {
-		// nothing to test here at the moment
-		expect(0);
-	});
-
-	test('Setting: blinkingCursorInterval', function () {
-		// nothing to test here at the moment
-		expect(0);
 	});
 
 	test('Setting: useExistingOptions', function () {
@@ -1301,7 +1270,7 @@ $(function () {
 
 		var cbOptions = [{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}],
 			combobox = $.jec(cbOptions, { ignoredKeys: [72, { min: 73, max: 75}] });
-			
+
 		key(combobox, 72);
 		equals(combobox.jecValue(), '', 'Ignored key pressed (number)');
 		key(combobox, 74);
@@ -1403,7 +1372,7 @@ $(function () {
 
 	module('pref');
 	test('Getting preference', function () {
-		expect(19);
+		expect(17);
 
 		$('#test').jec();
 		ok($('#test').jecPref() === undefined, 'Get preference (undefined)');
@@ -1423,8 +1392,6 @@ $(function () {
 			optionStyles: {},
 			focusOnNewOption: false,
 			useExistingOptions: false,
-			blinkingCursor: false,
-			blinkingCursorInterval: 1000,
 			ignoredKeys: [],
 			acceptedKeys: [
 				{ min: 32, max: 126 },
@@ -1438,9 +1405,8 @@ $(function () {
 					value = defaults.acceptedKeys;
 					$.each(value, function () {
 						// min,max tuple
-						if (this !== null && typeof this === 'object' &&
-							typeof this.min === 'number' && typeof this.max === 'number' &&
-							this.min <= this.max) {
+						if ($.isObject(this) && typeof this.min === 'number' && typeof this.max === 'number'
+						        && this.min <= this.max) {
 							for (i = this.min; i <= this.max; i += 1) {
 								keys[keys.length] = i;
 							}
@@ -1584,56 +1550,6 @@ $(function () {
 		equals($('#test').jecPref('useExistingOptions'), true, 'Set preference (null)');
 		$('#test').jecPref('useExistingOptions', $);
 		equals($('#test').jecPref('useExistingOptions'), true, 'Set preference (function)');
-		reset($('#test'));
-	});
-
-	test('Setting preference: blinkingCursor', function () {
-		expect(9);
-
-		$('#test').jec();
-		$('#test').jecPref('blinkingCursor', true);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (boolean)');
-		$('#test').jecPref('blinkingCursor', 'true');
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (string)');
-		$('#test').jecPref('blinkingCursor', {});
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (object)');
-		$('#test').jecPref('blinkingCursor', []);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (array)');
-		$('#test').jecPref('blinkingCursor', 1);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (int)');
-		$('#test').jecPref('blinkingCursor', 1.2);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (float)');
-		$('#test').jecPref('blinkingCursor', undefined);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (undefined)');
-		$('#test').jecPref('blinkingCursor', null);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (null)');
-		$('#test').jecPref('blinkingCursor', $);
-		equals($('#test').jecPref('blinkingCursor'), true, 'Set preference (function)');
-		reset($('#test'));
-	});
-
-	test('Setting preference: blinkingCursorInterval', function () {
-		expect(9);
-
-		$('#test').jec();
-		$('#test').jecPref('blinkingCursorInterval', 1);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (int)');
-		$('#test').jecPref('blinkingCursorInterval', 1.2);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (float)');
-		$('#test').jecPref('blinkingCursorInterval', '2');
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (string)');
-		$('#test').jecPref('blinkingCursorInterval', {});
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (object)');
-		$('#test').jecPref('blinkingCursorInterval', []);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (array)');
-		$('#test').jecPref('blinkingCursorInterval', false);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (boolean)');
-		$('#test').jecPref('blinkingCursorInterval', undefined);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (undefined)');
-		$('#test').jecPref('blinkingCursorInterval', null);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (null)');
-		$('#test').jecPref('blinkingCursorInterval', $);
-		equals($('#test').jecPref('blinkingCursorInterval'), 1, 'Set preference (function)');
 		reset($('#test'));
 	});
 
