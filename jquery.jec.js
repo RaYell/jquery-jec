@@ -15,19 +15,18 @@
 /*jslint indent: 4, maxlen: 120 */
 /*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
 /*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, bool,
-browser, ceil, change, charCode, classes, clearCursor, click, css, cursorState, data, destroy, disable, each, editable,
-enable, eq, expr, extend, filter, find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor,
-ignoreOptGroups, ignoredKeys, inArray, init, initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn,
-jecPref, jecValue, keyCode, keyDown, keyPress, keyRange, keyUp, keys, length, max, maxLength, min, msie, object,
-openedState, optionClasses, optionStyles, parent, position, pref, prop, push, random, remove, removeAttr, removeClass,
-removeData, removeProp, safari, setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind,
-uneditable, useExistingOptions, val, value, valueIsEditable*/
+ceil, change, charCode, classes, click, css, data, destroy, disable, each, editable, enable, eq, expr, extend, filter,
+find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoreOptGroups, ignoredKeys, inArray, init,
+initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
+keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, position,
+pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, setEditableOption, styles,
+substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable*/
 (function ($) {
     'use strict';
 
     $.jEC = (function () {
-        var pluginClass = 'jecEditableOption', cursorClass = 'hasCursor', options = {}, values = {}, lastKeyCode,
-            defaults, Validators, EventHandlers, Combobox, activeCombobox;
+        var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode,
+            defaults, Validators, EventHandlers, Combobox;
 
 		// for jQuery < 1.6
         if ($.fn.prop === undefined) {
@@ -122,7 +121,6 @@ uneditable, useExistingOptions, val, value, valueIsEditable*/
                     var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
                         option, value, specialKeys, exit = false, text;
 
-                    Combobox.clearCursor($(this));
                     if (keyCode !== 9 && keyCode !== 13 && keyCode !== 27) {
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
@@ -171,12 +169,6 @@ uneditable, useExistingOptions, val, value, valueIsEditable*/
                     if (opt.useExistingOptions) {
                         Combobox.setEditableOption($(this));
                     }
-                },
-
-                click: function () {
-                    if (!$.browser.safari) {
-                        Combobox.openedState($(this), !Combobox.openedState($(this)));
-                    }
                 }
             };
         }());
@@ -222,7 +214,7 @@ uneditable, useExistingOptions, val, value, valueIsEditable*/
                         return {
                             integer: function (elem, name, value) {
                                 var id = Combobox.getId(elem), opt = options[id];
-                                if (opt !== undefined && Validators.integer(value)) {
+                                if (opt !== undefined && Validators.integer(value) && value >= 0) {
                                     opt[name] = value;
                                     return true;
                                 }
@@ -629,8 +621,6 @@ uneditable, useExistingOptions, val, value, valueIsEditable*/
                     return $(this).filter(':editable').each(function () {
                         $(this).jecOff();
                         $.removeData($(this).get(0), 'jecId');
-                        $.removeData($(this).get(0), 'jecCursorState');
-                        $.removeData($(this).get(0), 'jecOpenedState');
                     });
                 },
 
@@ -746,39 +736,6 @@ uneditable, useExistingOptions, val, value, valueIsEditable*/
 
                 valueIsEditable: function (elem) {
                     return elem.find('option.' + pluginClass).get(0) === elem.find('option:selected').get(0);
-                },
-
-                clearCursor: function (elem) {
-                    $(elem).find('option.' + cursorClass).each(function () {
-                        var text = $(this).text();
-                        $(this).removeClass(cursorClass).text(text.substring(0, text.length - 1));
-                    });
-                },
-
-                cursorState: function (elem, state) {
-                    return elem.data('jecCursorState', state);
-                },
-
-                openedState: function (elem, state) {
-                    return elem.data('jecOpenedState', state);
-                },
-
-                //handles editable cursor
-                handleCursor: function () {
-                    if (activeCombobox !== undefined && activeCombobox !== null) {
-                        if ($.browser.msie && Combobox.openedState(activeCombobox)) {
-                            return;
-                        }
-
-                        var state = Combobox.cursorState(activeCombobox), elem;
-                        if (state) {
-                            Combobox.clearCursor(activeCombobox);
-                        } else if (Combobox.valueIsEditable(activeCombobox)) {
-                            elem = activeCombobox.find('option:selected');
-                            elem.addClass(cursorClass).text(elem.text() + '|');
-                        }
-                        Combobox.cursorState(activeCombobox, !state);
-                    }
                 }
             };
         }());
