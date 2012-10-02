@@ -525,6 +525,7 @@ substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOpt
                         var id = generateId(), elem = $(this);
 
                         elem.data('jecId', id);
+						elem.data('jecActive', true);
 
                         // override passed default options
                         options[id] = $.extend(true, {}, defaults);
@@ -621,29 +622,36 @@ substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOpt
                     return $(this).filter(':editable').each(function () {
                         $(this).jecOff();
                         $.removeData($(this).get(0), 'jecId');
+						$.removeData($(this).get(0), 'jecActive');
                     });
                 },
 
                 // enable editablecombobox
                 enable: function () {
                     return $(this).filter(':editable').each(function () {
-                        var id = Combobox.getId($(this)), value = values[id];
+						if (!$(this).data('jecActive')) {
+							var id = Combobox.getId($(this)), value = values[id];
+							$(this).data('jecActive', true);
 
-                        setup($(this));
+							setup($(this));
 
-                        if (value !== undefined) {
-                            $(this).jecValue(value);
-                        }
+							if (value !== undefined) {
+								$(this).jecValue(value);
+							}
+						}
                     });
                 },
 
                 // disable editable combobox
                 disable: function () {
-                    return $(this).filter(':editable').each(function () {
-                        var val = $(this).find('option.' + pluginClass).val();
-                        values[Combobox.getId($(this))] = val;
-                        Parameters.Remove.all($(this));
-                        EditableOption.destroy($(this));
+					return $(this).filter(':editable').each(function () {
+						if ($(this).data('jecActive')) {
+							var val = $(this).find('option.' + pluginClass).val();
+							values[Combobox.getId($(this))] = val;
+							Parameters.Remove.all($(this));
+							EditableOption.destroy($(this));
+							$(this).data('jecActive', false);
+						}
                     });
                 },
 
