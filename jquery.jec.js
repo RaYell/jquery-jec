@@ -18,9 +18,10 @@
 ceil, change, charCode, classes, click, css, data, destroy, disable, each, editable, enable, eq, expr, extend, filter,
 find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoreOptGroups, ignoredKeys, inArray, init,
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
-keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, position,
-pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, setEditableOption, styles,
-substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val, value, valueIsEditable*/
+keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
+position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
+setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val,
+value, valueIsEditable*/
 (function ($) {
     'use strict';
 
@@ -119,7 +120,7 @@ substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOpt
                 // about pressed keys)
                 keyPress: function (event) {
                     var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
-                        option, value, specialKeys, exit = false, text;
+                        option, value, specialKeys, exit = false, text, select;
 
                     if (keyCode !== 9 && keyCode !== 13 && keyCode !== 27) {
                         // special keys codes
@@ -147,7 +148,8 @@ substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOpt
                                     option.val(value).text(value);
                                 }
 
-                                option.prop('selected', true);
+								select = option.parents('select');
+								select.get(0).selectedIndex = opt.position;
                             }
                         }
 
