@@ -29,7 +29,7 @@ value, valueIsEditable*/
         var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode,
             defaults, Validators, EventHandlers, Combobox;
 
-		// for jQuery < 1.6
+        // for jQuery < 1.6
         if ($.fn.prop === undefined) {
             $.fn.extend({
                 'prop': function (key, valueSet) {
@@ -89,7 +89,7 @@ value, valueIsEditable*/
                     return charCode;
                 }
 
-				return event.keyCode;
+                return event.keyCode;
             };
 
             return {
@@ -97,7 +97,7 @@ value, valueIsEditable*/
                 // handles keys pressed on select (backspace and delete must be handled
                 // in keydown event in order to work in IE)
                 keyDown: function (event) {
-					var keyCode = getKeyCode(event), option, value;
+                    var keyCode = getKeyCode(event), option, value;
 
                     lastKeyCode = keyCode;
 
@@ -126,13 +126,13 @@ value, valueIsEditable*/
                         // special keys codes
                         specialKeys = [37, 38, 39, 40, 46];
                         // handle special keys
-						/*jslint unparam: true*/
+                        /*jslint unparam: true*/
                         $.each(specialKeys, function (i, val) {
-							if (keyCode === val && keyCode === lastKeyCode) {
+                            if (keyCode === val && keyCode === lastKeyCode) {
                                 exit = true;
                             }
                         });
-						/*jslint unparam: false*/
+                        /*jslint unparam: false*/
 
                         // don't handle ignored keys
                         if (!exit && $.inArray(keyCode, opt.ignoredKeys) === -1) {
@@ -148,8 +148,8 @@ value, valueIsEditable*/
                                     option.val(value).text(value);
                                 }
 
-								select = option.parents('select');
-								select.get(0).selectedIndex = opt.position;
+                                select = option.parents('select');
+                                select.get(0).selectedIndex = opt.position;
                             }
                         }
 
@@ -158,7 +158,7 @@ value, valueIsEditable*/
                 },
 
                 keyUp: function () {
-					var opt = options[Combobox.getId($(this))];
+                    var opt = options[Combobox.getId($(this))];
                     if (opt.triggerChangeEvent) {
                         $(this).trigger('change');
                     }
@@ -189,7 +189,7 @@ value, valueIsEditable*/
                     parseKeys = function (value) {
                         var keys = [];
                         if ($.isArray(value)) {
-							/*jslint unparam: true*/
+                            /*jslint unparam: true*/
                             $.each(value, function (i, val) {
                                 var j, min, max;
                                 if (Validators.keyRange(val)) {
@@ -207,7 +207,7 @@ value, valueIsEditable*/
                                     keys.push(val);
                                 }
                             });
-							/*jslint unparam: false*/
+                            /*jslint unparam: false*/
                         }
                         return keys;
                     };
@@ -323,11 +323,11 @@ value, valueIsEditable*/
                     var removeClasses, removeStyles;
 
                     removeClasses = function (elem, classes) {
-						/*jslint unparam: true*/
+                        /*jslint unparam: true*/
                         $.each(classes, function (i, val) {
-							elem.removeClass(val);
+                            elem.removeClass(val);
                         });
-						/*jslint unparam: false*/
+                        /*jslint unparam: false*/
                     };
 
                     removeStyles = function (elem, styles) {
@@ -380,11 +380,11 @@ value, valueIsEditable*/
                     var setClasses, setStyles;
 
                     setClasses = function (elem, classes) {
-						/*jslint unparam: true*/
+                        /*jslint unparam: true*/
                         $.each(classes, function (i, val) {
                             elem.addClass(String(val));
                         });
-						/*jslint unparam: false*/
+                        /*jslint unparam: false*/
                     };
 
                     setStyles = function (elem, styles) {
@@ -527,7 +527,7 @@ value, valueIsEditable*/
                         var id = generateId(), elem = $(this);
 
                         elem.data('jecId', id);
-						elem.data('jecActive', true);
+                        elem.data('jecActive', true);
 
                         // override passed default options
                         options[id] = $.extend(true, {}, defaults);
@@ -593,7 +593,7 @@ value, valueIsEditable*/
 
                     addOptions = function (elem, options) {
                         if ($.isArray(options)) {
-							/*jslint unparam: true*/
+                            /*jslint unparam: true*/
                             $.each(options, function (i, val) {
                                 if ($.isPlainObject(val)) {
                                     $.each(val, function (key, value) {
@@ -610,7 +610,7 @@ value, valueIsEditable*/
                                     $('<option>').text(val).attr('value', val).appendTo(elem);
                                 }
                             });
-							/*jslint unparam: false*/
+                            /*jslint unparam: false*/
                         }
                     };
 
@@ -624,36 +624,36 @@ value, valueIsEditable*/
                     return $(this).filter(':editable').each(function () {
                         $(this).jecOff();
                         $.removeData($(this).get(0), 'jecId');
-						$.removeData($(this).get(0), 'jecActive');
+                        $.removeData($(this).get(0), 'jecActive');
                     });
                 },
 
                 // enable editablecombobox
                 enable: function () {
                     return $(this).filter(':editable').each(function () {
-						if (!$(this).data('jecActive')) {
-							var id = Combobox.getId($(this)), value = values[id];
-							$(this).data('jecActive', true);
+                        if (!$(this).data('jecActive')) {
+                            var id = Combobox.getId($(this)), value = values[id];
+                            $(this).data('jecActive', true);
 
-							setup($(this));
+                            setup($(this));
 
-							if (value !== undefined) {
-								$(this).jecValue(value);
-							}
-						}
+                            if (value !== undefined) {
+                                $(this).jecValue(value);
+                            }
+                        }
                     });
                 },
 
                 // disable editable combobox
                 disable: function () {
-					return $(this).filter(':editable').each(function () {
-						if ($(this).data('jecActive')) {
-							var val = $(this).find('option.' + pluginClass).val();
-							values[Combobox.getId($(this))] = val;
-							Parameters.Remove.all($(this));
-							EditableOption.destroy($(this));
-							$(this).data('jecActive', false);
-						}
+                    return $(this).filter(':editable').each(function () {
+                        if ($(this).data('jecActive')) {
+                            var val = $(this).find('option.' + pluginClass).val();
+                            values[Combobox.getId($(this))] = val;
+                            Parameters.Remove.all($(this));
+                            EditableOption.destroy($(this));
+                            $(this).data('jecActive', false);
+                        }
                     });
                 },
 
@@ -664,7 +664,7 @@ value, valueIsEditable*/
                             // get value
                             return $(this).find('option.' + pluginClass).val();
                         }
-						if (typeof value === 'string' || typeof value === 'number') {
+                        if (typeof value === 'string' || typeof value === 'number') {
                             // set value
                             return $(this).filter(':editable').each(function () {
                                 var option = $(this).find('option.' + pluginClass);
@@ -686,49 +686,49 @@ value, valueIsEditable*/
                                 return options[Combobox.getId($(this))][name];
                             }
 
-							// set preference
-							return $(this).filter(':editable').each(function () {
-								switch (name) {
-								case 'position':
-									Parameters.Set.position($(this), value);
-									Parameters.Handle.position($(this));
-									break;
-								case 'classes':
-									Parameters.Remove.classes($(this));
-									Parameters.Set.classes($(this), value);
-									Parameters.Handle.position($(this));
-									break;
-								case 'optionClasses':
-									Parameters.Remove.optionClasses($(this));
-									Parameters.Set.optionClasses($(this), value);
-									Parameters.Set.optionClasses($(this));
-									break;
-								case 'styles':
-									Parameters.Remove.styles($(this));
-									Parameters.Set.styles($(this), value);
-									Parameters.Set.styles($(this));
-									break;
-								case 'optionStyles':
-									Parameters.Remove.optionStyles($(this));
-									Parameters.Set.optionStyles($(this), value);
-									Parameters.Handle.optionStyles($(this));
-									break;
-								case 'focusOnNewOption':
-									Parameters.Set.focusOnNewOption($(this), value);
-									Parameters.Handle.focusOnNewOption($(this));
-									break;
-								case 'useExistingOptions':
-									Parameters.Set.useExistingOptions($(this), value);
-									Parameters.Handle.useExistingOptions($(this));
-									break;
-								case 'ignoredKeys':
-									Parameters.Set.ignoredKeys($(this), value);
-									break;
-								case 'acceptedKeys':
-									Parameters.Set.acceptedKeys($(this), value);
-									break;
-								}
-							});
+                            // set preference
+                            return $(this).filter(':editable').each(function () {
+                                switch (name) {
+                                case 'position':
+                                    Parameters.Set.position($(this), value);
+                                    Parameters.Handle.position($(this));
+                                    break;
+                                case 'classes':
+                                    Parameters.Remove.classes($(this));
+                                    Parameters.Set.classes($(this), value);
+                                    Parameters.Handle.position($(this));
+                                    break;
+                                case 'optionClasses':
+                                    Parameters.Remove.optionClasses($(this));
+                                    Parameters.Set.optionClasses($(this), value);
+                                    Parameters.Set.optionClasses($(this));
+                                    break;
+                                case 'styles':
+                                    Parameters.Remove.styles($(this));
+                                    Parameters.Set.styles($(this), value);
+                                    Parameters.Set.styles($(this));
+                                    break;
+                                case 'optionStyles':
+                                    Parameters.Remove.optionStyles($(this));
+                                    Parameters.Set.optionStyles($(this), value);
+                                    Parameters.Handle.optionStyles($(this));
+                                    break;
+                                case 'focusOnNewOption':
+                                    Parameters.Set.focusOnNewOption($(this), value);
+                                    Parameters.Handle.focusOnNewOption($(this));
+                                    break;
+                                case 'useExistingOptions':
+                                    Parameters.Set.useExistingOptions($(this), value);
+                                    Parameters.Handle.useExistingOptions($(this));
+                                    break;
+                                case 'ignoredKeys':
+                                    Parameters.Set.ignoredKeys($(this), value);
+                                    break;
+                                case 'acceptedKeys':
+                                    Parameters.Set.acceptedKeys($(this), value);
+                                    break;
+                                }
+                            });
                         }
                     }
                 },
