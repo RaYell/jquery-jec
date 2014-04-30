@@ -43,63 +43,63 @@ Initializes editable combobox. Will ignore all non-```<select>``` elements and e
 | ```array``` | ```ignoredKeys``` | ignored key codes, values in array can the either a ``` {min: MIN_VALUE, max: MAX_VALUE} ```, ``` {exact: VALUE} ``` value or integers | ``` [] ``` | 1.0 |
 | ```array``` | ```acceptedKeys``` | accepted key codes, values in array can the either a ``` {min: MIN_VALUE, max: MAX_VALUE} ```, ``` {exact: VALUE} ``` value or integers | ``` [{min:32, max:126}, {min:191, max:382}] ``` | 1.1 |
 
-==== Notes ====
+##### Notes
   * while all other preferences can be changed on runtime using ```jecPref()``` method, changing ```focusOnNewOption``` has no effect on plugin behaviour because this preference is used only when the combobox is initialized
   * ```ignoredKeys``` have higher priority then ```acceptedKeys``` which means if there is the same key code in both arrays then it will be ignored
 
-=== Returned Value ===
+##### Returned Value
 This method returns jQuery object collection with objects which are initialized editable comboboxes.
 
-== jecOn() ==
-```
+#### ```jecOn()```
+```javascript
 $(selector).jecOn();
 ```
 
 Enables previously  disabled editable combobox. Will ignore all non-```<select>``` elements and elements that were not initialized. This will not remove the ```<select>``` element but it will start behaving like an ordinary ```<select>```.
 
-=== Returned Value ===
+##### Returned Value
 This method returns jQuery object collection with objects which are enabled editable comboboxes.
 
-== jecOff() ==
-```
+#### ```jecOff()```
+```javascript
 $(selector).jecOff();
 ```
 
 Disables previously enabled editable combobox. Will ignore all non-```<select>``` elements and elements that were not initialized. This will not remove the ```<select>``` element but it will need to be enabled if it is to be used as editable combobox again.
 
-=== Returned Value ===
+##### Returned Value
 This method returns jQuery object collection with objects which are disabled editable comboboxes.
 
-== jecKill() ==
-```
+#### ```jecKill()```
+```javascript
 $(selector).jecKill();
 ```
 
 Destroys editable combobox. Will ignore all non-```<select>``` elements and elements that were not initialized. This will not remove the ```<select>``` element but it will need to be initialized again if it is to be used as editable combobox again.
 
-=== Returned Value ===
+##### Returned Value
 This method returns jQuery object collection with objects which are destroyed editable comboboxes.
 
-== jecValue(value[, setFocus]) ==
-```
+#### ```jecValue(value[, setFocus])```
+```javascript
 $(selector).jecValue(value[, setFocus]);
 ```
 
 Sets the value and text of editable option.
 
-== Parameters ==
+##### Parameters
 | **Type** | **Name** | **Description** | **Default value** |
 | -------- | -------- | --------------- | ----------------- | ------------ |
-| ```string```, ```number``` | ```value``` | value to be set | _N/A_ |
+| ```string```, ```number``` | ```value``` | value to be set |  |
 | ```bool``` | ```setFocus``` | moves focus to editable option if set to ```true``` | ```true``` |
 
-=== Returned Value ===
+##### Returned Value
 This method returns jQuery object collection with objects which values has been changed.
 
 #summary jQuery Editable Combobox documentation syntax method jecPref().
 
-== jecPref(name) ==
-```
+#### ```jecPref(name)```
+```javascript
 $(selector).jecPref(name);
 ```
 
