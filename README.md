@@ -14,7 +14,7 @@ Note: remember to replace ```PATH_TO_JEC_DIR``` to correct directory path.
 
 ### Syntax
 
-#### jec([settings])
+#### ```jec([settings])```
 
 ```javascript
 $(selector).jec([settings])
