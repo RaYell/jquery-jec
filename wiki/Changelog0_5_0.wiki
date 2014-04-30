@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.5.0.
-= 0.5.0 (2008.10.29) =
- * added parameter for using existing {{{<option>}}} tag values as a base for editable option ([http://code.google.com/p/jquery-jec/issues/detail?id=3&can=1 #3])

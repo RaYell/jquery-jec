@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.5.1.
-= 0.5.1 (2008.10.29) =
- * fixed tab and up/down arrows behavior ([http://code.google.com/p/jquery-jec/issues/detail?id=4&can=1 #4])

@@ -1,5 +1,0 @@
-#summary jQuery Editable Combobox changelog v1.2.0.
-= 1.2.0 (2009.07.10) =
- * added possibility to create comboboxes from scratch ([http://code.google.com/p/jquery-jec/issues/detail?id=24&can=1 #24])
- * dropped support for {exact: VALUE} tuple ([http://code.google.com/p/jquery-jec/issues/detail?id=28 #28])
- * blinking cursor added ([http://code.google.com/p/jquery-jec/issues/detail?id=27 #27])

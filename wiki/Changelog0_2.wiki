@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.2.
-= 0.2 (2008.04.04) =
- * options added

@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.5.3.
-= 0.5.3 (2009.04.16) =
- * fixed arrow keys handling in Firefox ([http://code.google.com/p/jquery-jec/issues/detail?id=9&can=1 #9])

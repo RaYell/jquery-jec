@@ -1,8 +1,0 @@
-#summary jQuery Editable Combobox documentation syntax methods.
- * [DocumentationSyntaxMethodsJec jec()]
- * [DocumentationSyntaxMethodsJecOn jecOn()]
- * [DocumentationSyntaxMethodsJecOf jecOff()]
- * [DocumentationSyntaxMethodsJecKill jecKill()]
- * [DocumentationSyntaxMethodsJecValue jecValue()]
- * [DocumentationSyntaxMethodsJecPref jecPref()]
- * [DocumentationSyntaxMethodsDotJec $.jec()]

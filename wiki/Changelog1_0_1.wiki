@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v1.0.1.
-= 1.0.1 (2009.06.02) =
- * fixed plugin disabling on Chrome ([http://code.google.com/p/jquery-jec/issues/detail?id=21&can=1 #21])

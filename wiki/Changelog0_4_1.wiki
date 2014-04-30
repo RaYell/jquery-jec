@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.4.1.
-= 0.4.1 (2008.07.23) =
- * IE6 fix ([http://code.google.com/p/jquery-jec/issues/detail?id=2&can=1 #2])

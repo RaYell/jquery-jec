@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v1.3.1
-= 1.3.1 (2010.10.28) =
- * optgroup support added ([http://code.google.com/p/jquery-jec/issues/detail?id=42&can=1 #42])

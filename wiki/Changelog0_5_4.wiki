@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox changelog v0.5.4.
-= 0.5.4 (2009.04.16) =
- * fixed delete key handling in Firefox ([http://code.google.com/p/jquery-jec/issues/detail?id=10&can=1 #10])

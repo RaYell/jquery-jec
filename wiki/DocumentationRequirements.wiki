@@ -1,4 +1,0 @@
-#summary jQuery Editable Combobox documentation requirements.
-= Requirements =
-
-jQuery library is required to use this extension. It can be downloaded from [http://jquery.com jQuery Web Page].

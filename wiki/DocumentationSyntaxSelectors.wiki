@@ -1,3 +1,0 @@
-#summary jQuery Editable Combobox documentation syntax selectors.
- * [DocumentationSyntaxSelectorsEditable :editable]
- * [DocumentationSyntaxSelectorsUneditable :uneditable]
