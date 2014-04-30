@@ -1,8 +1,8 @@
-# Requirements
+### Requirements
 
 jQuery library is required to use this extension. It can be downloaded from [[http://jquery.com|jQuery Web Page]].
 
-# Setup
+### Setup
 
 Import plugin file after importing the jQuery library.
 
@@ -12,9 +12,9 @@ Import plugin file after importing the jQuery library.
 
 Note: remember to replace ```PATH_TO_JEC_DIR``` to correct directory path.
 
-# Syntax
+### Syntax
 
-## jec([settings])
+#### jec([settings])
 
 ```javascript
 $(selector).jec([settings])
@@ -22,11 +22,11 @@ $(selector).jec([settings])
 
 Initializes editable combobox. Will ignore all non-{{{<select>}}} elements and elements already initialized.
 
-### Parameters
+##### Parameters
 | **Type** | **Name** | **Description** | **Default value** | **Added in** |
 | {{{object}}} | {{{settings}}} | plugin settings | {{{ {} }}} | 1.0 |
 
-# Options
+##### Options
 | **Type** | **Name** | **Description** | **Default value** | **Added in** |
 | {{{int}}} | {{{position}}} | index of editable option to be inserted in select | {{{0}}} | 1.0 |
 | {{{bool}}} | {{{ignoreOptGroups}}} | ignores option groups when placing editable option if set to {{{true}}} | {{{false}}} | 1.3 |
