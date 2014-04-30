@@ -213,6 +213,6 @@ Expanding the list of combobox options in a browser that uses WebKit as a render
 On some mobile devices (like an iPhone) plugin will not work since they implement comboboxes in a different way then normal browsers so there might not be a possibility to type with the ```<select>``` box selected.
 
 = Links =
-* [IncompatibleChanges](/RaYell/jquery-jec/wiki/Incompatible-Changes)
-* [[Changelog]]
+* [IncompatibleChanges](https://github.com/RaYell/jquery-jec/wiki/Incompatible-Changes)
+* [Changelog](https://github.com/RaYell/jquery-jec/wiki/Changelog)
 * [Demo](http://jsfiddle.net/RaYell/n96RF)
