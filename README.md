@@ -1,6 +1,6 @@
 ### Requirements
 
-jQuery library is required to use this extension. It can be downloaded from (jQuery Web Page)[http://jquery.com].
+jQuery library is required to use this extension. It can be downloaded from [jQuery Web Page](http://jquery.com).
 
 ### Setup
 
@@ -95,8 +95,6 @@ Sets the value and text of editable option.
 
 ##### Returned Value
 This method returns jQuery object collection with objects which values has been changed.
-
-#summary jQuery Editable Combobox documentation syntax method jecPref().
 
 #### jecPref(name)
 ```javascript
@@ -215,6 +213,6 @@ Expanding the list of combobox options in a browser that uses WebKit as a render
 On some mobile devices (like an iPhone) plugin will not work since they implement comboboxes in a different way then normal browsers so there might not be a possibility to type with the ```<select>``` box selected.
 
 = Links =
-* [[IncompatibleChanges|Incompatible Changes]]
+* [IncompatibleChanges](/RaYell/jquery-jec/wiki/Incompatible-Changes)
 * [[Changelog]]
-* [[http://jsfiddle.net/RaYell/n96RF|Demo]]
+* [Demo](http://jsfiddle.net/RaYell/n96RF)
