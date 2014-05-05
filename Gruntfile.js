@@ -24,7 +24,7 @@ module.exports = function (grunt) {
             },
             my_target: {
                 files: {
-                    'jquery.jec.min.js': ['jquery.jec.js']
+                    'jquery-jec.min.js': ['jquery-jec.js']
                 }
             }
         }
