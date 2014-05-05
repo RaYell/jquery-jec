@@ -4,13 +4,17 @@ jQuery library is required to use this extension. It can be downloaded from [jQu
 
 ### Setup
 
+Install the library using Bower
+
+```
+bower install jquery-jec
+```
+
 Import plugin file after importing the jQuery library.
 
 ```html
-<script type="text/javascript" src="PATH_TO_JEC_DIR/jquery.jec.js"></script>
+<script type="text/javascript" src="bower_components/jquery-jec/jquery-jec.min.js"></script>
 ```
-
-Note: remember to replace ```PATH_TO_JEC_DIR``` to correct directory path.
 
 ### Syntax
 
