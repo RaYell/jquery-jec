@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-blanket-qunit');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.initConfig({
         qunit: {
@@ -14,6 +15,16 @@ module.exports = function (grunt) {
                         'tests/jquery2.html?coverage=true&gruntReport'
                     ],
                     threshold: 90
+                }
+            }
+        },
+        uglify: {
+            options: {
+                mangle: false
+            },
+            my_target: {
+                files: {
+                    'jquery.jec.min.js': ['jquery.jec.js']
                 }
             }
         }
