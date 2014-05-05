@@ -31,4 +31,5 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['qunit', 'blanket_qunit']);
+    grunt.registerTask('build', ['uglify']);
 };
