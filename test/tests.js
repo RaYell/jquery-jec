@@ -3,9 +3,6 @@
 describe('JEC', function () {
     'use strict';
     var assert = chai.assert,
-        trim = function (str) {
-            return str.replace(/(^\s+)|(\s+$)/, '');
-        },
         key = function (elem, code) {
             var list = ['keydown', 'keypress', 'keyup'];
             $.each(list, function () {
@@ -19,7 +16,7 @@ describe('JEC', function () {
             elem.jecKill();
             elem.children('option[value=opt2]').prop('selected', true);
             elem.val('opt2');
-            elem.children().andSelf().removeAttr('class');
+            elem.children().andSelf().removeAttr('class').addClass('hidden');
             elem.children().andSelf().removeAttr('style');
         };
     describe('Combobox initialization', function () {
@@ -29,167 +26,222 @@ describe('JEC', function () {
             reset($('#test'));
         });
     });
+    describe('Keyboard', function () {
+        it('should behave correctly with keyboard', function () {
+            $('#test').jec();
+            key($('#test'), 72);
+            assert.equal($('#test').jecValue(), 'H');
+            key($('#test'), 105);
+            assert.equal($('#test').jecValue(), 'Hi');
+            key($('#test'), 32);
+            assert.equal($('#test').jecValue(), 'Hi ');
+            key($('#test'), 33);
+            assert.equal($('#test').jecValue(), 'Hi !');
+            key($('#test'), 8);
+            assert.equal($('#test').jecValue(), 'Hi ');
+            key($('#test'), 46);
+            assert.equal($('#test').jecValue(), 'Hi');
+            reset($('#test'));
+        });
+    });
+    describe('Setting position', function () {
+        it('should set the editable option on the first position', function () {
+            $('#test').jec({
+                position: 0
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the last position', function () {
+            $('#test').jec({
+                position: 3
+            });
+            assert.lengthOf($('#test').children('option:last.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the last position (big value)', function () {
+            $('#test').jec({
+                position: 100
+            });
+            assert.lengthOf($('#test').children('option:last.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring negative value', function () {
+            $('#test').jec({
+                position: -1
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring float value', function () {
+            $('#test').jec({
+                position: 2.2
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring string value', function () {
+            $('#test').jec({
+                position: '1'
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring boolean value', function () {
+            $('#test').jec({
+                position: true
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring undefined value', function () {
+            $('#test').jec({
+                position: undefined
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring null value', function () {
+            $('#test').jec({
+                position: null
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring object value', function () {
+            $('#test').jec({
+                position: {
+                    position: 1
+                }
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring array value', function () {
+            $('#test').jec({
+                position: [1]
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+        it('should set the editable option on the default ignoring function value', function () {
+            $('#test').jec({
+                position: function () {
+                    return 1;
+                }
+            });
+            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
+            reset($('#test'));
+        });
+    });
+    describe('Setting max length', function () {
+        it('should set the max length to 2', function () {
+            $('#test').jec({
+                maxLength: 2
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 2);
+            reset($('#test'));
+        });
+        it('should ignore invalid negative max length value', function () {
+            $('#test').jec({
+                maxLength: -1
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid float max length value', function () {
+            $('#test').jec({
+                maxLength: 1.2
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid string max length value', function () {
+            $('#test').jec({
+                maxLength: '1'
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid boolean max length value', function () {
+            $('#test').jec({
+                maxLength: true
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid undefined max length value', function () {
+            $('#test').jec({
+                maxLength: undefined
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid null max length value', function () {
+            $('#test').jec({
+                maxLength: null
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid object max length value', function () {
+            $('#test').jec({
+                maxLength: {
+                    maxLength: 1
+                }
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid array max length value', function () {
+            $('#test').jec({
+                maxLength: [1]
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+        it('should ignore invalid function max length value', function () {
+            $('#test').jec({
+                maxLength: function () {
+                    return 1;
+                }
+            });
+            key($('#test'), 72);
+            key($('#test'), 72);
+            key($('#test'), 72);
+            assert.lengthOf($('#test').jecValue(), 3);
+            reset($('#test'));
+        });
+    });
 });
 /*
-$(function () {
-    'use strict';
-
-    // hack for html validator (ol cannot be empty)
-    $('li').remove();
-
-    module('init');
-    test('Editable combobox initialization', function () {
-        expect(1);
-
-        $('#test').jec();
-        ok($('#test:editable').length === 1, 'Create combobox without any preferences');
-        reset($('#test'));
-    });
-
-    test('Keyboard', function () {
-        expect(6);
-
-        $('#test').jec();
-        key($('#test'), 72);
-        equal($('#test').jecValue(), 'H', 'Type letter H');
-        key($('#test'), 105);
-        equal($('#test').jecValue(), 'Hi', 'Type letter i');
-        key($('#test'), 32);
-        equal($('#test').jecValue(), 'Hi ', 'Type space');
-        key($('#test'), 33);
-        equal($('#test').jecValue(), 'Hi !', 'Type !');
-        key($('#test'), 8);
-        equal($('#test').jecValue(), 'Hi ', 'Backspace');
-        key($('#test'), 46);
-        equal($('#test').jecValue(), 'Hi', 'Delete');
-        reset($('#test'));
-    });
-
-    test('Setting: position', function () {
-        //expect(13);
-
-        $('#test').jec({ position: 0 });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position');
-        reset($('#test'));
-
-        $('#test').jec({ position: 1 });
-        ok($('#test').children('option').eq(1).filter('.jecEditableOption').length === 1,
-            'Editable option on second position');
-        reset($('#test'));
-
-        $('#test').jec({ position: 3 });
-        ok($('#test').children('option:last').filter('.jecEditableOption').length === 1,
-            'Editable option on last position');
-        reset($('#test'));
-
-        $('#test').jec({ position: 100 });
-        ok($('#test').children('option:last').filter('.jecEditableOption').length === 1,
-            'Editable option on last position (value greater then number of options)');
-        reset($('#test'));
-
-        $('#test').jec({ position: -1 });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (negative int)');
-        reset($('#test'));
-
-        $('#test').jec({ position: 1.2 });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (float)');
-        reset($('#test'));
-
-        $('#test').jec({ position: '1' });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (string)');
-        reset($('#test'));
-
-        $('#test').jec({ position: true });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (boolean)');
-        reset($('#test'));
-
-        $('#test').jec({ position: null });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (null)');
-        reset($('#test'));
-
-        $('#test').jec({ position: undefined });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ position: {} });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (object)');
-        reset($('#test'));
-
-        $('#test').jec({ position: [] });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (array)');
-        reset($('#test'));
-
-        $('#test').jec({ position: $ });
-        ok($('#test').children('option:first.jecEditableOption').length === 1,
-            'Editable option on first position (function)');
-        reset($('#test'));
-    });
-
-    test('Setting: maxLength', function () {
-        expect(10);
-
-        $('#test').jec({ maxLength: 2 });
-        key($('#test'), 72);
-        key($('#test'), 72);
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 2, 'Limiting max length');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: -1 });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Negative max length');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: 0.1 });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (float)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: '0' });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (string)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: true });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (bool)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: null });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (null)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: undefined });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: {} });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (object)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: [] });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (array)');
-        reset($('#test'));
-
-        $('#test').jec({ maxLength: $ });
-        key($('#test'), 72);
-        equal($('#test').jecValue().length, 1, 'Malformed max length (function)');
-        reset($('#test'));
-    });
-
     test('Setting: classes', function () {
         expect(15);
 
@@ -1603,6 +1655,4 @@ $(function () {
         $('#test').jecPref('acceptedKeys', $);
         deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
         reset($('#test'));
-    });
-});
-*/
+    });*/
