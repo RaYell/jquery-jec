@@ -1,21 +1,35 @@
 {
   "name": "jquery-jec",
+  "title": "jQuery Editable Combobox",
   "version": "1.3.4",
-  "description": "jQuery Editable Combobox",
-  "main": "jquery-jec.js",
+  "description": "Editable combobox implementation for jQuery",
+  "main": "dist/jquery-jec.js",
+  "author": {
+    "name": "Lukasz Rajchel",
+    "url": "http://rajchel.pl"
+  },
+  "homepage": "https://github.com/RaYell/jquery-jec",
   "directories": {
-    "test": "tests"
+    "test": "test"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/RaYell/jquery-jec"
   },
-  "author": "Lukasz Rajchel",
-  "license": "Apache",
+  "keywords": [
+    "jquery",
+    "combobox",
+    "jec"
+  ],
   "bugs": {
     "url": "https://github.com/RaYell/jquery-jec/issues"
   },
-  "homepage": "https://github.com/RaYell/jquery-jec",
+  "licenses": [
+    {
+      "type": "Apache",
+      "url": "https://github.com/RaYell/jquery-jec/blob/master/LICENSE"
+    }
+  ],
   "dependencies": {
       "jquery": "^2.1.1"
   },
