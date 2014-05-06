@@ -1,19 +1,15 @@
 /**
  * jQuery jEC (jQuery Editable Combobox) 1.3.4
- * http://code.google.com/p/jquery-jec
  *
- * Copyright (c) 2008-2012 Lukasz Rajchel (lukasz@rajchel.pl | http://rajchel.pl)
- * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
- * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ * Copyright (c) 2008-2012 Lukasz Rajchel
+ * Licensed under the Apache license (https://www.apache.org/licenses/LICENSE-2.0.html)
  *
- * Documentation :  http://code.google.com/p/jquery-jec/wiki/Documentation
- * Changelog     :  http://code.google.com/p/jquery-jec/wiki/Changelog
- *
+ * Website       :  https://github.com/RaYell/jquery-domec
  * Contributors  :  Lukasz Rajchel, Artem Orlov
  */
 
 /*jslint indent: 4, maxlen: 120 */
-/*global Array, Math, String, clearInterval, document, jQuery, setInterval*/
+/*global Math, String, jQuery*/
 /*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, bool,
 ceil, change, charCode, classes, click, css, data, destroy, disable, each, editable, enable, eq, expr, extend, filter,
 find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoreOptGroups, ignoredKeys, inArray, init,
@@ -26,7 +22,8 @@ value, valueIsEditable*/
     'use strict';
 
     $.jEC = (function () {
-        var pluginClass = 'jecEditableOption', options = {}, values = {}, lastKeyCode,
+        var pluginClass = 'jecEditableOption',
+            options = {}, values = {}, lastKeyCode,
             defaults, Validators, EventHandlers, Combobox;
 
         // for jQuery < 1.6
@@ -97,12 +94,13 @@ value, valueIsEditable*/
                 // handles keys pressed on select (backspace and delete must be handled
                 // in keydown event in order to work in IE)
                 keyDown: function (event) {
-                    var keyCode = getKeyCode(event), option, value;
+                    var keyCode = getKeyCode(event),
+                        option, value;
 
                     lastKeyCode = keyCode;
 
                     switch (keyCode) {
-                    case 8:  // backspace
+                    case 8: // backspace
                     case 46: // delete
                         option = $(this).find('option.' + pluginClass);
                         if (option.val().length >= 1) {
@@ -119,8 +117,10 @@ value, valueIsEditable*/
                 // handles the rest of the keys (keypress event gives more informations
                 // about pressed keys)
                 keyPress: function (event) {
-                    var keyCode = getKeyCode(event), opt = options[Combobox.getId($(this))],
-                        option, value, specialKeys, exit = false, text, select;
+                    var keyCode = getKeyCode(event),
+                        opt = options[Combobox.getId($(this))],
+                        option, value, specialKeys, exit = false,
+                        text, select;
 
                     if (keyCode !== 9 && keyCode !== 13 && keyCode !== 27) {
                         // special keys codes
@@ -215,7 +215,8 @@ value, valueIsEditable*/
                     Handles = (function () {
                         return {
                             integer: function (elem, name, value) {
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (opt !== undefined && Validators.integer(value) && value >= 0) {
                                     opt[name] = value;
                                     return true;
@@ -223,7 +224,8 @@ value, valueIsEditable*/
                                 return false;
                             },
                             bool: function (elem, name, value) {
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (opt !== undefined && typeof value === 'boolean') {
                                     opt[name] = value;
                                     return true;
@@ -234,7 +236,8 @@ value, valueIsEditable*/
                                 if (typeof value === 'string') {
                                     value = [value];
                                 }
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (opt !== undefined && $.isArray(value)) {
                                     opt[name] = value;
                                     return true;
@@ -242,13 +245,15 @@ value, valueIsEditable*/
                                 return false;
                             },
                             object: function (elem, name, value) {
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (opt !== undefined && value !== null && $.isPlainObject(value)) {
                                     opt[name] = value;
                                 }
                             },
                             keys: function (elem, name, value) {
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (opt !== undefined && $.isArray(value)) {
                                     opt[name] = parseKeys(value);
                                 }
@@ -259,7 +264,9 @@ value, valueIsEditable*/
                     return {
                         position: function (elem, value) {
                             if (Handles.integer(elem, 'position', value)) {
-                                var id = Combobox.getId(elem), opt = options[id], optionsCount;
+                                var id = Combobox.getId(elem),
+                                    opt = options[id],
+                                    optionsCount;
                                 optionsCount =
                                     elem.find('option:not(.' + pluginClass + ')').length;
                                 if (value > optionsCount) {
@@ -274,7 +281,8 @@ value, valueIsEditable*/
 
                         maxLength: function (elem, value) {
                             if (Handles.integer(elem, 'maxLength', value)) {
-                                var id = Combobox.getId(elem), opt = options[id];
+                                var id = Combobox.getId(elem),
+                                    opt = options[id];
                                 if (value < 0 || value > 255) {
                                     opt.maxLength = 255;
                                 }
@@ -338,14 +346,16 @@ value, valueIsEditable*/
 
                     return {
                         classes: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 removeClasses(elem, opt.classes);
                             }
                         },
 
                         optionClasses: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 removeClasses(elem.find('option.' + pluginClass),
                                     opt.optionClasses);
@@ -353,14 +363,16 @@ value, valueIsEditable*/
                         },
 
                         styles: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 removeStyles(elem, opt.styles);
                             }
                         },
 
                         optionStyles: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 removeStyles(elem.find('option.' + pluginClass),
                                     opt.optionStyles);
@@ -395,7 +407,8 @@ value, valueIsEditable*/
 
                     return {
                         position: function (elem) {
-                            var opt = options[Combobox.getId(elem)], option, uneditableOptions, container;
+                            var opt = options[Combobox.getId(elem)],
+                                option, uneditableOptions, container;
                             option = elem.find('option.' + pluginClass);
 
                             uneditableOptions = elem.find('option:not(.' + pluginClass + ')');
@@ -413,35 +426,40 @@ value, valueIsEditable*/
                         },
 
                         classes: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 setClasses(elem, opt.classes);
                             }
                         },
 
                         optionClasses: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 setClasses(elem.find('option.' + pluginClass), opt.optionClasses);
                             }
                         },
 
                         styles: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 setStyles(elem, opt.styles);
                             }
                         },
 
                         optionStyles: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined) {
                                 setStyles(elem.find('option.' + pluginClass), opt.optionStyles);
                             }
                         },
 
                         focusOnNewOption: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined && opt.focusOnNewOption) {
                                 elem.find(':not(option.' + pluginClass + ')').removeProp('selected');
                                 elem.find('option.' + pluginClass).prop('selected', true);
@@ -449,7 +467,8 @@ value, valueIsEditable*/
                         },
 
                         useExistingOptions: function (elem) {
-                            var id = Combobox.getId(elem), opt = options[id];
+                            var id = Combobox.getId(elem),
+                                opt = options[id];
                             if (opt !== undefined && opt.useExistingOptions) {
                                 Combobox.setEditableOption(elem);
                             }
@@ -524,7 +543,8 @@ value, valueIsEditable*/
                 // create editable combobox
                 init: function (settings) {
                     return $(this).filter(':uneditable').each(function () {
-                        var id = generateId(), elem = $(this);
+                        var id = generateId(),
+                            elem = $(this);
 
                         elem.data('jecId', id);
                         elem.data('jecActive', true);
@@ -632,7 +652,8 @@ value, valueIsEditable*/
                 enable: function () {
                     return $(this).filter(':editable').each(function () {
                         if (!$(this).data('jecActive')) {
-                            var id = Combobox.getId($(this)), value = values[id];
+                            var id = Combobox.getId($(this)),
+                                value = values[id];
                             $(this).data('jecActive', true);
 
                             setup($(this));
