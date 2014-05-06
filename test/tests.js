@@ -1,44 +1,41 @@
 /*jslint indent: 4, maxlen: 120 */
-/*global $, String, equal, expect, deepEqual, module, ok, test*/
-/*properties Event, acceptedKeys, andSelf, attr, bind, browser, children, classes, css, data, display, each, eq,
-filter, find, focus, focusOnNewOption, g1, hasClass, ignoreOptGroups, ignoredKeys, isPlainObject, jECTimer, jec,
-jecKill, jecOff, jecOn, jecPref, jecValue, k1, k2, k3, k4, k5, k6, keyCode, length, max, maxLength, min, opacity,
-opt1, opt2, opt3, optionClasses, optionStyles, position, prop, remove, removeAttr, replace, styles, text, trigger,
-triggerChangeEvent, unbind, useExistingOptions, val*/
+/*global describe, it, chai, $*/
+describe('JEC', function () {
+    'use strict';
+    var assert = chai.assert,
+        trim = function (str) {
+            return str.replace(/(^\s+)|(\s+$)/, '');
+        },
+        key = function (elem, code) {
+            var list = ['keydown', 'keypress', 'keyup'];
+            $.each(list, function () {
+                var e = $.Event(this, {
+                    keyCode: code
+                });
+                elem.trigger(e);
+            });
+        },
+        reset = function (elem) {
+            elem.jecKill();
+            elem.children('option[value=opt2]').prop('selected', true);
+            elem.val('opt2');
+            elem.children().andSelf().removeAttr('class');
+            elem.children().andSelf().removeAttr('style');
+        };
+    describe('Combobox initialization', function () {
+        it('should create a new combobox', function () {
+            $('#test').jec();
+            assert.lengthOf($('#test:editable'), 1);
+            reset($('#test'));
+        });
+    });
+});
+/*
 $(function () {
     'use strict';
 
     // hack for html validator (ol cannot be empty)
     $('li').remove();
-
-    // disable timers in order not to hang up the browser
-    $.jECTimer = null;
-
-    var trim, key, reset, isEmptyOrUndefined;
-
-    trim = function (str) {
-        return str.replace(/(^\s+)|(\s+$)/, '');
-    };
-
-    key = function (elem, code) {
-        var list = ['keydown', 'keypress', 'keyup'];
-        $.each(list, function () {
-            var e = $.Event(this, { keyCode: code });
-            elem.trigger(e);
-        });
-    };
-
-    reset = function (elem) {
-        elem.jecKill();
-        elem.children('option[value=opt2]').prop('selected', true);
-        elem.val('opt2');
-        elem.children().andSelf().removeAttr('class');
-        elem.children().andSelf().removeAttr('style');
-    };
-
-    isEmptyOrUndefined = function (value) {
-        return value === '' || value === undefined;
-    };
 
     module('init');
     test('Editable combobox initialization', function () {
@@ -1608,3 +1605,4 @@ $(function () {
         reset($('#test'));
     });
 });
+*/
