@@ -13,7 +13,7 @@ bower install jquery-jec
 Import plugin file after importing the jQuery library.
 
 ```html
-<script type="text/javascript" src="bower_components/jquery-jec/jquery-jec.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery-jec/src/jquery-jec.min.js"></script>
 ```
 
 ### Syntax
