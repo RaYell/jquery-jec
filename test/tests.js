@@ -13,11 +13,12 @@ describe('JEC', function () {
             });
         },
         init = function () {
-            var select1 = '<select id="test"><option>opt1</option><option selected>opt2</option><option>opt3</option></select>',
+            var select1 = '<select id="test"><option>opt1</option><option selected>opt2</option>' +
+                '<option>opt3</option></select>',
                 select2 = '<select id="gtest" class="hidden"><option>opt1</option>' +
-                    '<optgroup label="Group 1"><option selected>opt2</option>' +
-                    '<option>opt3</option></optgroup><optgroup label="Group 2">' +
-                    '<option>opt4</option></optgroup><option>opt5</option></select>';
+                '<optgroup label="Group 1"><option selected>opt2</option>' +
+                '<option>opt3</option></optgroup><optgroup label="Group 2">' +
+                '<option>opt4</option></optgroup><option>opt5</option></select>';
             $('#fixtures').empty().append(select1).append(select2);
         };
 
@@ -25,7 +26,8 @@ describe('JEC', function () {
         it('should create a new combobox', function () {
             init();
             var elem = $('#test').jec();
-            assert.equal(elem.is(':editable'), true);
+            assert.notEqual(elem.data('jecId'), undefined);
+            assert.notEqual(elem.data('jecId'), null);
         });
     });
 
@@ -822,7 +824,7 @@ describe('JEC', function () {
             var elem = $('#test').jec({
                 focusOnNewOption: false
             });
-            assert.equal(elem.val(), 'opt1');
+            assert.equal(elem.val(), 'opt2');
         });
         it('should ignore the invalid string value', function () {
             init();
@@ -889,8 +891,8 @@ describe('JEC', function () {
         it('should properly handle use existing options flag', function () {
             init();
             var elem = $('#test').jec({
-                    useExistingOptions: true
-                }),
+                useExistingOptions: true
+            }),
                 option = elem.children('.jecEditableOption');
             elem.children('option:eq(1)').prop('selected', true);
             elem.trigger('change');
@@ -908,8 +910,11 @@ describe('JEC', function () {
         it('should properly handle ignored keys', function () {
             init();
             var elem = $('#test').jec({
-                    ignoredKeys: [72, { min: 73, max: 75}]
-                }),
+                ignoredKeys: [72, {
+                    min: 73,
+                    max: 75
+                }]
+            }),
                 option = elem.children('.jecEditableOption');
             key(elem, 72);
             assert.equal(option.val(), '');
@@ -924,8 +929,11 @@ describe('JEC', function () {
         it('should properly handle accepted keys', function () {
             init();
             var elem = $('#test').jec({
-                    acceptedKeys: [72, { min: 73, max: 75}]
-                }),
+                acceptedKeys: [72, {
+                    min: 73,
+                    max: 75
+                }]
+            }),
                 option = elem.children('.jecEditableOption');
             key(elem, 72);
             assert.equal(option.val(), 'H');
