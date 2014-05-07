@@ -896,7 +896,90 @@ describe('JEC', function () {
             elem.trigger('change');
             assert.equal(option.val(), 'opt3');
         });
-        // todo: write tests for invalid values
+        it('should ignore value given as string', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: 'true'
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as int', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: 1
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as float', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: 1.2
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as undefined', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: undefined
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as null', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: null
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as array', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: [true]
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as object', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: {
+                    useExistingOptions: true
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as function', function () {
+            init();
+            var elem = $('#test').jec({
+                useExistingOptions: function () {
+                    return true;
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
     });
     describe('Setting ignored keys', function () {
         it('should properly handle ignored keys', function () {
