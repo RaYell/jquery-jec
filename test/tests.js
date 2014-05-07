@@ -1,8 +1,8 @@
 /*jslint indent: 4, maxlen: 120 */
-/*global describe, it, chai, $*/
+/*global describe, it, window, $*/
 describe('JEC', function () {
     'use strict';
-    var assert = chai.assert,
+    var assert = window.assert,
         key = function (elem, code) {
             var list = ['keydown', 'keypress', 'keyup'];
             $.each(list, function () {
