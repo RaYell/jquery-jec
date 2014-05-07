@@ -11,19 +11,10 @@ describe('JEC (init with JS)', function () {
                 });
                 elem.trigger(e);
             });
-        },
-        init = function () {
-            var select1 = '<select id="test"><option>opt1</option><option>opt2</option><option>opt3</option></select>',
-                select2 = '<select id="gtest" class="hidden"><option value="opt1">opt1</option>' +
-                    '<optgroup label="Group 1"><option value="opt2" selected="selected">opt2</option>' +
-                    '<option value="opt3">opt3</option></optgroup><optgroup label="Group 2">' +
-                    '<option value="opt4">opt4</option></optgroup><option value="opt5">opt5</option></select>';
-            $('#fixtures').empty().append(select1).append(select2);
         };
 
     describe('Combobox initialization', function () {
         it('should create a new combobox', function () {
-            init();
             var elem = $.jec();
             assert.equal(elem.is(':editable'), true);
         });
@@ -35,7 +26,6 @@ describe('JEC (init with JS)', function () {
 
     describe('Keyboard', function () {
         it('should behave correctly with keyboard', function () {
-            init();
             var elem = $.jec([{ opt1: 'opt1', opt2: 'opt2', opt3: 'opt3'}]),
                 option = elem.children('option.jecEditableOption');
             key(elem, 72);
