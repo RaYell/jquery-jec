@@ -14,7 +14,7 @@ require(['chai'], function (chai) {
 
     require(['jquery'], function () {
         require(['jec'], function () {
-            require(['tests.js'], function () {
+            require(['tests.js', 'tests-initjs.js'], function () {
                 mocha.run();
             });
         });
