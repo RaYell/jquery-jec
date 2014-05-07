@@ -16,8 +16,8 @@ find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignor
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
 keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
 position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
-setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val,
-value, valueIsEditable*/
+setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions,
+val, value, valueIsEditable*/
 (function ($) {
     'use strict';
 
@@ -244,7 +244,7 @@ value, valueIsEditable*/
                             },
                             array: function (elem, name, value) {
                                 if (typeof value === 'string') {
-                                    value = [value];
+                                    value = value.split(/\s+/);
                                 }
                                 var id = Combobox.getId(elem),
                                     opt = options[id];
