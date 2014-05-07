@@ -631,6 +631,7 @@ value, valueIsEditable*/
                                 }
                             });
                             /*jslint unparam: false*/
+                            elem.find('option:first').prop('selected');
                         }
                     };
 
