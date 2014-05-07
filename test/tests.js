@@ -158,7 +158,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: -1
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -170,7 +170,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: 1.2
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -182,7 +182,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: '1'
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -194,7 +194,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: true
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -206,7 +206,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: undefined
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -218,7 +218,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: null
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -232,7 +232,7 @@ describe('JEC', function () {
                         maxLength: 1
                     }
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -244,7 +244,7 @@ describe('JEC', function () {
                 elem = $('#test').jec({
                     maxLength: [1]
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
@@ -258,7 +258,7 @@ describe('JEC', function () {
                         return 1;
                     }
                 });
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i += 1) {
                 key(elem, 72);
             }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
