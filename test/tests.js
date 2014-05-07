@@ -19,546 +19,797 @@ describe('JEC', function () {
             elem.children().andSelf().removeAttr('class').addClass('hidden');
             elem.children().andSelf().removeAttr('style');
         };
+
     describe('Combobox initialization', function () {
         it('should create a new combobox', function () {
-            $('#test').jec();
-            assert.lengthOf($('#test:editable'), 1);
-            reset($('#test'));
+            var elem = $('#test').jec();
+            assert.equal(elem.is(':editable'), true);
+            reset(elem);
         });
     });
+
     describe('Keyboard', function () {
         it('should behave correctly with keyboard', function () {
-            $('#test').jec();
+            var elem = $('#test').jec(),
+                option = elem.children('option.jecEditableOption');
             key($('#test'), 72);
-            assert.equal($('#test').jecValue(), 'H');
+            assert.equal(option.val(), 'H');
             key($('#test'), 105);
-            assert.equal($('#test').jecValue(), 'Hi');
+            assert.equal(option.val(), 'Hi');
             key($('#test'), 32);
-            assert.equal($('#test').jecValue(), 'Hi ');
+            assert.equal(option.val(), 'Hi ');
             key($('#test'), 33);
-            assert.equal($('#test').jecValue(), 'Hi !');
+            assert.equal(option.val(), 'Hi !');
             key($('#test'), 8);
-            assert.equal($('#test').jecValue(), 'Hi ');
+            assert.equal(option.val(), 'Hi ');
             key($('#test'), 46);
-            assert.equal($('#test').jecValue(), 'Hi');
-            reset($('#test'));
+            assert.equal(option.val(), 'Hi');
+            reset(elem);
         });
     });
+
     describe('Setting position', function () {
-        it('should set the editable option on the first position', function () {
-            $('#test').jec({
-                position: 0
-            });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+        it('should set the editable option on the specific position', function () {
+            var position = 1,
+                elem = $('#test').jec({
+                    position: position
+                });
+            assert.equal(elem.children('option').eq(position).hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the last position', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: 3
             });
-            assert.lengthOf($('#test').children('option:last.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:last').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the last position (big value)', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: 100
             });
-            assert.lengthOf($('#test').children('option:last.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:last').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring negative value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: -1
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring float value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: 2.2
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring string value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: '1'
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring boolean value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: true
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring undefined value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: undefined
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring null value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: null
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring object value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: {
                     position: 1
                 }
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring array value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: [1]
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
         it('should set the editable option on the default ignoring function value', function () {
-            $('#test').jec({
+            var elem = $('#test').jec({
                 position: function () {
                     return 1;
                 }
             });
-            assert.lengthOf($('#test').children('option:first.jecEditableOption'), 1);
-            reset($('#test'));
+            assert.equal(elem.children('option:first').hasClass('jecEditableOption'), true);
+            reset(elem);
         });
     });
+
     describe('Setting max length', function () {
         it('should set the max length to 2', function () {
-            $('#test').jec({
-                maxLength: 2
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 2);
-            reset($('#test'));
+            var length = 2,
+                elem = $('#test').jec({
+                    maxLength: length
+                });
+            key(elem, 72);
+            key(elem, 72);
+            key(elem, 72);
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid negative max length value', function () {
-            $('#test').jec({
-                maxLength: -1
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: -1
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid float max length value', function () {
-            $('#test').jec({
-                maxLength: 1.2
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: 1.2
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid string max length value', function () {
-            $('#test').jec({
-                maxLength: '1'
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: '1'
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid boolean max length value', function () {
-            $('#test').jec({
-                maxLength: true
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: true
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid undefined max length value', function () {
-            $('#test').jec({
-                maxLength: undefined
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: undefined
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid null max length value', function () {
-            $('#test').jec({
-                maxLength: null
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: null
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid object max length value', function () {
-            $('#test').jec({
-                maxLength: {
-                    maxLength: 1
-                }
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: {
+                        maxLength: 1
+                    }
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid array max length value', function () {
-            $('#test').jec({
-                maxLength: [1]
-            });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: [1]
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
         });
         it('should ignore invalid function max length value', function () {
-            $('#test').jec({
-                maxLength: function () {
-                    return 1;
+            var i,
+                length = 10,
+                elem = $('#test').jec({
+                    maxLength: function () {
+                        return 1;
+                    }
+                });
+            for (i = 0; i < length; i++) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+            reset(elem);
+        });
+    });
+
+    describe('Setting classes', function () {
+        it('should not set any additional classes given as empty string', function () {
+            var elem = $('#test').jec({
+                classes: ''
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should set an additional class given as string', function () {
+            var className = 'myClass1',
+                elem = $('#test').jec({
+                    classes: className
+                });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 2);
+            assert.equal(elem.hasClass(className), true);
+            reset(elem);
+        });
+        it('should set multiple additional class given as string', function () {
+            var className1 = 'myClass1',
+                className2 = 'myClass2',
+                elem = $('#test').jec({
+                    classes: className1 + ' ' + className2
+                });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 3);
+            assert.equal(elem.hasClass(className1), true);
+            assert.equal(elem.hasClass(className2), true);
+            reset(elem);
+        });
+        it('should not set any additional classes given as empty array', function () {
+            var elem = $('#test').jec({
+                classes: []
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should set an additional class given as array', function () {
+            var className = 'myClass1',
+                elem = $('#test').jec({
+                    classes: [className]
+                });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 2);
+            assert.equal(elem.hasClass(className), true);
+            reset(elem);
+        });
+        it('should set multiple additional class given as array', function () {
+            var className1 = 'myClass1',
+                className2 = 'myClass2',
+                elem = $('#test').jec({
+                    classes: [className1, className2]
+                });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 3);
+            assert.equal(elem.hasClass(className1), true);
+            assert.equal(elem.hasClass(className2), true);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as int', function () {
+            var elem = $('#test').jec({
+                classes: 1
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as float', function () {
+            var elem = $('#test').jec({
+                classes: 1.2
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as boolean', function () {
+            var elem = $('#test').jec({
+                classes: true
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as undefined', function () {
+            var elem = $('#test').jec({
+                classes: undefined
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as null', function () {
+            var elem = $('#test').jec({
+                classes: null
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as object', function () {
+            var elem = $('#test').jec({
+                classes: {
+                    classes: 'myClass1'
                 }
             });
-            key($('#test'), 72);
-            key($('#test'), 72);
-            key($('#test'), 72);
-            assert.lengthOf($('#test').jecValue(), 3);
-            reset($('#test'));
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as function', function () {
+            var elem = $('#test').jec({
+                classes: function () {
+                    return 'myClass';
+                }
+            });
+            assert.lengthOf(elem.attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+    });
+
+    describe('Setting option classes', function () {
+        it('should not set any additional classes given as empty string', function () {
+            var elem = $('#test').jec({
+                optionClasses: ''
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should set an additional class given as string', function () {
+            var className = 'myClass1',
+                elem = $('#test').jec({
+                    optionClasses: className
+                }),
+                option = elem.children('.jecEditableOption');
+            assert.lengthOf(option.attr('class').split(/\s+/), 2);
+            assert.equal(option.hasClass(className), true);
+            reset(elem);
+        });
+        it('should set multiple additional class given as string', function () {
+            var className1 = 'myClass1',
+                className2 = 'myClass2',
+                elem = $('#test').jec({
+                    optionClasses: className1 + ' ' + className2
+                }),
+                option = elem.children('.jecEditableOption');
+            assert.lengthOf(option.attr('class').split(/\s+/), 3);
+            assert.equal(option.hasClass(className1), true);
+            assert.equal(option.hasClass(className2), true);
+            reset(elem);
+        });
+        it('should not set any additional classes given as empty array', function () {
+            var elem = $('#test').jec({
+                optionClasses: []
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should set an additional class given as array', function () {
+            var className = 'myClass1',
+                elem = $('#test').jec({
+                    optionClasses: [className]
+                }),
+                option = elem.children('.jecEditableOption');
+            assert.lengthOf(option.attr('class').split(/\s+/), 2);
+            assert.equal(option.hasClass(className), true);
+            reset(elem);
+        });
+        it('should set multiple additional class given as array', function () {
+            var className1 = 'myClass1',
+                className2 = 'myClass2',
+                elem = $('#test').jec({
+                    optionClasses: [className1, className2]
+                }),
+                option = elem.children('.jecEditableOption');
+            assert.lengthOf(option.attr('class').split(/\s+/), 3);
+            assert.equal(option.hasClass(className1), true);
+            assert.equal(option.hasClass(className2), true);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as int', function () {
+            var elem = $('#test').jec({
+                optionClasses: 1
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as float', function () {
+            var elem = $('#test').jec({
+                optionClasses: 1.2
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as boolean', function () {
+            var elem = $('#test').jec({
+                optionClasses: true
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as undefined', function () {
+            var elem = $('#test').jec({
+                optionClasses: undefined
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as null', function () {
+            var elem = $('#test').jec({
+                optionClasses: null
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as object', function () {
+            var elem = $('#test').jec({
+                optionClasses: {
+                    optionClasses: 'myClass1'
+                }
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+        it('should fail to set any additional classes given as function', function () {
+            var elem = $('#test').jec({
+                optionClasses: function () {
+                    return 'myClass';
+                }
+            });
+            assert.lengthOf(elem.children('.jecEditableOption').attr('class').split(/\s+/), 1);
+            reset(elem);
+        });
+    });
+
+    describe('Setting styles', function () {
+        it('should not set any additional styles given as empty object', function () {
+            var elem = $('#test').jec({
+                styles: {}
+            });
+            assert.equal(elem.css('opacity'), 1);
+            reset(elem);
+        });
+        it('should change the opacity to 0.5', function () {
+            var opacity = 0.5,
+                elem = $('#test').jec({
+                    styles: {
+                        opacity: opacity
+                    }
+                });
+            assert.equal(elem.css('opacity'), opacity);
+            reset(elem);
+        });
+        it('should change the opacity to 0.5 and display to none', function () {
+            var opacity = 0.5,
+                display = 'none',
+                elem = $('#test').jec({
+                    styles: {
+                        opacity: opacity,
+                        display: display
+                    }
+                });
+            assert.equal(elem.css('opacity'), opacity);
+            assert.equal(elem.css('display'), display);
+            reset(elem);
+        });
+        it('should not set any additional styles given as string', function () {
+            var elem = $('#test').jec({
+                styles: 'opacity: 0.5;'
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as int', function () {
+            var elem = $('#test').jec({
+                styles: 1
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as float', function () {
+            var elem = $('#test').jec({
+                styles: 1.2
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as undefined', function () {
+            var elem = $('#test').jec({
+                styles: undefined
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as null', function () {
+            var elem = $('#test').jec({
+                styles: null
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as boolean', function () {
+            var elem = $('#test').jec({
+                styles: true
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as array', function () {
+            var elem = $('#test').jec({
+                styles: ['opacity: 0.5;']
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as function', function () {
+            var elem = $('#test').jec({
+                styles: function () {
+                    return 'opacity: 0.5;';
+                }
+            });
+            assert.equal(elem.attr('style'), undefined);
+            reset(elem);
+        });
+    });
+
+    describe('Setting option styles', function () {
+        it('should not set any additional styles given as empty object', function () {
+            var elem = $('#test').jec({
+                optionStyles: {}
+            });
+            assert.equal(elem.children('.jecEditableOption').css('opacity'), 1);
+            reset(elem);
+        });
+        it('should change the opacity to 0.5', function () {
+            var opacity = 0.5,
+                elem = $('#test').jec({
+                    optionStyles: {
+                        opacity: opacity
+                    }
+                });
+            assert.equal(elem.children('.jecEditableOption').css('opacity'), opacity);
+            reset(elem);
+        });
+        it('should change the opacity to 0.5 and display to none', function () {
+            var opacity = 0.5,
+                display = 'none',
+                elem = $('#test').jec({
+                    optionStyles: {
+                        opacity: opacity,
+                        display: display
+                    }
+                }),
+                option = elem.children('.jecEditableOption');
+            assert.equal(option.css('opacity'), opacity);
+            assert.equal(option.css('display'), display);
+            reset(elem);
+        });
+        it('should not set any additional styles given as string', function () {
+            var elem = $('#test').jec({
+                optionStyles: 'opacity: 0.5;'
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as int', function () {
+            var elem = $('#test').jec({
+                optionStyles: 1
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as float', function () {
+            var elem = $('#test').jec({
+                optionStyles: 1.2
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as undefined', function () {
+            var elem = $('#test').jec({
+                optionStyles: undefined
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as null', function () {
+            var elem = $('#test').jec({
+                optionStyles: null
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as boolean', function () {
+            var elem = $('#test').jec({
+                optionStyles: true
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as array', function () {
+            var elem = $('#test').jec({
+                optionStyles: ['opacity: 0.5;']
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+        it('should not set any additional styles given as function', function () {
+            var elem = $('#test').jec({
+                optionStyles: function () {
+                    return 'opacity: 0.5;';
+                }
+            });
+            assert.equal(elem.children('.jecEditableOption').attr('style'), undefined);
+            reset(elem);
+        });
+    });
+    describe('Setting trigger change event handler', function () {
+        it('should respect attached change event handler', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: true
+                });
+            key(elem, 72);
+            assert.equal(val, 1);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore change event handler', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: false
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as string', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: 'true'
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as int', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: 1
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as float', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: 1.2
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as undefined', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: undefined
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as null', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: null
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as object', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: {
+                        triggerChangeEvent: true
+                    }
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as array', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: [true]
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
+        });
+        it('should ignore setting change event handler flag given as function', function () {
+            var val = 0,
+                handler = function () {
+                    val = 1;
+                },
+                elem = $('#test').on('change', handler).jec({
+                    triggerChangeEvent: function () {
+                        return true;
+                    }
+                });
+            key(elem, 72);
+            assert.equal(val, 0);
+            elem.off('change', handler);
+            reset(elem);
         });
     });
 });
 /*
-    test('Setting: classes', function () {
-        expect(15);
-
-        var c1 = 'class1', c2 = 'class2';
-
-        $('#test').jec({ classes: '' });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (string)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: c1 });
-        ok($('#test').hasClass(c1), 'One extra class (string)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: c1 + ' ' + c2 });
-        ok($('#test').hasClass(c1), 'Several extra classes  - checking c1 class (string)');
-        ok($('#test').hasClass(c2), 'Several extra classes  - checking c2 class (string)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: [] });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (array)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: [c1] });
-        ok($('#test').hasClass(c1), 'One extra class (array)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: [c1, c2] });
-        ok($('#test').hasClass(c1), 'Several extra classes - checking c1 class (array)');
-        ok($('#test').hasClass(c2), 'Several extra classes - checking c1 class (array)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: 1 });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (int)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: 1.2 });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (float)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: true });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (boolean)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: null });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (null)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: undefined });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: {} });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (object)');
-        reset($('#test'));
-
-        $('#test').jec({ classes: $ });
-        ok(isEmptyOrUndefined($('#test').attr('class')), 'No extra classes (function)');
-        reset($('#test'));
-    });
-
-    test('Setting: optionClasses', function () {
-        expect(15);
-
-        var c1 = 'c1', c2 = 'c2';
-
-        $('#test').jec({ optionClasses: '' });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (string)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: c1 });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1),
-            'One extra class (string)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: c1 + ' ' + c2 });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1),
-            'Several extra classes - checking c1 class(string)');
-        ok($('#test').children('option.jecEditableOption').hasClass(c2),
-            'Several extra classes - checking c2 class(string)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: [] });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (array)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: [c1] });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1),
-            'One extra class (array)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: [c1, c2] });
-        ok($('#test').children('option.jecEditableOption').hasClass(c1),
-             'Several extra classes - checking c1 class (array)');
-        ok($('#test').children('option.jecEditableOption').hasClass(c2),
-             'Several extra classes - checking c1 class (array)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: 1 });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (int)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: 1.2 });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (float)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: true });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (boolean)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: null });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (null)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: undefined });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: {} });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (object)');
-        reset($('#test'));
-
-        $('#test').jec({ optionClasses: $ });
-        ok(trim($('#test').children('option.jecEditableOption').attr('class')) ===
-            'jecEditableOption', 'No extra classes (function)');
-        reset($('#test'));
-    });
-
-    test('Setting: styles', function () {
-        expect(12);
-
-        var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'none', obj = {};
-
-        $('#test').jec({ styles: obj });
-        equal($('#test').css(s1), '1', 'No extra styles');
-        reset($('#test'));
-
-        obj[s1] = v1;
-        $('#test').jec({ styles: obj });
-        equal($('#test').css(s1), v1, 'Opacity changed');
-        reset($('#test'));
-
-        obj[s2] = v2;
-        $('#test').jec({ styles: obj });
-        equal($('#test').css(s1), v1, 'Opacity and display changed, checking opacity');
-        equal($('#test').css(s2), v2, 'Opacity and display changed, checking display');
-        reset($('#test'));
-
-        $('#test').jec({ styles: 'width: 100px' });
-        equal($('#test').css(s1), '1', 'No extra styles (string)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: 0 });
-        equal($('#test').css(s1), '1', 'No extra styles (int)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: 0.5 });
-        equal($('#test').css(s1), '1', 'No extra styles (float)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: true });
-        equal($('#test').css(s1), '1', 'No extra styles (boolean)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: null });
-        equal($('#test').css(s1), '1', 'No extra styles (null)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: undefined });
-        equal($('#test').css(s1), '1', 'No extra styles (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: [] });
-        equal($('#test').css(s1), '1', 'No extra styles (array)');
-        reset($('#test'));
-
-        $('#test').jec({ styles: $ });
-        equal($('#test').css(s1), '1', 'No extra styles (function)');
-        reset($('#test'));
-    });
-
-    test('Setting: optionStyles', function () {
-        expect(12);
-
-        var s1 = 'opacity', v1 = '0.5', s2 = 'display', v2 = 'none', obj = {};
-
-        $('#test').jec({ optionStyles: obj });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles');
-        reset($('#test'));
-
-        obj[s1] = v1;
-        $('#test').jec({ optionStyles: obj });
-        equal($('#test option.jecEditableOption').css(s1), v1, 'Opacity changed');
-        reset($('#test'));
-
-        obj[s2] = v2;
-        $('#test').jec({ optionStyles: obj });
-        equal($('#test option.jecEditableOption').css(s1), v1,
-            'Opacity and display changed, checking opacity');
-        equal($('#test option.jecEditableOption').css(s2), v2,
-            'Opacity and display changed, checking display');
-        reset($('#test'));
-
-        $('#test').jec({ styles: 'width: 100px' });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (string)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: 0 });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (int)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: 0.5 });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (float)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: true });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (boolean)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: null });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (null)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: undefined });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (undefined)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: [] });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (array)');
-        reset($('#test'));
-
-        $('#test').jec({ optionStyles: $ });
-        equal($('#test option.jecEditableOption').css(s1), '1', 'No extra styles (function)');
-        reset($('#test'));
-    });
-
-    test('Setting: triggerChangeEvent', function () {
-        expect(10);
-
-        var val = null;
-
-        function testHandler() {
-            val = 1;
-        }
-
-        $('#test').bind('change', testHandler);
-
-        $('#test').jec({ triggerChangeEvent: true });
-        key($('#test'), 72);
-        equal(val, 1, 'Run change event handler');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: false });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore change event handler');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: '' });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (string)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: 1 });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (int)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: 1.2 });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (float)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: undefined });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (undefined)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: null });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (null)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: {} });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (object)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: [] });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (array)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').jec({ triggerChangeEvent: $ });
-        key($('#test'), 72);
-        equal(val, null, 'Ignore malformed parameter (function)');
-        reset($('#test'));
-        val = null;
-
-        $('#test').unbind('change', testHandler);
-    });
-
     test('Setting: focusOnNewOption', function () {
         expect(10);
 
