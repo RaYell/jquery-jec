@@ -14,8 +14,12 @@ require(['chai'], function (chai) {
 
     require(['jquery'], function () {
         require(['jec'], function () {
-            require(['tests.js', 'tests-initjs.js'], function () {
-                mocha.run();
+            require(['tests.js'], function () {
+                require(['tests-initjs.js'], function () {
+                    require(['tests-other.js'], function () {
+                        mocha.run();
+                    });
+                });
             });
         });
     });
