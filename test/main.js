@@ -5,6 +5,14 @@ require.config({
         chai: '../node_modules/chai/chai',
         jquery: '../node_modules/jquery/dist/jquery.min',
         jec: '../src/jquery-jec'
+    },
+    shim: {
+        init: [
+            'jquery'
+        ],
+        jec: [
+            'jquery'
+        ]
     }
 });
 
@@ -13,12 +21,10 @@ require(['chai'], function (chai) {
     window.assert = chai.assert;
     mocha.setup('bdd');
 
-    require(['jquery'], function () {
-        require(['init', 'jec'], function (init) {
-            window.init = init.reset;
-            require(['core.js', 'init-js.js', 'value.js', 'pref.js', 'other.js'], function () {
-                mocha.run();
-            });
+    require(['init', 'jec'], function (init) {
+        window.init = init.reset;
+        require(['core.js', 'init-js.js', 'value.js', 'pref.js', 'other.js'], function () {
+            mocha.run();
         });
     });
 });

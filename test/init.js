@@ -1,6 +1,6 @@
 /*jslint indent: 4, maxlen: 120 */
-/*global define, $*/
-define('init', function () {
+/*global define*/
+define('init', ['jquery'], function ($) {
     'use strict';
     return {
         reset: function () {
