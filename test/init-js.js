@@ -247,14 +247,26 @@ describe('JEC (init with JS)', function () {
 
     describe('Setting max length', function () {
         it('should set the max length to 2', function () {
-            var length = 2,
+            var i,
+                length = 2,
                 elem = $.jec(['opt1', 'opt2', 'opt3'], {
                     maxLength: length
                 });
-            key(elem, 72);
-            key(elem, 72);
-            key(elem, 72);
+            for (i = 0; i < length + 1; i += 1) {
+                key(elem, 72);
+            }
             assert.lengthOf(elem.children('.jecEditableOption').val(), length);
+        });
+        it('should ignore too big max length value', function () {
+            var i,
+                length = 260,
+                elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                    maxLength: -1
+                });
+            for (i = 0; i < length; i += 1) {
+                key(elem, 72);
+            }
+            assert.lengthOf(elem.children('.jecEditableOption').val(), 255);
         });
         it('should ignore invalid negative max length value', function () {
             var i,
@@ -928,7 +940,82 @@ describe('JEC (init with JS)', function () {
             elem.trigger('change');
             assert.equal(option.val(), 'opt3');
         });
-        // todo: write tests for invalid values
+        it('should ignore value given as string', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: 'true'
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as int', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: 1
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as float', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: 1.2
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as undefined', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: undefined
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as null', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: null
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as array', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: [true]
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as object', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: {
+                    useExistingOptions: true
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
+        it('should ignore value given as function', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                useExistingOptions: function () {
+                    return true;
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            elem.children('option:eq(1)').prop('selected', true);
+            elem.trigger('change');
+            assert.equal(option.val(), '');
+        });
     });
     describe('Setting ignored keys', function () {
         it('should properly handle ignored keys', function () {
@@ -946,7 +1033,74 @@ describe('JEC (init with JS)', function () {
             key(elem, 76);
             assert.equal(option.val(), 'L');
         });
-        // todo: write tests for invalid values
+        it('should ignore setting ignored keys given as string', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: '76'
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as int', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: 76
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as float', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: 76.1
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as boolean', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: true
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as undefined', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: undefined
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as null', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: null
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as object', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: {
+                    ignoredKeys: [76]
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
+        it('should ignore setting ignored keys given as function', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                ignoredKeys: function () {
+                    return 76;
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 76);
+            assert.equal(option.val(), 'L');
+        });
     });
     describe('Setting accepted keys', function () {
         it('should properly handle accepted keys', function () {
@@ -964,7 +1118,74 @@ describe('JEC (init with JS)', function () {
             key(elem, 76);
             assert.equal(option.val(), 'HJ');
         });
-        // todo: write tests for invalid values
+        it('should ignore setting accepted keys given as string', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: '76'
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as int', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: 76
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as float', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: 76.1
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as undefined', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: undefined
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as null', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: null
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as boolean', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: true
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as object', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: {
+                    acceptedKeys: [76]
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
+        it('should ignore setting accepted keys given as function', function () {
+            var elem = $.jec(['opt1', 'opt2', 'opt3'], {
+                acceptedKeys: function () {
+                    return 76;
+                }
+            }),
+                option = elem.children('.jecEditableOption');
+            key(elem, 72);
+            assert.equal(option.val(), 'H');
+        });
     });
     describe('Setting ignore option groups', function () {
         it('should correctly position editable option', function () {
