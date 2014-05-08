@@ -16,6 +16,7 @@ if (typeof require === 'function') {
 }
 
 beforeEach(function () {
+    'use strict';
     var select1 = '<select id="test"><option>opt1</option><option selected>opt2</option>' +
         '<option>opt3</option></select>',
         select2 = '<select id="gtest" class="hidden"><option>opt1</option>' +
@@ -26,6 +27,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
+    'use strict';
     $('#fixtures').empty();
 });
 
