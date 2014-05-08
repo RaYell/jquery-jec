@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.3.4
+ * jQuery jEC (jQuery Editable Combobox) 1.4.0
  *
  * Copyright (c) 2008-2012 Lukasz Rajchel
  * Licensed under the Apache license (https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -16,7 +16,7 @@ find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignor
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
 keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, on, off, optionClasses, optionStyles, parent,
 parents, position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
-setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, uneditable, useExistingOptions, val
+setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, uneditable, useExistingOptions, val,
 value*/
 (function ($) {
     'use strict';

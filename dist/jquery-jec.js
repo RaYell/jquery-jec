@@ -1,5 +1,5 @@
 /**
- * jQuery jEC (jQuery Editable Combobox) 1.3.4
+ * jQuery jEC (jQuery Editable Combobox) 1.4.0
  *
  * Copyright (c) 2008-2012 Lukasz Rajchel
  * Licensed under the Apache license (https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -10,14 +10,14 @@
 
 /*jslint indent: 4, maxlen: 120 */
 /*global Math, String, jQuery*/
-/*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, bool,
+/*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bool,
 ceil, change, charCode, classes, click, css, data, destroy, disable, each, editable, enable, eq, expr, extend, filter,
 find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoreOptGroups, ignoredKeys, inArray, init,
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
-keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
-position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
-setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val,
-value, valueIsEditable*/
+keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, on, off, optionClasses, optionStyles, parent,
+parents, position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
+setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, uneditable, useExistingOptions, val,
+value*/
 (function ($) {
     'use strict';
 
@@ -30,22 +30,6 @@ value, valueIsEditable*/
             Validators,
             EventHandlers,
             Combobox;
-
-        // for jQuery < 1.6
-        if ($.fn.prop === undefined) {
-            $.fn.extend({
-                'prop': function (key, valueSet) {
-                    if (valueSet) {
-                        $(this).attr(key, key);
-                    } else {
-                        $(this).removeAttr(key);
-                    }
-                },
-                'removeProp': function (key) {
-                    $(this).removeAttr(key);
-                }
-            });
-        }
 
         defaults = {
             position: 0,
@@ -83,9 +67,7 @@ value, valueIsEditable*/
         }());
 
         EventHandlers = (function () {
-            var getKeyCode;
-
-            getKeyCode = function (event) {
+            var getKeyCode = function (event) {
                 var charCode = event.charCode;
                 if (charCode !== undefined && charCode !== 0) {
                     return charCode;
@@ -244,7 +226,7 @@ value, valueIsEditable*/
                             },
                             array: function (elem, name, value) {
                                 if (typeof value === 'string') {
-                                    value = [value];
+                                    value = value.split(/\s+/);
                                 }
                                 var id = Combobox.getId(elem),
                                     opt = options[id];
@@ -276,9 +258,7 @@ value, valueIsEditable*/
                             if (Handles.integer(elem, 'position', value)) {
                                 var id = Combobox.getId(elem),
                                     opt = options[id],
-                                    optionsCount;
-                                optionsCount =
-                                    elem.find('option:not(.' + pluginClass + ')').length;
+                                    optionsCount = elem.find('option:not(.' + pluginClass + ')').length;
                                 if (value > optionsCount) {
                                     opt.position = optionsCount;
                                 }
@@ -336,7 +316,6 @@ value, valueIsEditable*/
                         }
                     };
                 }());
-
                 Remove = (function () {
                     var removeClasses, removeStyles;
 
@@ -397,7 +376,6 @@ value, valueIsEditable*/
                         }
                     };
                 }());
-
                 Handle = (function () {
                     var setClasses, setStyles;
 
@@ -435,6 +413,13 @@ value, valueIsEditable*/
                             } else {
                                 elem.append(option);
                             }
+                        },
+
+                        maxLength: function (elem) {
+                            var opt = options[Combobox.getId(elem)],
+                                option = elem.find('option.' + pluginClass),
+                                val = option.text().substring(0, opt.maxLength);
+                            option.text(val).val(val);
                         },
 
                         classes: function (elem) {
@@ -514,21 +499,21 @@ value, valueIsEditable*/
                             elem.append(editableOption);
                         }
 
-                        elem.bind('keydown', EventHandlers.keyDown);
-                        elem.bind('keypress', EventHandlers.keyPress);
-                        elem.bind('keyup', EventHandlers.keyUp);
-                        elem.bind('change', EventHandlers.change);
-                        elem.bind('click', EventHandlers.click);
+                        elem.on('keydown', EventHandlers.keyDown);
+                        elem.on('keypress', EventHandlers.keyPress);
+                        elem.on('keyup', EventHandlers.keyUp);
+                        elem.on('change', EventHandlers.change);
+                        elem.on('click', EventHandlers.click);
                     },
 
                     destroy: function (elem) {
                         elem.find('option.' + pluginClass).remove();
 
-                        elem.unbind('keydown', EventHandlers.keyDown);
-                        elem.unbind('keypress', EventHandlers.keyPress);
-                        elem.unbind('keyup', EventHandlers.keyUp);
-                        elem.unbind('change', EventHandlers.change);
-                        elem.unbind('click', EventHandlers.click);
+                        elem.off('keydown', EventHandlers.keyDown);
+                        elem.off('keypress', EventHandlers.keyPress);
+                        elem.off('keyup', EventHandlers.keyUp);
+                        elem.off('change', EventHandlers.change);
+                        elem.off('click', EventHandlers.click);
                     }
                 };
             }());
@@ -620,32 +605,30 @@ value, valueIsEditable*/
 
                 // creates editable combobox without using existing select elements
                 initJS: function (options, settings) {
-                    var select, addOptions;
-
-                    select = $('<select>');
-
-                    addOptions = function (elem, options) {
-                        if ($.isArray(options)) {
-                            /*jslint unparam: true*/
-                            $.each(options, function (i, val) {
-                                if ($.isPlainObject(val)) {
-                                    $.each(val, function (key, value) {
-                                        if ($.isArray(value)) {
-                                            var og = $('<optgroup>').attr('label', key);
-                                            addOptions(og, value);
-                                            og.appendTo(select);
-                                        } else if (typeof value === 'number' || typeof value === 'string') {
-                                            $('<option>').text(value).attr('value', key)
-                                                .appendTo(elem);
-                                        }
-                                    });
-                                } else if (typeof val === 'string' || typeof val === 'number') {
-                                    $('<option>').text(val).attr('value', val).appendTo(elem);
-                                }
-                            });
-                            /*jslint unparam: false*/
-                        }
-                    };
+                    var select = $('<select>'),
+                        addOptions = function (elem, options) {
+                            if ($.isArray(options)) {
+                                /*jslint unparam: true*/
+                                $.each(options, function (i, val) {
+                                    if ($.isPlainObject(val)) {
+                                        $.each(val, function (key, value) {
+                                            if ($.isArray(value)) {
+                                                var og = $('<optgroup>').attr('label', key);
+                                                addOptions(og, value);
+                                                og.appendTo(select);
+                                            } else if (typeof value === 'number' || typeof value === 'string') {
+                                                $('<option>').text(value).attr('value', key)
+                                                    .appendTo(elem);
+                                            }
+                                        });
+                                    } else if (typeof val === 'string' || typeof val === 'number') {
+                                        $('<option>').text(val).attr('value', val).appendTo(elem);
+                                    }
+                                });
+                                /*jslint unparam: false*/
+                                elem.find('option:first').prop('selected');
+                            }
+                        };
 
                     addOptions(select, options);
 
@@ -727,6 +710,10 @@ value, valueIsEditable*/
                                     Parameters.Set.position($(this), value);
                                     Parameters.Handle.position($(this));
                                     break;
+                                case 'maxLength':
+                                    Parameters.Set.maxLength($(this), value);
+                                    Parameters.Handle.maxLength($(this));
+                                    break;
                                 case 'classes':
                                     Parameters.Remove.classes($(this));
                                     Parameters.Set.classes($(this), value);
@@ -776,10 +763,6 @@ value, valueIsEditable*/
                 // get combobox id
                 getId: function (elem) {
                     return elem.data('jecId');
-                },
-
-                valueIsEditable: function (elem) {
-                    return elem.find('option.' + pluginClass).get(0) === elem.find('option:selected').get(0);
                 }
             };
         }());
