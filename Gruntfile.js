@@ -48,7 +48,7 @@ module.exports = function (grunt) {
                     'test/*.html'
                 ],
                 options: {
-                    threshold: 90,
+                    threshold: 100,
                     run: true
                 }
             }

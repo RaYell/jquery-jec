@@ -78,3 +78,44 @@ describe('Kill', function () {
         });
     });
 });
+
+describe('Other', function () {
+    'use strict';
+    var assert = window.assert,
+        init = window.init;
+
+    it('should remove classes when destroyed', function () {
+        init();
+        var elem = $('#test').jec({
+            classes: ['myClass1', 'myClass2']
+        });
+        elem.jecKill();
+        assert.equal(elem.attr('class'), '');
+    });
+
+    it('should remove styles when destroyed', function () {
+        init();
+        var elem = $('#test').jec({
+            styles: {
+                opacity: 0.5
+            }
+        });
+        elem.jecKill();
+        assert.equal(elem.css('opacity'), 1);
+    });
+
+    it('should properly handle key codes', function () {
+        init();
+        var elem = $('#test').jec(),
+            list = ['keydown', 'keypress', 'keyup'];
+
+        $.each(list, function () {
+            var e = $.Event(this, {
+                charCode: 72
+            });
+            elem.trigger(e);
+        });
+        assert.equal(elem.children('.jecEditableOption').text(), 'H');
+        assert.equal(elem.children('.jecEditableOption').val(), 'H');
+    });
+});

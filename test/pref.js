@@ -150,7 +150,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('position'), 0);
             });
         });
-        
+
         describe('Max length', function () {
             it('should set the max length', function () {
                 init();
@@ -490,7 +490,7 @@ describe('Setting preference', function () {
                 assert.deepEqual(elem.jecPref('optionStyles'), {});
             });
         });
-        
+
         describe('Focus on new option', function () {
             it('should set the focus on new option', function () {
                 init();
@@ -554,7 +554,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('focusOnNewOption'), false);
             });
         });
-        
+
         describe('Use existing options', function () {
             it('should set the use existing options', function () {
                 init();
@@ -618,7 +618,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('useExistingOptions'), false);
             });
         });
-        
+
         describe('Ignored keys', function () {
             it('should set the ignored keys', function () {
                 init();
@@ -689,7 +689,7 @@ describe('Setting preference', function () {
                 assert.deepEqual(elem.jecPref('ignoredKeys'), []);
             });
         });
-        
+
         describe('Accepted keys', function () {
             var i,
                 keys = [];
@@ -835,7 +835,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('position'), 0);
             });
         });
-        
+
         describe('Max length', function () {
             it('should set the max length', function () {
                 init();
@@ -1175,7 +1175,7 @@ describe('Setting preference', function () {
                 assert.deepEqual(elem.jecPref('optionStyles'), {});
             });
         });
-        
+
         describe('Focus on new option', function () {
             it('should set the focus on new option', function () {
                 init();
@@ -1239,7 +1239,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('focusOnNewOption'), false);
             });
         });
-        
+
         describe('Use existing options', function () {
             it('should set the use existing options', function () {
                 init();
@@ -1303,7 +1303,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('useExistingOptions'), false);
             });
         });
-        
+
         describe('Ignored keys', function () {
             it('should set the ignored keys', function () {
                 init();
@@ -1374,7 +1374,7 @@ describe('Setting preference', function () {
                 assert.deepEqual(elem.jecPref('ignoredKeys'), []);
             });
         });
-        
+
         describe('Accepted keys', function () {
             var i,
                 keys = [];
