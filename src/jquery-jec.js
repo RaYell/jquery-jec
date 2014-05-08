@@ -26,22 +26,6 @@ value, valueIsEditable*/
             options = {}, values = {}, lastKeyCode,
             defaults, Validators, EventHandlers, Combobox;
 
-        // for jQuery < 1.6
-        if ($.fn.prop === undefined) {
-            $.fn.extend({
-                'prop': function (key, valueSet) {
-                    if (valueSet) {
-                        $(this).attr(key, key);
-                    } else {
-                        $(this).removeAttr(key);
-                    }
-                },
-                'removeProp': function (key) {
-                    $(this).removeAttr(key);
-                }
-            });
-        }
-
         defaults = {
             position: 0,
             ignoreOptGroups: false,
@@ -78,9 +62,7 @@ value, valueIsEditable*/
         }());
 
         EventHandlers = (function () {
-            var getKeyCode;
-
-            getKeyCode = function (event) {
+            var getKeyCode = function (event) {
                 var charCode = event.charCode;
                 if (charCode !== undefined && charCode !== 0) {
                     return charCode;
@@ -266,9 +248,7 @@ value, valueIsEditable*/
                             if (Handles.integer(elem, 'position', value)) {
                                 var id = Combobox.getId(elem),
                                     opt = options[id],
-                                    optionsCount;
-                                optionsCount =
-                                    elem.find('option:not(.' + pluginClass + ')').length;
+                                    optionsCount = elem.find('option:not(.' + pluginClass + ')').length;
                                 if (value > optionsCount) {
                                     opt.position = optionsCount;
                                 }
@@ -326,7 +306,6 @@ value, valueIsEditable*/
                         }
                     };
                 }());
-
                 Remove = (function () {
                     var removeClasses, removeStyles;
 
@@ -387,7 +366,6 @@ value, valueIsEditable*/
                         }
                     };
                 }());
-
                 Handle = (function () {
                     var setClasses, setStyles;
 
@@ -423,6 +401,13 @@ value, valueIsEditable*/
                             } else {
                                 elem.append(option);
                             }
+                        },
+
+                        maxLength: function (elem) {
+                            var opt = options[Combobox.getId(elem)],
+                                option = elem.find('option.' + pluginClass),
+                                val = option.text().substring(0, opt.maxLength);
+                            option.text(val).val(val);
                         },
 
                         classes: function (elem) {
@@ -607,33 +592,30 @@ value, valueIsEditable*/
 
                 // creates editable combobox without using existing select elements
                 initJS: function (options, settings) {
-                    var select, addOptions;
-
-                    select = $('<select>');
-
-                    addOptions = function (elem, options) {
-                        if ($.isArray(options)) {
-                            /*jslint unparam: true*/
-                            $.each(options, function (i, val) {
-                                if ($.isPlainObject(val)) {
-                                    $.each(val, function (key, value) {
-                                        if ($.isArray(value)) {
-                                            var og = $('<optgroup>').attr('label', key);
-                                            addOptions(og, value);
-                                            og.appendTo(select);
-                                        } else if (typeof value === 'number' || typeof value === 'string') {
-                                            $('<option>').text(value).attr('value', key)
-                                                .appendTo(elem);
-                                        }
-                                    });
-                                } else if (typeof val === 'string' || typeof val === 'number') {
-                                    $('<option>').text(val).attr('value', val).appendTo(elem);
-                                }
-                            });
-                            /*jslint unparam: false*/
-                            elem.find('option:first').prop('selected');
-                        }
-                    };
+                    var select = $('<select>'),
+                        addOptions = function (elem, options) {
+                            if ($.isArray(options)) {
+                                /*jslint unparam: true*/
+                                $.each(options, function (i, val) {
+                                    if ($.isPlainObject(val)) {
+                                        $.each(val, function (key, value) {
+                                            if ($.isArray(value)) {
+                                                var og = $('<optgroup>').attr('label', key);
+                                                addOptions(og, value);
+                                                og.appendTo(select);
+                                            } else if (typeof value === 'number' || typeof value === 'string') {
+                                                $('<option>').text(value).attr('value', key)
+                                                    .appendTo(elem);
+                                            }
+                                        });
+                                    } else if (typeof val === 'string' || typeof val === 'number') {
+                                        $('<option>').text(val).attr('value', val).appendTo(elem);
+                                    }
+                                });
+                                /*jslint unparam: false*/
+                                elem.find('option:first').prop('selected');
+                            }
+                        };
 
                     addOptions(select, options);
 
@@ -714,6 +696,10 @@ value, valueIsEditable*/
                                 case 'position':
                                     Parameters.Set.position($(this), value);
                                     Parameters.Handle.position($(this));
+                                    break;
+                                case 'maxLength':
+                                    Parameters.Set.maxLength($(this), value);
+                                    Parameters.Handle.maxLength($(this));
                                     break;
                                 case 'classes':
                                     Parameters.Remove.classes($(this));
