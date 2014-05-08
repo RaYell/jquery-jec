@@ -10,14 +10,14 @@
 
 /*jslint indent: 4, maxlen: 120 */
 /*global Math, String, jQuery*/
-/*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bind, bool,
+/*properties ':', Handle, Remove, Set, acceptedKeys, addClass, all, append, appendTo, array, attr, before, bool,
 ceil, change, charCode, classes, click, css, data, destroy, disable, each, editable, enable, eq, expr, extend, filter,
 find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignoreOptGroups, ignoredKeys, inArray, init,
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
-keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
-position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
-setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions,
-val, value*/
+keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, on, off, optionClasses, optionStyles, parent,
+parents, position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
+setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, uneditable, useExistingOptions, val
+value*/
 (function ($) {
     'use strict';
 
@@ -499,21 +499,21 @@ val, value*/
                             elem.append(editableOption);
                         }
 
-                        elem.bind('keydown', EventHandlers.keyDown);
-                        elem.bind('keypress', EventHandlers.keyPress);
-                        elem.bind('keyup', EventHandlers.keyUp);
-                        elem.bind('change', EventHandlers.change);
-                        elem.bind('click', EventHandlers.click);
+                        elem.on('keydown', EventHandlers.keyDown);
+                        elem.on('keypress', EventHandlers.keyPress);
+                        elem.on('keyup', EventHandlers.keyUp);
+                        elem.on('change', EventHandlers.change);
+                        elem.on('click', EventHandlers.click);
                     },
 
                     destroy: function (elem) {
                         elem.find('option.' + pluginClass).remove();
 
-                        elem.unbind('keydown', EventHandlers.keyDown);
-                        elem.unbind('keypress', EventHandlers.keyPress);
-                        elem.unbind('keyup', EventHandlers.keyUp);
-                        elem.unbind('change', EventHandlers.change);
-                        elem.unbind('click', EventHandlers.click);
+                        elem.off('keydown', EventHandlers.keyDown);
+                        elem.off('keypress', EventHandlers.keyPress);
+                        elem.off('keyup', EventHandlers.keyUp);
+                        elem.off('change', EventHandlers.change);
+                        elem.off('click', EventHandlers.click);
                     }
                 };
             }());
