@@ -460,6 +460,11 @@ value*/
                             if (opt !== undefined && opt.focusOnNewOption) {
                                 elem.find(':not(option.' + pluginClass + ')').removeProp('selected');
                                 elem.find('option.' + pluginClass).prop('selected', true);
+                            } else if (opt !== undefined) {
+                                elem.find('option.' + pluginClass).removeProp('selected');
+                                if (elem.val() === '') {
+                                    elem.find('option:not(.' + pluginClass + '):first').prop('selected', true);
+                                }
                             }
                         },
 
