@@ -1,6 +1,6 @@
 /*jslint indent: 4, maxlen: 120 */
-/*global define, beforeEach, afterEach*/
-define('init', ['jquery'], function ($) {
+/*global require, beforeEach, afterEach*/
+require(['jquery'], function ($) {
     'use strict';
     beforeEach(function () {
         var select1 = '<select id="test"><option>opt1</option><option selected>opt2</option>' +

@@ -7,30 +7,30 @@ require.config({
         jec: '../src/jquery-jec'
     },
     shim: {
-        init: [
+        'mocha-init': [
             'jquery'
         ],
         jec: [
             'jquery'
         ],
-        core: [
-            'init',
+        'tests-core': [
+            'mocha-init',
             'jec'
         ],
-        'init-js': [
-            'init',
+        'tests-init-js': [
+            'mocha-init',
             'jec'
         ],
-        value: [
-            'init',
+        'tests-value': [
+            'mocha-init',
             'jec'
         ],
-        pref: [
-            'init',
+        'tests-pref': [
+            'mocha-init',
             'jec'
         ],
-        other: [
-            'init',
+        'tests-other': [
+            'mocha-init',
             'jec'
         ]
     }
@@ -41,7 +41,7 @@ require(['chai'], function (chai) {
     window.assert = chai.assert;
     mocha.setup('bdd');
 
-    require(['core', 'init-js', 'value', 'pref', 'other'], function () {
+    require(['tests-core', 'tests-init-js', 'tests-value', 'tests-pref', 'tests-other'], function () {
         mocha.run();
     });
 });
