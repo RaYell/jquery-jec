@@ -148,6 +148,7 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('position'), 0);
             });
         });
+<<<<<<< HEAD
         
         describe('Max length', function () {
             it('should set the max length', function () {
@@ -222,6 +223,8 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('maxLength'), 255);
             });
         });
+=======
+>>>>>>> mocha-tests
 
         describe('Classes', function () {
             it('should set the classes given as string', function () {

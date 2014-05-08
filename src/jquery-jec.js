@@ -16,15 +16,20 @@ find, floor, fn, focusOnNewOption, fromCharCode, get, getId, handleCursor, ignor
 initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPref, jecValue, keyCode, keyDown,
 keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
 position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
-setEditableOption, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions, val,
-value, valueIsEditable*/
+setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions,
+val, value, valueIsEditable*/
 (function ($) {
     'use strict';
 
     $.jEC = (function () {
         var pluginClass = 'jecEditableOption',
-            options = {}, values = {}, lastKeyCode,
-            defaults, Validators, EventHandlers, Combobox;
+            options = {},
+            values = {},
+            lastKeyCode,
+            defaults,
+            Validators,
+            EventHandlers,
+            Combobox;
 
         defaults = {
             position: 0,
@@ -77,7 +82,8 @@ value, valueIsEditable*/
                 // in keydown event in order to work in IE)
                 keyDown: function (event) {
                     var keyCode = getKeyCode(event),
-                        option, value;
+                        option,
+                        value;
 
                     lastKeyCode = keyCode;
 
@@ -101,8 +107,12 @@ value, valueIsEditable*/
                 keyPress: function (event) {
                     var keyCode = getKeyCode(event),
                         opt = options[Combobox.getId($(this))],
-                        option, value, specialKeys, exit = false,
-                        text, select;
+                        option,
+                        value,
+                        specialKeys,
+                        exit = false,
+                        text,
+                        select;
 
                     if (keyCode !== 9 && keyCode !== 13 && keyCode !== 27) {
                         // special keys codes
@@ -216,7 +226,7 @@ value, valueIsEditable*/
                             },
                             array: function (elem, name, value) {
                                 if (typeof value === 'string') {
-                                    value = [value];
+                                    value = value.split(/\s+/);
                                 }
                                 var id = Combobox.getId(elem),
                                     opt = options[id];
@@ -386,7 +396,9 @@ value, valueIsEditable*/
                     return {
                         position: function (elem) {
                             var opt = options[Combobox.getId(elem)],
-                                option, uneditableOptions, container;
+                                option,
+                                uneditableOptions,
+                                container;
                             option = elem.find('option.' + pluginClass);
 
                             uneditableOptions = elem.find('option:not(.' + pluginClass + ')');
@@ -508,8 +520,9 @@ value, valueIsEditable*/
 
             // generates unique identifier
             generateId = function () {
+                var random;
                 while (true) {
-                    var random = Math.floor(Math.random() * 100000);
+                    random = Math.floor(Math.random() * 100000);
 
                     if (options[random] === undefined) {
                         return random;

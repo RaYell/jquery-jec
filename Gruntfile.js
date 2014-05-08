@@ -48,7 +48,7 @@ module.exports = function (grunt) {
                     'test/*.html'
                 ],
                 options: {
-                    threshold: 100,
+                    threshold: 90,
                     run: true
                 }
             }
@@ -66,6 +66,7 @@ module.exports = function (grunt) {
             all: [
                 'src/*.js',
                 'test/*.js',
+                'test/main.js',
                 'Gruntfile.js'
             ]
         }
