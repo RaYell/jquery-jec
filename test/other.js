@@ -2,12 +2,10 @@
 /*global describe, it, window, $*/
 describe('Disable', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     describe('JEC', function () {
         it('should properly disable editable functionality', function () {
-            init();
             var elem = $('#test').jec();
             elem.jecOff();
             assert.lengthOf(elem.children('option'), 3);
@@ -27,12 +25,10 @@ describe('Disable', function () {
 
 describe('Enable', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     describe('JEC', function () {
         it('should properly enable editable functionality', function () {
-            init();
             var elem = $('#test').jec();
             elem.jecOff();
             elem.jecOn();
@@ -56,12 +52,10 @@ describe('Enable', function () {
 
 describe('Kill', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     describe('JEC', function () {
         it('should properly kill editable functionality', function () {
-            init();
             var elem = $('#test').jec();
             elem.jecKill();
             assert.lengthOf(elem.children('option'), 3);
@@ -81,11 +75,9 @@ describe('Kill', function () {
 
 describe('Other', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     it('should remove classes when destroyed', function () {
-        init();
         var elem = $('#test').jec({
             classes: ['myClass1', 'myClass2']
         });
@@ -94,7 +86,6 @@ describe('Other', function () {
     });
 
     it('should remove styles when destroyed', function () {
-        init();
         var elem = $('#test').jec({
             styles: {
                 opacity: 0.5
@@ -105,7 +96,6 @@ describe('Other', function () {
     });
 
     it('should properly handle key codes', function () {
-        init();
         var elem = $('#test').jec(),
             list = ['keydown', 'keypress', 'keyup'];
 

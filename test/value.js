@@ -2,12 +2,10 @@
 /*global describe, it, window, $*/
 describe('Retrieving value', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     describe('JEC', function () {
         it('should retrieve the editable value', function () {
-            init();
             var elem = $('#test').jec(),
                 val = 'v1';
             elem.children('.jecEditableOption').text(val).val(val);
@@ -27,12 +25,10 @@ describe('Retrieving value', function () {
 
 describe('Setting value', function () {
     'use strict';
-    var assert = window.assert,
-        init = window.init;
+    var assert = window.assert;
 
     describe('JEC', function () {
         it('should set the editable value', function () {
-            init();
             var elem = $('#test').jec(),
                 val = 'v1';
             elem.jecValue(val);

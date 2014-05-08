@@ -12,6 +12,26 @@ require.config({
         ],
         jec: [
             'jquery'
+        ],
+        core: [
+            'init',
+            'jec'
+        ],
+        'init-js': [
+            'init',
+            'jec'
+        ],
+        value: [
+            'init',
+            'jec'
+        ],
+        pref: [
+            'init',
+            'jec'
+        ],
+        other: [
+            'init',
+            'jec'
         ]
     }
 });
@@ -21,10 +41,7 @@ require(['chai'], function (chai) {
     window.assert = chai.assert;
     mocha.setup('bdd');
 
-    require(['init', 'jec'], function (init) {
-        window.init = init.reset;
-        require(['core.js', 'init-js.js', 'value.js', 'pref.js', 'other.js'], function () {
-            mocha.run();
-        });
+    require(['core', 'init-js', 'value', 'pref', 'other'], function () {
+        mocha.run();
     });
 });
