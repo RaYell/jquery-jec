@@ -4,8 +4,7 @@ require.config({
     paths: {
         chai: '../node_modules/chai/chai',
         jquery: '../node_modules/jquery/dist/jquery.min',
-        jec: '../src/jquery-jec',
-        init: 'init'
+        jec: '../src/jquery-jec'
     }
 });
 
@@ -17,7 +16,7 @@ require(['chai'], function (chai) {
     require(['jquery'], function () {
         require(['init', 'jec'], function (init) {
             window.init = init.reset;
-            require(['core.js', 'init-js.js', 'other.js', 'value.js', 'pref.js'], function () {
+            require(['core.js', 'init-js.js', 'value.js', 'pref.js', 'other.js'], function () {
                 mocha.run();
             });
         });
