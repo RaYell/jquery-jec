@@ -129,7 +129,9 @@ describe('Setting preference', function () {
                 init();
                 var elem = $('#test').jec();
                 elem.jecPref('position', {
-                    position: 1
+                    position: {
+                        position: 1
+                    }
                 });
                 assert.equal(elem.jecPref('position'), 0);
             });
@@ -488,127 +490,286 @@ describe('Setting preference', function () {
                 assert.deepEqual(elem.jecPref('optionStyles'), {});
             });
         });
+        
+        describe('Focus on new option', function () {
+            it('should set the focus on new option', function () {
+                init();
+                var elem = $('#test').jec(),
+                    focusOnNewOption = true;
+                elem.jecPref('focusOnNewOption', focusOnNewOption);
+                assert.equal(elem.jecPref('focusOnNewOption'), focusOnNewOption);
+            });
+            it('should ignore focus on new option given as int', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', 1);
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as float', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', 1.2);
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as string', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', '1');
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as undefined', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', undefined);
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as null', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', null);
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as object', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', {
+                    focusOnNewOption: {
+                        focusOnNewOption: true
+                    }
+                });
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as array', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', [true]);
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+            it('should ignore focus on new option given as function', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('focusOnNewOption', function () {
+                    return true;
+                });
+                assert.equal(elem.jecPref('focusOnNewOption'), false);
+            });
+        });
+        
+        describe('Use existing options', function () {
+            it('should set the use existing options', function () {
+                init();
+                var elem = $('#test').jec(),
+                    useExistingOptions = true;
+                elem.jecPref('useExistingOptions', useExistingOptions);
+                assert.equal(elem.jecPref('useExistingOptions'), useExistingOptions);
+            });
+            it('should ignore use existing options given as int', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', 1);
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as float', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', 1.2);
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as string', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', '1');
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as undefined', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', undefined);
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as null', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', null);
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as object', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', {
+                    useExistingOptions: {
+                        useExistingOptions: true
+                    }
+                });
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as array', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', [true]);
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+            it('should ignore use existing options given as function', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('useExistingOptions', function () {
+                    return true;
+                });
+                assert.equal(elem.jecPref('useExistingOptions'), false);
+            });
+        });
+        
+        describe('Ignored keys', function () {
+            it('should set the ignored keys', function () {
+                init();
+                var elem = $('#test').jec(),
+                    ignoredKeys = [
+                        {
+                            min: 10,
+                            max: 15
+                        },
+                        35,
+                        55
+                    ];
+                elem.jecPref('ignoredKeys', ignoredKeys);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), [10, 11, 12, 13, 14, 15, 35, 55]);
+            });
+            it('should ignore ignored keys given as int', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', 1);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as float', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', 1.2);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as string', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', '1');
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as undefined', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', undefined);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as null', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', null);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as object', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', {
+                    ignoredKeys: {
+                        ignoredKeys: true
+                    }
+                });
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as bool', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', true);
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+            it('should ignore ignored keys given as function', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('ignoredKeys', function () {
+                    return true;
+                });
+                assert.deepEqual(elem.jecPref('ignoredKeys'), []);
+            });
+        });
+        
+        describe('Accepted keys', function () {
+            var i,
+                keys = [];
+            for (i = 32; i <= 126; i += 1) {
+                keys.push(i);
+            }
+            for (i = 191; i <= 382; i += 1) {
+                keys.push(i);
+            }
+
+            it('should set the accepted keys', function () {
+                init();
+                var elem = $('#test').jec(),
+                    acceptedKeys = [
+                        {
+                            min: 10,
+                            max: 15
+                        },
+                        35,
+                        55
+                    ];
+                elem.jecPref('acceptedKeys', acceptedKeys);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), [10, 11, 12, 13, 14, 15, 35, 55]);
+            });
+            it('should ignore accepted keys given as int', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', 1);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as float', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', 1.2);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as string', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', '1');
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as undefined', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', undefined);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as null', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', null);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as object', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', {
+                    acceptedKeys: {
+                        acceptedKeys: true
+                    }
+                });
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as bool', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', true);
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+            it('should ignore accepted keys given as function', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('acceptedKeys', function () {
+                    return true;
+                });
+                assert.deepEqual(elem.jecPref('acceptedKeys'), keys);
+            });
+        });
     });
 
     describe('JEC (init with JS)', function () {});
 });
-
-/*
-test('Setting preference: focusOnNewOption', function () {
-    expect(9);
-
-    $.jec(['opt1', 'opt2', 'opt3'], );
-    $('#test').jecPref('focusOnNewOption', true);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (boolean)');
-    $('#test').jecPref('focusOnNewOption', 'true');
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (string)');
-    $('#test').jecPref('focusOnNewOption', {});
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (object)');
-    $('#test').jecPref('focusOnNewOption', []);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (array)');
-    $('#test').jecPref('focusOnNewOption', 1);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (int)');
-    $('#test').jecPref('focusOnNewOption', 1.2);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (float)');
-    $('#test').jecPref('focusOnNewOption', undefined);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (undefined)');
-    $('#test').jecPref('focusOnNewOption', null);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (null)');
-    $('#test').jecPref('focusOnNewOption', $);
-    equal($('#test').jecPref('focusOnNewOption'), true, 'Set preference (function)');
-    reset($('#test'));
-});
-
-test('Setting preference: useExistingOptions', function () {
-    expect(9);
-
-    $.jec(['opt1', 'opt2', 'opt3'], );
-    $('#test').jecPref('useExistingOptions', true);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (boolean)');
-    $('#test').jecPref('useExistingOptions', 'true');
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (string)');
-    $('#test').jecPref('useExistingOptions', {});
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (object)');
-    $('#test').jecPref('useExistingOptions', []);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (array)');
-    $('#test').jecPref('useExistingOptions', 1);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (int)');
-    $('#test').jecPref('useExistingOptions', 1.2);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (float)');
-    $('#test').jecPref('useExistingOptions', undefined);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (undefined)');
-    $('#test').jecPref('useExistingOptions', null);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (null)');
-    $('#test').jecPref('useExistingOptions', $);
-    equal($('#test').jecPref('useExistingOptions'), true, 'Set preference (function)');
-    reset($('#test'));
-});
-
-test('Setting preference: ignoredKeys', function () {
-    expect(9);
-
-    var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
-    range = [
-        {
-            min: 10,
-            max: 15
-        }, // (min, max) tuple
-            35, 55 // number values
-        ];
-
-    $.jec(['opt1', 'opt2', 'opt3'], );
-    $('#test').jecPref('ignoredKeys', range);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (array)');
-    $('#test').jecPref('ignoredKeys', true);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (boolean)');
-    $('#test').jecPref('ignoredKeys', '');
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (string)');
-    $('#test').jecPref('ignoredKeys', {});
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (object)');
-    $('#test').jecPref('ignoredKeys', 1);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (int)');
-    $('#test').jecPref('ignoredKeys', 1.2);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (float)');
-    $('#test').jecPref('ignoredKeys', undefined);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (undefined)');
-    $('#test').jecPref('ignoredKeys', null);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (null)');
-    $('#test').jecPref('ignoredKeys', $);
-    deepEqual($('#test').jecPref('ignoredKeys'), parsedRange, 'Set preference (function)');
-    reset($('#test'));
-});
-
-test('Setting preference: acceptedKeys', function () {
-    expect(9);
-
-    var range, parsedRange = [10, 11, 12, 13, 14, 15, 35, 55];
-    range = [
-        {
-            min: 10,
-            max: 15
-        }, // (min, max) tuple
-            35, 55 // number values
-        ];
-
-    $.jec(['opt1', 'opt2', 'opt3'], );
-    $('#test').jecPref('acceptedKeys', range);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (array)');
-    $('#test').jecPref('acceptedKeys', true);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (boolean)');
-    $('#test').jecPref('acceptedKeys', '');
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (string)');
-    $('#test').jecPref('acceptedKeys', {});
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (object)');
-    $('#test').jecPref('acceptedKeys', 1);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (int)');
-    $('#test').jecPref('acceptedKeys', 1.2);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (float)');
-    $('#test').jecPref('acceptedKeys', undefined);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (undefined)');
-    $('#test').jecPref('acceptedKeys', null);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (null)');
-    $('#test').jecPref('acceptedKeys', $);
-    deepEqual($('#test').jecPref('acceptedKeys'), parsedRange, 'Set preference (function)');
-    reset($('#test'));
-});
-*/
