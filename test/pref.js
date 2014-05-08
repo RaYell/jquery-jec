@@ -416,7 +416,7 @@ describe('Setting preference', function () {
         });
     });
 
-    describe('JEC (init with JS)', function () {});
+    //describe('JEC (init with JS)', function () {});
 });
 
 /*
