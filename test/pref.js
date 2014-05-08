@@ -148,6 +148,80 @@ describe('Setting preference', function () {
                 assert.equal(elem.jecPref('position'), 0);
             });
         });
+        
+        describe('Max length', function () {
+            it('should set the max length', function () {
+                init();
+                var elem = $('#test').jec(),
+                    maxLength = 3;
+                elem.jecPref('maxLength', maxLength);
+                assert.equal(elem.jecPref('maxLength'), maxLength);
+            });
+            it('should ignore negative length', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', -1);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore too big length', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', 260);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as float', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', 1.2);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as string', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', '1');
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as undefined', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', undefined);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as null', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', null);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as boolean', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', true);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as object', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', {
+                    maxLength: 1
+                });
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as array', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', [1]);
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+            it('should ignore max length given as function', function () {
+                init();
+                var elem = $('#test').jec();
+                elem.jecPref('maxLength', function () {
+                    return 1;
+                });
+                assert.equal(elem.jecPref('maxLength'), 255);
+            });
+        });
 
         describe('Classes', function () {
             it('should set the classes given as string', function () {
@@ -416,7 +490,7 @@ describe('Setting preference', function () {
         });
     });
 
-    //describe('JEC (init with JS)', function () {});
+    describe('JEC (init with JS)', function () {});
 });
 
 /*

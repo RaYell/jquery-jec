@@ -17,7 +17,7 @@ initJS, integer, isArray, isPlainObject, jEC, jec, jecKill, jecOff, jecOn, jecPr
 keyPress, keyRange, keyUp, keys, length, max, maxLength, min, object, optionClasses, optionStyles, parent, parents,
 position, pref, prop, push, random, remove, removeAttr, removeClass, removeData, removeProp, selectedIndex,
 setEditableOption, split, styles, substring, text, trigger, triggerChangeEvent, unbind, uneditable, useExistingOptions,
-val, value, valueIsEditable*/
+val, value*/
 (function ($) {
     'use strict';
 
@@ -763,10 +763,6 @@ val, value, valueIsEditable*/
                 // get combobox id
                 getId: function (elem) {
                     return elem.data('jecId');
-                },
-
-                valueIsEditable: function (elem) {
-                    return elem.find('option.' + pluginClass).get(0) === elem.find('option:selected').get(0);
                 }
             };
         }());
