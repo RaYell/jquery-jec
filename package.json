@@ -53,7 +53,7 @@
   },
   "config": {
     "blanket": {
-      "pattern": "src/jquery-domec.js"
+      "pattern": "src/jquery-jec.js"
     }
   }
 }
