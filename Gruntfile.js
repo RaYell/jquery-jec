@@ -15,8 +15,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: false,
-                sourceMap: 'dist/jquery-jec.min.map',
-                sourceMapURL: 'jquery-jec.min.map'
+                sourceMap: true
             },
             dist: {
                 files: {
