@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/RaYell/jquery-jec.svg?branch=master)](https://travis-ci.org/RaYell/jquery-jec)
+[![Coverage Status](https://coveralls.io/repos/RaYell/jquery-jec/badge.png?branch=master)](https://coveralls.io/r/RaYell/jquery-jec?branch=master)
+
 ### Requirements
 
 jQuery 1.7+ library is required to use this extension. It can be downloaded from [jQuery Web Page](http://jquery.com).
