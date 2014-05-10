@@ -10,7 +10,7 @@ jQuery 1.7+ library is required to use this extension. It can be downloaded from
 Install the library using Bower
 
 ```
-bower install jquery-jec
+bower install jquery-jec --save
 ```
 
 Import plugin file after importing the jQuery library.
