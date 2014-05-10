@@ -87,6 +87,13 @@ Destroys editable combobox. Will ignore all non-```<select>``` elements and elem
 ##### Returned Value
 This method returns jQuery object collection with objects which are destroyed editable comboboxes.
 
+#### jecValue()
+```javascript
+$(selector).jecValue();
+```
+
+Gets the value and text of editable option.
+
 #### jecValue(value[, setFocus])
 ```javascript
 $(selector).jecValue(value[, setFocus]);
