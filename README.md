@@ -114,7 +114,7 @@ Gets the specified preference value.
 
 ##### Parameters
 | **Type** | **Name** | **Description** | **Default value** |
-| -------- | -------- | --------------- | ----------------- | ------------ |
+| -------- | -------- | --------------- | ----------------- |
 | ```string``` | ```name``` | preference name | |
 
 ##### Returned Value
@@ -129,6 +129,7 @@ Sets the value of the specified preference. Value type must match allowed value 
 
 ##### Parameters
 | **Type** | **Name** | **Description** | **Default value** |
+| -------- | -------- | --------------- | ----------------- |
 | ```string``` | ```name``` | preference name | _N/A_ |
 | ```any``` | ```value``` | value to be set | ```null``` |
 
