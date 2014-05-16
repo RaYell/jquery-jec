@@ -10,7 +10,7 @@ jQuery 1.7+ library is required to use this extension. It can be downloaded from
 Install the library using Bower
 
 ```
-bower install jquery-jec
+bower install jquery-jec --save
 ```
 
 Import plugin file after importing the jQuery library.
@@ -87,6 +87,13 @@ Destroys editable combobox. Will ignore all non-```<select>``` elements and elem
 ##### Returned Value
 This method returns jQuery object collection with objects which are destroyed editable comboboxes.
 
+#### jecValue()
+```javascript
+$(selector).jecValue();
+```
+
+Gets the value and text of editable option.
+
 #### jecValue(value[, setFocus])
 ```javascript
 $(selector).jecValue(value[, setFocus]);
@@ -114,7 +121,7 @@ Gets the specified preference value.
 
 ##### Parameters
 | **Type** | **Name** | **Description** | **Default value** |
-| -------- | -------- | --------------- | ----------------- | ------------ |
+| -------- | -------- | --------------- | ----------------- |
 | ```string``` | ```name``` | preference name | |
 
 ##### Returned Value
@@ -129,6 +136,7 @@ Sets the value of the specified preference. Value type must match allowed value 
 
 ##### Parameters
 | **Type** | **Name** | **Description** | **Default value** |
+| -------- | -------- | --------------- | ----------------- |
 | ```string``` | ```name``` | preference name | _N/A_ |
 | ```any``` | ```value``` | value to be set | ```null``` |
 
