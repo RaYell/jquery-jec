@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/RaYell/jquery-jec.svg?branch=master)](https://travis-ci.org/RaYell/jquery-jec)
 [![Coverage Status](https://coveralls.io/repos/RaYell/jquery-jec/badge.png?branch=master)](https://coveralls.io/r/RaYell/jquery-jec?branch=master)
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 ### Requirements
 
