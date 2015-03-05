@@ -39,7 +39,7 @@ Initializes editable combobox. Will ignore all non-```<select>``` elements and e
 ##### Options
 | **Type** | **Name** | **Description** | **Default value** | **Added in** |
 | -------- | -------- | --------------- | ----------------- | ------------ |
-| ```int`` | ```position``` | index of editable option to be inserted in select | ```0``` | 1.0 |
+| ```int``` | ```position``` | index of editable option to be inserted in select | ```0``` | 1.0 |
 | ```bool``` | ```ignoreOptGroups``` | ignores option groups when placing editable option if set to ```true``` | ```false``` | 1.3 |
 | ```int``` | ```maxLength``` | max input length | ```255``` | 1.3 |
 | ```string```, ```array``` | ```classes``` | additional classes to be added | ```[]``` | 1.0 |
