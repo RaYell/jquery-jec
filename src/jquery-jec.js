@@ -411,7 +411,7 @@ value*/
                                     uneditableOptions.eq(opt.position).before(option);
                                 }
                             } else {
-                                elem.append(option);
+                                elem.append(option.html());
                             }
                         },
 
@@ -501,7 +501,7 @@ value*/
                         if (!elem.find('option.' + pluginClass).length) {
                             var editableOption = $('<option>');
                             editableOption.addClass(pluginClass);
-                            elem.append(editableOption);
+                            elem.append(editableOption.html());
                         }
 
                         elem.on('keydown', EventHandlers.keyDown);
