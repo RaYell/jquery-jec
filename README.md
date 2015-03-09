@@ -232,4 +232,4 @@ On some mobile devices (like an iPhone) plugin will not work since they implemen
 ### Links
 * [IncompatibleChanges](https://github.com/RaYell/jquery-jec/wiki/Incompatible-Changes)
 * [Changelog](https://github.com/RaYell/jquery-jec/wiki/Changelog)
-* [Demo](http://jsfiddle.net/RaYell/n96RF)
+* [Demo](http://jsfiddle.net/n96RF/9)
