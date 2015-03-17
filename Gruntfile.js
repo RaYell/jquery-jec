@@ -12,7 +12,7 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     'dist/jquery-jec.min.js': [
-                        'dist/jquery-jec.js'
+                        'src/jquery-jec.js'
                     ]
                 }
             }
