@@ -6,3 +6,8 @@ script:
   - grunt build
   - grunt test
   - grunt cover
+after_script:
+  - ./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | codeclimate
+addons:
+  code_climate:
+    repo_token: e87910107c5c3edd4399ca41bf50292b4a4fb55516b6f8449541d1b8b43b56ce
