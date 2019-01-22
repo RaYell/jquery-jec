@@ -1,10 +1,5 @@
 # This project is no longer maintained!
 
-[![Bower version](https://badge.fury.io/bo/jquery-jec.svg)](http://badge.fury.io/bo/jquery-jec)
-[![Build Status](https://travis-ci.org/RaYell/jquery-jec.svg?branch=master)](https://travis-ci.org/RaYell/jquery-jec)
-[![Coverage Status](https://coveralls.io/repos/RaYell/jquery-jec/badge.png?branch=master)](https://coveralls.io/r/RaYell/jquery-jec?branch=master)
-[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-
 ### Requirements
 
 jQuery 1.7+ library is required to use this extension. It can be downloaded from [jQuery Web Page](http://jquery.com).
